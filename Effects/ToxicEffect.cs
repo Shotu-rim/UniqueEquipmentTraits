@@ -12,7 +12,9 @@ namespace UniqueEquipmentTraits.Effects
 
         public override void Apply(UETEffectContext context)
         {
-            if (context == null || context.Victim == null)
+            if (context == null ||
+                context.Attacker == null ||
+                context.Victim == null)
                 return;
 
             Pawn victim = context.Victim;
@@ -95,11 +97,17 @@ namespace UniqueEquipmentTraits.Effects
             }
 
 
+
+            float actualIncrease = Mathf.Max(
+                0f,
+                toxic.Severity - previousSeverity);
+
             context.Report(
-                $"{context.Attacker.LabelShort} increased " +
-                $"{context.Victim.LabelShort}'s toxic buildup " +
-                $"by {toxicIncrease:P0}, raising it from " +
-                $"{previousSeverity:P0} to {toxic.Severity:P0}.");
+                $"{context.Attacker.LabelShort}'s Toxic infused " +
+                $"{victim.LabelShort} with a toxic substance, " +
+                $"increasing toxic buildup by {actualIncrease:P1} " +
+                $"(from {previousSeverity:P1} to {toxic.Severity:P1}).");
+
 
         }
     }

@@ -39,10 +39,9 @@ namespace UniqueEquipmentTraits.Effects
 
 
             context.Report(
-                $"{context.Attacker.LabelShort} unleashed an EMP discharge " +
-                $"against {context.Victim.LabelShort}, attempting to stun " +
-                $"the target for {stunTicks / 60f:F2} seconds " +
-                $"before resistance is applied.");
+                $"{context.Attacker.LabelShort}'s Stormbound discharged an EMP pulse " +
+                $"into {victim.LabelShort}, attempting to stun the target " +
+                $"for {stunTicks / 60f:F2} seconds before EMP resistance and adaptation.");
 
         }
     }

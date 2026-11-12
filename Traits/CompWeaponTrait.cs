@@ -1,13 +1,313 @@
-﻿
+
 using RimWorld;
 using Verse;
 using System.Collections.Generic;
 using UniqueEquipmentTraits.Core;
+using UniqueEquipmentTraits.Effects;
 
 namespace UniqueEquipmentTraits.Traits
 {
     public class CompWeaponTrait : ThingComp
     {
+        // Flurry is stored on the weapon, never on shared Tool/VerbProperties.
+        private int flurryCharges;
+        private Pawn flurryOwner;
+        private bool flurryLastAttack;
+
+        // Tailwind state is stored on the weapon.
+        private int tailwindCharges;
+        private Pawn tailwindOwner;
+
+        public int TailwindCharges => tailwindCharges;
+
+        public int FlurryCharges => flurryCharges;
+        public bool FlurryLastAttack => flurryLastAttack;
+
+        public override void CompTickRare()
+        {
+            base.CompTickRare();
+            ValidateFlurryState();
+            ValidateTailwindState();
+        }
+
+        private void ValidateFlurryState()
+        {
+            if (flurryCharges <= 0)
+            {
+                if (flurryOwner != null) ClearFlurry();
+                return;
+            }
+            if (!FlurryActiveFor(flurryOwner))
+                ClearFlurry();
+            else
+                SyncFlurryHediff(flurryOwner);
+        }
+
+        private void ValidateTailwindState()
+        {
+            if (tailwindCharges <= 0)
+            {
+                if (tailwindOwner != null)
+                    ClearTailwind();
+
+                return;
+            }
+
+            if (!TailwindActiveFor(tailwindOwner))
+                ClearTailwind();
+            else
+                TailwindEffect.SyncHediff(tailwindOwner);
+        }
+
+        public override void PostExposeData()
+        {
+            base.PostExposeData();
+            Scribe_Values.Look(ref flurryCharges, "uetFlurryCharges", 0);
+            Scribe_References.Look(ref flurryOwner, "uetFlurryOwner");
+            Scribe_Values.Look(ref flurryLastAttack, "uetFlurryLastAttack", false);
+            Scribe_Values.Look(ref tailwindCharges, "uetTailwindCharges", 0);
+            Scribe_References.Look(ref tailwindOwner, "uetTailwindOwner");
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                if (flurryCharges < 0)
+                    flurryCharges = 0;
+
+                if (tailwindCharges < 0)
+                    tailwindCharges = 0;
+            }
+        }
+
+        public bool HasFlurry()
+        {
+            return FlurryEffect.HasFlurry(parent);
+        }
+
+        public void ClearFlurry()
+        {
+            FlurryEffect.RemoveHediff(flurryOwner);
+
+            flurryCharges = 0;
+            flurryOwner = null;
+            flurryLastAttack = false;
+        }
+
+        // Activation occurs only after actual damage has been registered.
+        // The triggering attack is not charged and is not accelerated.
+
+        public bool TryActivateFlurry(Pawn pawn)
+        {
+            if (!FlurryEffect.IsValidOwner(parent, pawn))
+                return false;
+
+            CompQuality quality = parent.TryGetComp<CompQuality>();
+
+            if (quality == null)
+                return false;
+
+            float chance =
+                FlurryEffect.ActivationChance(quality.Quality);
+
+            if (!Rand.Chance(chance))
+                return false;
+
+            return ActivateFlurry(pawn);
+        }
+
+        // Called by Prismatic after its own successful activation roll.
+        public bool ActivatePrismaticFlurry(Pawn pawn)
+        {
+            if (!PrismaticEffect.HasPrismatic(parent))
+                return false;
+
+            return ActivateFlurry(pawn);
+        }
+
+        private bool ActivateFlurry(Pawn pawn)
+        {
+            if (flurryCharges > 0 ||
+                !FlurryEffect.CanUseEffect(parent, pawn))
+                return false;
+
+            CompQuality quality = parent.TryGetComp<CompQuality>();
+
+            if (quality == null)
+                return false;
+
+            int charges =
+                FlurryEffect.InitialCharges(quality.Quality);
+
+            if (charges <= 0)
+                return false;
+
+            flurryOwner = pawn;
+            flurryCharges = charges;
+
+            SyncFlurryHediff(pawn);
+
+            return true;
+        }
+
+
+
+        public bool FlurryActiveFor(Pawn pawn)
+        {
+            return flurryCharges > 0 &&
+                   flurryOwner == pawn &&
+                   FlurryEffect.CanUseEffect(parent, pawn);
+        }
+
+
+        // Called once per completed attack attempt, including misses and dodges.
+        public void ConsumeFlurryAttempt(Pawn pawn)
+        {
+            if (!FlurryActiveFor(pawn))
+                return;
+
+            flurryCharges--;
+
+            
+
+            if (flurryCharges == 0)
+            {
+                
+
+                ClearFlurry();
+            }
+            else
+            {
+                SyncFlurryHediff(pawn);
+            }
+        }
+
+        private void SyncFlurryHediff(Pawn pawn)
+        {
+            FlurryEffect.SyncHediff(pawn);
+        }
+
+        public float FlurrySpeedBonus()
+        {
+            CompQuality quality = parent.TryGetComp<CompQuality>();
+
+            return quality == null
+                ? 0f
+                : FlurryEffect.SpeedBonus(quality.Quality);
+        }
+
+        public float FlurryDamageMultiplier()
+        {
+            CompQuality quality = parent.TryGetComp<CompQuality>();
+
+            return quality == null
+                ? 1f
+                : FlurryEffect.DamageMultiplier(quality.Quality);
+        }
+
+
+        public bool HasTailwind()
+        {
+            return TailwindEffect.HasTailwind(parent);
+        }
+
+        // Removes the active effect and clears its state.
+        public void ClearTailwind()
+        {
+            TailwindEffect.RemoveHediff(tailwindOwner);
+
+            tailwindCharges = 0;
+            tailwindOwner = null;
+        }
+
+        // Activates only after a successful damaging melee attack.
+        // The triggering attack does not consume a charge.
+
+        public bool TryActivateTailwind(Pawn pawn)
+        {
+            if (!TailwindEffect.IsValidOwner(parent, pawn))
+                return false;
+
+            CompQuality quality = parent.TryGetComp<CompQuality>();
+
+            if (quality == null)
+                return false;
+
+            float chance =
+                TailwindEffect.ActivationChance(quality.Quality);
+
+            if (!Rand.Chance(chance))
+                return false;
+
+            return ActivateTailwind(pawn);
+        }
+
+        // Called by Prismatic after its own successful activation roll.
+        public bool ActivatePrismaticTailwind(Pawn pawn)
+        {
+            if (!PrismaticEffect.HasPrismatic(parent))
+                return false;
+
+            return ActivateTailwind(pawn);
+        }
+
+        private bool ActivateTailwind(Pawn pawn)
+        {
+            if (tailwindCharges > 0 ||
+                !TailwindEffect.CanUseEffect(parent, pawn))
+                return false;
+
+            CompQuality quality = parent.TryGetComp<CompQuality>();
+
+            if (quality == null)
+                return false;
+
+            int charges =
+                TailwindEffect.InitialCharges(quality.Quality);
+
+            if (charges <= 0)
+                return false;
+
+            tailwindOwner = pawn;
+            tailwindCharges = charges;
+
+            TailwindEffect.SyncHediff(pawn);
+
+            return true;
+        }
+
+
+        // Checks whether this pawn currently benefits from Tailwind.
+        public bool TailwindActiveFor(Pawn pawn)
+        {
+            return tailwindCharges > 0 &&
+                   tailwindOwner == pawn &&
+                   TailwindEffect.CanUseEffect(parent, pawn);
+        }
+
+        // Called once after a resolved incoming melee attack attempt.
+        public void ConsumeTailwindAttempt(Pawn pawn)
+        {
+            if (!TailwindActiveFor(pawn))
+                return;
+
+            tailwindCharges--;
+
+            if (tailwindCharges <= 0)
+                ClearTailwind();
+            else
+                TailwindEffect.SyncHediff(pawn);
+        }
+
+        // Returns the bonus to the final melee dodge probability.
+        public float TailwindDodgeBonus()
+        {
+            CompQuality quality =
+                parent.TryGetComp<CompQuality>();
+
+            return quality == null
+                ? 0f
+                : TailwindEffect.DodgeBonus(quality.Quality);
+        }
+
+
         // Wyłącznie do ręcznego testowania traitów.
         private bool DebugSetTrait(RimWorld.WeaponTraitDef newTrait)
         {
@@ -87,6 +387,9 @@ namespace UniqueEquipmentTraits.Traits
 
             if (oldTrait != null)
                 traits.Remove(oldTrait);
+
+            ClearFlurry();
+            ClearTailwind();
 
             if (newTrait != null)
                 uniqueComp.AddTrait(newTrait);
@@ -194,9 +497,44 @@ namespace UniqueEquipmentTraits.Traits
             if (qualityComp == null)
                 yield break;
 
+
             float activationChance =
                 WeaponTraitQuality.GetActivationChance(
                     qualityComp.Quality);
+
+            if (trait.defName == "UET_Flurry")
+            {
+                activationChance =
+                    WeaponTraitQuality.GetEffectStrength(
+                        qualityComp.Quality);
+            }
+            else if (trait.defName == "UET_Tailwind")
+            {
+                activationChance =
+                    TailwindEffect.ActivationChance(
+                        qualityComp.Quality);
+            }
+            else if (trait.defName == "UET_Prismatic")
+            {
+                activationChance =
+                    UnityEngine.Mathf.Clamp01(
+                        WeaponTraitQuality.GetEffectStrength(
+                            qualityComp.Quality) * 2f);
+            }
+            else if (trait.defName == "UET_NaniteDisruptor")
+            {
+                switch (qualityComp.Quality)
+                {
+                    case QualityCategory.Masterwork:
+                        activationChance = 0.35f;
+                        break;
+
+                    case QualityCategory.Legendary:
+                        activationChance = 0.45f;
+                        break;
+                }
+            }
+
 
             yield return new StatDrawEntry(
                 StatCategoryDefOf.BasicsImportant,

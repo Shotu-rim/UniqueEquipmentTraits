@@ -1,7 +1,7 @@
 ﻿
 using System.Collections.Generic;
+using RimWorld;
 using Verse;
-using UniqueEquipmentTraits.Traits;
 
 namespace UniqueEquipmentTraits.Core
 {
@@ -20,7 +20,8 @@ namespace UniqueEquipmentTraits.Core
             if (string.IsNullOrEmpty(defName))
                 return null;
 
-            return DefDatabase<WeaponTraitDef>.GetNamedSilentFail(defName);
+            return DefDatabase<WeaponTraitDef>
+                .GetNamedSilentFail(defName);
         }
     }
 }

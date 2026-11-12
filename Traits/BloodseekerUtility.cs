@@ -13,36 +13,34 @@ namespace UniqueEquipmentTraits.Traits
             Pawn attacker,
             Pawn victim,
             ThingWithComps weapon,
-            float bleedingBeforeAttack)
+            float bleedingBeforeAttack,
+            BloodseekerHealingReport report = null)
         {
-            Log.Message("[UET] Bloodseeker UTILITY ENTERED");
-
             if (attacker == null || victim == null || weapon == null)
             {
-                Log.Message(
-                    "[UET] Bloodseeker SKIPPED | " +
-                    "Reason: Null attacker, victim or weapon");
+                if (report != null)
+                    report.SkipReason = "Invalid attacker, victim or weapon";
+
                 return 0f;
             }
 
             if (attacker.Dead || attacker.health == null ||
                 victim.health == null)
             {
-                Log.Message(
-                    "[UET] Bloodseeker SKIPPED | " +
-                    "Reason: Invalid pawn health");
+                if (report != null)
+                    report.SkipReason = "Invalid pawn health";
+
                 return 0f;
             }
-
 
             CompQuality qualityComp =
                 weapon.TryGetComp<CompQuality>();
 
             if (qualityComp == null)
             {
-                Log.Message(
-                    "[UET] Bloodseeker SKIPPED | " +
-                    "Reason: Missing quality component");
+                if (report != null)
+                    report.SkipReason = "Missing quality component";
+
                 return 0f;
             }
 
@@ -52,34 +50,19 @@ namespace UniqueEquipmentTraits.Traits
                 ? bleedingBeforeAttack
                 : victim.health.hediffSet.BleedRateTotal;
 
-            // Diagnostyka krwawienia aktualnych ran.
-            float injuryBleeding = 0f;
-
-            foreach (Hediff hediff in
-                victim.health.hediffSet.hediffs)
+            if (report != null)
             {
-                Hediff_Injury injury = hediff as Hediff_Injury;
-
-                if (injury != null)
-                    injuryBleeding += injury.BleedRate;
+                report.BleedingBeforeAttack = bleedingBeforeAttack;
+                report.BleedingAfterAttack =
+                    victim.health.hediffSet.BleedRateTotal;
+                report.BleedingUsed = bleeding;
             }
-
-            Log.Message(
-                $"[UET] Bloodseeker BLEED CHECK | " +
-                $"Victim: {victim.LabelShort} | " +
-                $"Downed: {victim.Downed} | " +
-                $"Dead: {victim.Dead} | " +
-                $"BleedingBeforeAttack: {bleedingBeforeAttack:F3} | " +
-                $"BleedRateTotal: " +
-                $"{victim.health.hediffSet.BleedRateTotal:F3} | " +
-                $"InjuryBleeding: {injuryBleeding:F3} | " +
-                $"BleedingUsed: {bleeding:F3}");
 
             if (bleeding <= 0f)
             {
-                Log.Message(
-                    "[UET] Bloodseeker SKIPPED | " +
-                    "Reason: Victim not bleeding");
+                if (report != null)
+                    report.SkipReason = "Victim not bleeding";
+
                 return 0f;
             }
 
@@ -87,16 +70,17 @@ namespace UniqueEquipmentTraits.Traits
                 WeaponTraitQuality.GetEffectStrength(
                     qualityComp.Quality);
 
+            if (report != null)
+                report.EffectStrength = qualityFactor;
+
             if (qualityFactor <= 0f)
             {
-                Log.Message(
-                    "[UET] Bloodseeker SKIPPED | " +
-                    "Reason: Invalid quality factor");
+                if (report != null)
+                    report.SkipReason = "Invalid quality factor";
+
                 return 0f;
             }
 
-            // Zbieramy wszystkie kwalifikujące się rany
-            // z całego ciała napastnika.
             List<Hediff_Injury> injuries =
                 new List<Hediff_Injury>();
 
@@ -115,31 +99,67 @@ namespace UniqueEquipmentTraits.Traits
 
                 injuries.Add(injury);
                 missingHP += injury.Severity;
+
+                // Diagnostyka: stan ran przed leczeniem.
+                if (report != null)
+                {
+                    BodyPartRecord part = injury.Part;
+
+                    if (!report.InjuriesByPart.TryGetValue(
+                        part,
+                        out BloodseekerHealingReport.PartInjuryInfo info))
+                    {
+                        info = new BloodseekerHealingReport.PartInjuryInfo();
+                        report.InjuriesByPart.Add(part, info);
+                    }
+
+                    info.WoundCount++;
+                    info.MissingHP += injury.Severity;
+                }
+            }
+
+            if (report != null)
+            {
+                report.InjuryCount = injuries.Count;
+                report.MissingHP = missingHP;
             }
 
             if (injuries.Count == 0)
             {
-                Log.Message(
-                    $"[UET] Bloodseeker SKIPPED | " +
-                    $"Reason: No healable injuries | " +
-                    $"Attacker: {attacker.LabelShort}");
+                if (report != null)
+                    report.SkipReason = "No healable injuries";
+
                 return 0f;
             }
 
-            // 100% krwawienia = mnożnik 1.
-            // 150% i więcej = maksymalny mnożnik 1.5.
             float bleedingMultiplier =
-                Mathf.Clamp(bleeding, 0f, 1.5f);
+                Mathf.Clamp(bleeding, 0f, 3f);
 
-            float healing =
-                missingHP * qualityFactor * bleedingMultiplier;
+            float bleedingFactor =
+                Mathf.Pow(bleedingMultiplier / 3f, 0.8f);
 
-            healing = Mathf.Min(healing, missingHP);
-
-            float healingPool = healing;
+            float healingPool = missingHP * bleedingFactor;
             float totalHealed = 0f;
 
-            // Losujemy kolejność ran.
+            float basePartLimit = 0.4f;
+
+            if (qualityComp.Quality == QualityCategory.Legendary)
+                basePartLimit = 0.5f;
+
+            float partLimitFactor =
+                basePartLimit * (1f + qualityFactor);
+
+            if (report != null)
+            {
+                report.BleedingFactor = bleedingFactor;
+                report.InitialHealingPool = healingPool;
+                report.PartLimitFactor = partLimitFactor;
+            }
+
+            Dictionary<BodyPartRecord, float> healedByPart =
+                new Dictionary<BodyPartRecord, float>();
+
+            // Zachowujemy istniejące losowanie kolejności.
             injuries.Shuffle();
 
             foreach (Hediff_Injury injury in injuries)
@@ -147,16 +167,61 @@ namespace UniqueEquipmentTraits.Traits
                 if (healingPool <= 0f)
                     break;
 
-                float amount =
-                    Mathf.Min(healingPool, injury.Severity);
+                BodyPartRecord part = injury.Part;
+
+                float maxPartHealing =
+                    part.def.GetMaxHealth(attacker) *
+                    partLimitFactor;
+
+                float alreadyHealed = 0f;
+                healedByPart.TryGetValue(
+                    part,
+                    out alreadyHealed);
+
+                float remainingPartHealing = Mathf.Max(
+                    0f,
+                    maxPartHealing - alreadyHealed
+                );
+
+                if (remainingPartHealing <= 0f)
+                    continue;
+
+                float amount = Mathf.Min(
+                    healingPool,
+                    injury.Severity,
+                    remainingPartHealing
+                );
+
+                if (amount <= 0f)
+                    continue;
 
                 injury.Heal(amount);
 
                 totalHealed += amount;
                 healingPool -= amount;
 
+                healedByPart[part] = alreadyHealed + amount;
+
                 if (injury.ShouldRemove)
                     attacker.health.RemoveHediff(injury);
+            }
+
+            if (report != null)
+            {
+                report.TotalHealed = totalHealed;
+                report.UnusedHealingPool = healingPool;
+
+                foreach (KeyValuePair<BodyPartRecord, float> entry
+                    in healedByPart)
+                {
+                    report.HealedByPart.Add(
+                        entry.Key,
+                        entry.Value);
+                }
+
+                if (totalHealed <= 0f)
+                    report.SkipReason =
+                        "Healing prevented by part limits";
             }
 
             return totalHealed;

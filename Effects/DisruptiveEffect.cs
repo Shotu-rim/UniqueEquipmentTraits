@@ -7,6 +7,8 @@ namespace UniqueEquipmentTraits.Effects
     public sealed class DisruptiveEffect : UETEffect
     {
         private const float NeuralHeatMultiplier = 60f;
+        private const float ReferenceNeuralHeatMax = 80f;
+        private const float PsychicSensitivityExponent = 0.25f;
 
         public override void Apply(UETEffectContext context)
         {
@@ -18,14 +20,37 @@ namespace UniqueEquipmentTraits.Effects
             if (!CanReceiveNeuralHeat(victim))
                 return;
 
-            float amount =
-                NeuralHeatMultiplier * context.EffectStrength;
+            // Actual Psychic Sensitivity, including modifiers.
+            float sensitivity =
+                victim.GetStatValue(StatDefOf.PsychicSensitivity);
 
-            if (amount <= 0f)
+            // Completely psychically insensitive targets
+            // are immune to Disruptive.
+            if (sensitivity <= 0f)
                 return;
 
             Pawn_PsychicEntropyTracker tracker =
                 victim.psychicEntropy;
+
+            // Maximum Neural Heat of the victim.
+            float maxHeat = tracker.MaxEntropy;
+
+            if (maxHeat <= 0f)
+                return;
+
+            // Heat = 60 * EffectStrength
+            //      * (MaxHeat / 80)
+            //      * Sensitivity^0.25
+            float amount =
+                NeuralHeatMultiplier *
+                context.EffectStrength *
+                (maxHeat / ReferenceNeuralHeatMax) *
+                UnityEngine.Mathf.Pow(
+                    sensitivity,
+                    PsychicSensitivityExponent);
+
+            if (amount <= 0f)
+                return;
 
             float before = tracker.EntropyValue;
 

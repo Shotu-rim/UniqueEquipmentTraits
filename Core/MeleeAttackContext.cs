@@ -14,6 +14,28 @@ namespace UniqueEquipmentTraits.Core
         public bool DamageDealt { get; set; }
         public float DamageAmount { get; private set; }
         public float BleedingBeforeAttack { get; }
+        public bool ArmorPiercingActivated { get; internal set; }
+
+        public float ArmorPiercingStrength { get; internal set; }
+
+        public RimWorld.WeaponTraitDef PrismaticSelectedTrait
+        {
+            get;
+            internal set;
+        }
+
+        public bool PrismaticActivationRolled
+        {
+            get;
+            internal set;
+        }
+
+        public bool PrismaticActivated
+        {
+            get;
+            internal set;
+        }
+
 
         private readonly HashSet<BodyPartRecord> hitParts =
             new HashSet<BodyPartRecord>();
@@ -63,6 +85,10 @@ namespace UniqueEquipmentTraits.Core
             if (injuryDef != null)
                 partInjuryDefs[part] = injuryDef;
         }
+
+
+       
+
 
         public MeleeAttackContext(
             Pawn attacker,

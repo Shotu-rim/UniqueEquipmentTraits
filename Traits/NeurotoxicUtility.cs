@@ -115,8 +115,15 @@ namespace UniqueEquipmentTraits
 
 
 
-        public static void ApplyNeurotoxic(Pawn victim, float effectStrength)
+        public static void ApplyNeurotoxic(
+            Pawn victim,
+            float effectStrength,
+            out int affectedCapacities,
+            out float appliedWeakening)
         {
+            affectedCapacities = 0;
+            appliedWeakening = 0f;
+
             if (victim == null || victim.Dead || effectStrength <= 0f)
                 return;
 
@@ -260,8 +267,13 @@ namespace UniqueEquipmentTraits
                     newHediff.Initialize(target.Capacity, amount);
                     victim.health.AddHediff(newHediff, part);
                 }
+
+                // Zliczamy tylko faktycznie nałożone osłabienie.
+                affectedCapacities++;
+                appliedWeakening += amount;
             }
         }
+
 
 
         public static void ProcessNaturalRecovery(Pawn pawn)
@@ -269,11 +281,10 @@ namespace UniqueEquipmentTraits
             if (pawn == null || pawn.Dead || !pawn.RaceProps.IsFlesh)
                 return;
 
-            if (pawn.needs?.food != null && pawn.needs.food.Starving)
-                return;
-
             List<Hediff_Neurotoxic> neurotoxins =
                 new List<Hediff_Neurotoxic>();
+
+            float totalToxicity = 0f;
 
             foreach (Hediff hediff in pawn.health.hediffSet.hediffs)
             {
@@ -281,6 +292,7 @@ namespace UniqueEquipmentTraits
                     neurotoxic.Severity > 0f)
                 {
                     neurotoxins.Add(neurotoxic);
+                    totalToxicity += neurotoxic.Severity;
                 }
             }
 
@@ -290,27 +302,56 @@ namespace UniqueEquipmentTraits
             // Jedna losowa instancja otrzymuje porcję regeneracji.
             Hediff_Neurotoxic selected = neurotoxins.RandomElement();
 
-            // Bazowa szybkość regeneracji.
-            float recovery = 0.01f;
+            const float baseRecovery = 0.01f;
+            const float minToxicityFactor = 0.25f;
+            const float minFinalFactor = 0.10f;
+            const float starvationMultiplier = 0.40f;
+
+            // Im większe nagromadzenie neurotoksyn,
+            // tym wolniejsza naturalna regeneracja.
+            // Samo zatrucie nie obniża tempa poniżej 25%.
+            float toxicityFactor = UnityEngine.Mathf.Max(
+                minToxicityFactor,
+                1f / (1f + totalToxicity));
+
+            float recoveryFactor = toxicityFactor;
+
+            // Głód dodatkowo spowalnia regenerację,
+            // ale nie zatrzymuje jej całkowicie.
+            if (pawn.needs?.food != null &&
+                pawn.needs.food.Starving)
+            {
+                recoveryFactor *= starvationMultiplier;
+            }
 
             // Odpoczynek i łóżko przyspieszają regenerację.
             if (pawn.GetPosture() != PawnPosture.Standing)
             {
-                recovery *= 1.5f;
+                recoveryFactor *= 1.5f;
 
                 Building_Bed bed = pawn.CurrentBed();
 
                 if (bed != null)
                 {
-                    recovery *= 1f + bed.def.building.bed_healPerDay / 10f;
+                    recoveryFactor *=
+                        1f + bed.def.building.bed_healPerDay / 10f;
                 }
             }
 
-            // Współczynnik regeneracji organizmu.
-            recovery *= pawn.GetStatValue(StatDefOf.InjuryHealingFactor);
+            // Uwzględniamy współczynnik leczenia organizmu.
+            recoveryFactor *=
+                UnityEngine.Mathf.Max(
+                    0f,
+                    pawn.GetStatValue(StatDefOf.InjuryHealingFactor));
 
-            if (recovery <= 0f)
-                return;
+            // Bezwzględne minimum: 10% bazowej regeneracji.
+            // Obowiązuje również podczas głodu i przy
+            // zerowym InjuryHealingFactor.
+            recoveryFactor = UnityEngine.Mathf.Max(
+                minFinalFactor,
+                recoveryFactor);
+
+            float recovery = baseRecovery * recoveryFactor;
 
             selected.Severity -= recovery;
 
@@ -323,6 +364,7 @@ namespace UniqueEquipmentTraits
                 pawn.health.Notify_HediffChanged(selected);
             }
         }
+
 
 
         public static void ApplyGlitterworldTreatment(

@@ -8,7 +8,9 @@ namespace UniqueEquipmentTraits.Effects
     {
         public override void Apply(UETEffectContext context)
         {
-            if (context == null)
+            if (context == null ||
+                context.Victim == null ||
+                context.EffectStrength <= 0f)
                 return;
 
             NaniteDisruptionResult result =
@@ -19,64 +21,36 @@ namespace UniqueEquipmentTraits.Effects
             if (result == null || result.Parts.Count == 0)
                 return;
 
-            string attacker = context.Attacker.LabelShort;
+            string attacker =
+                context.Attacker?.LabelShort ?? "Unknown attacker";
+
             string victim = context.Victim.LabelShort;
 
-            if (result.IsMechanoid)
-            {
-                ReportMechanoid(
-                    context,
-                    result,
-                    attacker,
-                    victim);
-            }
-            else
-            {
-                ReportImplant(
-                    context,
-                    result,
-                    attacker,
-                    victim);
-            }
-        }
-
-        private static void ReportImplant(
-            UETEffectContext context,
-            NaniteDisruptionResult result,
-            string attacker,
-            string victim)
-        {
-            NaniteDisruptionPartResult part =
-                result.Parts[0];
-
-            context.Report(
-                $"{attacker} disrupted {victim}'s nanite systems, " +
-                $"degrading {part.PartName} by " +
-                $"{part.AppliedPercent:F1} percentage points " +
-                $"(total degradation: {part.TotalPercent:F1}%).");
-        }
-
-        private static void ReportMechanoid(
-            UETEffectContext context,
-            NaniteDisruptionResult result,
-            string attacker,
-            string victim)
-        {
             List<string> details = new List<string>();
+
+            float totalApplied = 0f;
 
             foreach (NaniteDisruptionPartResult part
                 in result.Parts)
             {
+                totalApplied += part.AppliedPercent;
+
                 details.Add(
                     $"{part.PartName}: " +
-                    $"+{part.AppliedPercent:F1} percentage points " +
+                    $"+{part.AppliedPercent:F1} pp " +
                     $"(total: {part.TotalPercent:F1}%)");
             }
 
+            string targetType = result.IsMechanoid
+                ? "mechanical components"
+                : "implants";
+
             context.Report(
-                $"{attacker} disrupted {victim}'s mechanical systems, " +
-                $"degrading {result.Parts.Count} " +
-                $"{(result.Parts.Count == 1 ? "body part" : "body parts")}: " +
+                $"{attacker} released disruptive nanites " +
+                $"into {victim}, degrading " +
+                $"{result.Parts.Count} {targetType} " +
+                $"by a total of {totalApplied:F1} " +
+                $"percentage points: " +
                 string.Join("; ", details) + ".");
         }
     }

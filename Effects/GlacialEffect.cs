@@ -1,6 +1,7 @@
 ﻿
-using RimWorld;
+using System;
 using System.Collections.Generic;
+using RimWorld;
 using Verse;
 using static Verse.DamageWorker;
 
@@ -9,6 +10,7 @@ namespace UniqueEquipmentTraits.Effects
     public class GlacialEffect : UETEffect
     {
         private const float FrostbiteMultiplier = 10f;
+        private const float DamageScaling = 0.5f;
 
         public override void Apply(UETEffectContext context)
         {
@@ -25,10 +27,8 @@ namespace UniqueEquipmentTraits.Effects
                 victim.RaceProps.IsMechanoid)
                 return;
 
-            float frostbiteDamage =
-                context.EffectStrength * FrostbiteMultiplier;
-
-            if (frostbiteDamage <= 0f)
+            if (context.HitParts == null ||
+                context.HitParts.Count == 0)
                 return;
 
             DamageDef frostbiteDef =
@@ -40,14 +40,37 @@ namespace UniqueEquipmentTraits.Effects
                 return;
             }
 
-            if (context.HitParts == null)
+            // Bazowe obrażenia zależne od EffectStrength.
+            float baseFrostbiteDamage =
+                context.EffectStrength * FrostbiteMultiplier;
+
+            // Łączne obrażenia pierwotnego ataku.
+            float originalDamage = Math.Max(0f, context.DamageAmount);
+
+            // Powolny wzrost obrażeń Glacial.
+            // Przy 1 obrażeniu nie ma dodatkowego bonusu.
+            float bonusDamage =
+                DamageScaling *
+                (float)Math.Sqrt(Math.Max(0f, originalDamage - 1f));
+
+            // Jednakowe obrażenia bazowe na każdą
+            // trafioną część ciała.
+            float frostbiteDamage =
+                baseFrostbiteDamage + bonusDamage;
+
+            if (frostbiteDamage <= 0f)
                 return;
 
             int partsAffected = 0;
+            float totalDamageDealt = 0f;
+
             List<string> affectedParts = new List<string>();
 
             foreach (BodyPartRecord part in context.HitParts)
             {
+                if (victim.Dead)
+                    break;
+
                 if (part == null)
                     continue;
 
@@ -77,19 +100,23 @@ namespace UniqueEquipmentTraits.Effects
                 if (result != null && result.totalDamageDealt > 0f)
                 {
                     partsAffected++;
+
+                    totalDamageDealt += result.totalDamageDealt;
+
                     affectedParts.Add(part.LabelCap);
                 }
             }
 
+            // Combat Log: raportujemy rzeczywiste
+            // obrażenia, a nie wyłącznie bazowe.
             if (partsAffected > 0)
             {
-
                 context.Report(
                     $"{context.Attacker.LabelShort} inflicted frostbite on " +
-                    $"{context.Victim.LabelShort}, affecting {partsAffected} " +
-                    $"body part(s) with {frostbiteDamage:F1} base damage each: " +
+                    $"{victim.LabelShort}, affecting {partsAffected} " +
+                    $"body part(s) for {totalDamageDealt:F1} total damage " +
+                    $"({frostbiteDamage:F1} base damage per part): " +
                     $"{string.Join(", ", affectedParts)}.");
-
             }
         }
     }

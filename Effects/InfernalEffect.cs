@@ -1,13 +1,16 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using RimWorld;
 using Verse;
+using static Verse.DamageWorker;
 
 namespace UniqueEquipmentTraits.Effects
 {
     public class InfernalEffect : UETEffect
     {
         private const float BurnMultiplier = 10f;
+        private const float DamageScaling = 0.5f;
 
         public override void Apply(UETEffectContext context)
         {
@@ -24,58 +27,95 @@ namespace UniqueEquipmentTraits.Effects
                 victim.RaceProps.IsMechanoid)
                 return;
 
-            float burnSeverity =
-                context.EffectStrength * BurnMultiplier;
-
-            if (burnSeverity <= 0f)
+            if (context.HitParts == null ||
+                context.HitParts.Count == 0)
                 return;
 
-            HediffDef burnDef =
-                DefDatabase<HediffDef>.GetNamedSilentFail("Burn");
+            DamageDef burnDef = DamageDefOf.Burn;
 
             if (burnDef == null)
             {
-                Log.Error("[UET] Missing HediffDef: Burn");
+                Log.Error("[UET] Missing DamageDef: Burn");
                 return;
             }
 
-            int burnsApplied = 0;
-            List<string> burnedParts = new List<string>();
+            // Podstawowe obrażenia zależne od jakości broni.
+            float baseBurnDamage =
+                context.EffectStrength * BurnMultiplier;
+
+            // Łagodne skalowanie od łącznych obrażeń ataku.
+            float originalDamage =
+                Math.Max(0f, context.DamageAmount);
+
+            float bonusDamage =
+                DamageScaling *
+                (float)Math.Sqrt(
+                    Math.Max(0f, originalDamage - 1f));
+
+            float burnDamage =
+                baseBurnDamage + bonusDamage;
+
+            if (burnDamage <= 0f)
+                return;
+
+            int partsAffected = 0;
+            float totalDamageDealt = 0f;
+
+            List<string> burnedParts =
+                new List<string>();
 
             foreach (BodyPartRecord part in context.HitParts)
             {
+                if (victim.Dead)
+                    break;
+
                 if (part == null)
                     continue;
 
-                // Nie nakładamy poparzeń na brakujące części.
+                // Pomijamy brakujące części ciała.
                 if (victim.health.hediffSet.PartIsMissing(part))
                     continue;
 
-                Hediff_Injury burn =
-                    HediffMaker.MakeHediff(
-                        burnDef, victim, part) as Hediff_Injury;
+                DamageInfo dinfo = new DamageInfo(
+                    burnDef,
+                    burnDamage,
+                    0f,
+                    -1f,
+                    context.Attacker
+                );
 
-                if (burn == null)
-                    continue;
+                // Obrażenia wyłącznie na trafionej części.
+                dinfo.SetHitPart(part);
 
-                burn.Severity = burnSeverity;
+                // Infernal ignoruje pancerz.
+                dinfo.SetIgnoreArmor(true);
 
-                victim.health.AddHediff(burn, part);
+                // Bez propagacji na inne części ciała.
+                dinfo.SetAllowDamagePropagation(false);
 
-                burnsApplied++;
-                burnedParts.Add(part.LabelCap);
+                DamageResult result =
+                    victim.TakeDamage(dinfo);
+
+                if (result != null &&
+                    result.totalDamageDealt > 0f)
+                {
+                    partsAffected++;
+
+                    totalDamageDealt +=
+                        result.totalDamageDealt;
+
+                    burnedParts.Add(part.LabelCap);
+                }
             }
 
-            if (burnsApplied > 0)
+            if (partsAffected > 0)
             {
-
                 context.Report(
-                    $"{context.Attacker.LabelShort} inflicted " +
-                    $"{burnsApplied} {(burnsApplied == 1 ? "burn" : "burns")} " +
-                    $"on {context.Victim.LabelShort}, each with a severity " +
-                    $"of {burnSeverity:F1}, affecting: " +
+                    $"{context.Attacker.LabelShort} inflicted burns on " +
+                    $"{victim.LabelShort}, affecting {partsAffected} " +
+                    $"body part(s) for {totalDamageDealt:F1} total damage " +
+                    $"({burnDamage:F1} base damage per part): " +
                     $"{string.Join(", ", burnedParts)}.");
-
             }
         }
     }

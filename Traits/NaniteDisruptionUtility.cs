@@ -1,6 +1,7 @@
 ﻿
 using System.Collections.Generic;
 using RimWorld;
+using UnityEngine;
 using Verse;
 using UniqueEquipmentTraits.Effects;
 using UniqueEquipmentTraits.Implants;
@@ -11,6 +12,18 @@ namespace UniqueEquipmentTraits.Traits
     internal static class NaniteDisruptionUtility
     {
         private const float MaxDamage = 0.60f;
+        private const int MaxInitialParts = 3;
+        private const int SpreadMultiplier = 2;
+        private const float Epsilon = 0.000001f;
+        private const float ImplantDamageMultiplier = 0.75f;
+        private const int MaxSpreadParts = 5;
+
+        private sealed class DamageTarget
+        {
+            internal BodyPartRecord Part;
+            internal HediffComp_NaniteDamage Comp;
+            internal float Weight;
+        }
 
         internal static NaniteDisruptionResult TryDisrupt(
             Pawn victim,
@@ -26,23 +39,22 @@ namespace UniqueEquipmentTraits.Traits
                 victim.RaceProps.IsMechanoid)
             {
                 return TryDisruptMechanoid(
-                    victim,
-                    effectStrength);
+                    victim, effectStrength);
             }
 
-            return TryDisruptImplant(
-                victim,
-                effectStrength);
+            return TryDisruptImplants(
+                victim, effectStrength);
         }
 
-        private static NaniteDisruptionResult TryDisruptImplant(
+        private static NaniteDisruptionResult TryDisruptImplants(
             Pawn victim,
             float effectStrength)
         {
-            List<HediffComp_NaniteDamage> eligibleImplants =
-                new List<HediffComp_NaniteDamage>();
+            List<DamageTarget> targets =
+                new List<DamageTarget>();
 
-            foreach (Hediff hediff in victim.health.hediffSet.hediffs)
+            foreach (Hediff hediff in
+                victim.health.hediffSet.hediffs)
             {
                 if (!(hediff is Hediff_AddedPart implant))
                     continue;
@@ -50,45 +62,44 @@ namespace UniqueEquipmentTraits.Traits
                 HediffComp_NaniteDamage comp =
                     implant.TryGetComp<HediffComp_NaniteDamage>();
 
-                if (comp == null)
+                if (comp == null ||
+                    comp.AccumulatedDamage >= MaxDamage)
                     continue;
 
-                if (comp.AccumulatedDamage >= MaxDamage)
-                    continue;
-
-                eligibleImplants.Add(comp);
+                targets.Add(new DamageTarget
+                {
+                    Part = implant.Part,
+                    Comp = comp
+                });
             }
 
-            if (eligibleImplants.Count == 0)
+            if (targets.Count == 0)
                 return null;
 
-            HediffComp_NaniteDamage selected =
-                eligibleImplants.RandomElement();
+            int initialCount =
+                Mathf.Min(MaxInitialParts, targets.Count);
 
-            float damageBefore = selected.AccumulatedDamage;
+            float budget =
+                effectStrength * initialCount * ImplantDamageMultiplier;
 
-            selected.ApplyDamage(effectStrength);
+            targets.Shuffle();
 
-            float damageAfter = selected.AccumulatedDamage;
-            float damageApplied = damageAfter - damageBefore;
+            int spreadCount = Mathf.Min(
+                targets.Count,
+                Mathf.Min(initialCount * 2, MaxSpreadParts));
 
-            if (damageApplied <= 0f)
-                return null;
+            targets.RemoveRange(
+                spreadCount,
+                targets.Count - spreadCount);
 
             NaniteDisruptionResult result =
                 new NaniteDisruptionResult();
 
             result.IsMechanoid = false;
 
-            result.Parts.Add(
-                new NaniteDisruptionPartResult
-                {
-                    PartName = selected.parent.Label,
-                    AppliedPercent = damageApplied * 100f,
-                    TotalPercent = damageAfter * 100f
-                });
+            DistributeDamage(targets, budget, result);
 
-            return result;
+            return result.Parts.Count > 0 ? result : null;
         }
 
         private static NaniteDisruptionResult TryDisruptMechanoid(
@@ -108,13 +119,14 @@ namespace UniqueEquipmentTraits.Traits
                 return null;
             }
 
-            HediffSet hediffSet = victim.health.hediffSet;
+            HediffSet hediffSet =
+                victim.health.hediffSet;
 
             List<BodyPartRecord> eligibleParts =
                 new List<BodyPartRecord>();
 
-            foreach (BodyPartRecord part
-                in victim.RaceProps.body.AllParts)
+            foreach (BodyPartRecord part in
+                victim.RaceProps.body.AllParts)
             {
                 if (hediffSet.PartIsMissing(part))
                     continue;
@@ -124,11 +136,11 @@ namespace UniqueEquipmentTraits.Traits
 
                 if (existing != null)
                 {
-                    HediffComp_NaniteDamage existingComp =
+                    HediffComp_NaniteDamage comp =
                         existing.TryGetComp<HediffComp_NaniteDamage>();
 
-                    if (existingComp != null &&
-                        existingComp.AccumulatedDamage >= MaxDamage)
+                    if (comp == null ||
+                        comp.AccumulatedDamage >= MaxDamage)
                         continue;
                 }
 
@@ -138,19 +150,21 @@ namespace UniqueEquipmentTraits.Traits
             if (eligibleParts.Count == 0)
                 return null;
 
+            int initialCount = Mathf.Min(
+                MaxInitialParts, eligibleParts.Count);
+
+            float budget = effectStrength * initialCount;
+
             eligibleParts.Shuffle();
 
-            int partsToDamage =
-                eligibleParts.Count < 3
-                    ? eligibleParts.Count
-                    : 3;
+            int spreadCount = Mathf.Min(
+                eligibleParts.Count,
+                Mathf.Min(initialCount * 2, MaxSpreadParts));
 
-            NaniteDisruptionResult result =
-                new NaniteDisruptionResult();
+            List<DamageTarget> targets =
+                new List<DamageTarget>();
 
-            result.IsMechanoid = true;
-
-            for (int i = 0; i < partsToDamage; i++)
+            for (int i = 0; i < spreadCount; i++)
             {
                 BodyPartRecord part = eligibleParts[i];
 
@@ -161,51 +175,153 @@ namespace UniqueEquipmentTraits.Traits
                 {
                     degradation =
                         HediffMaker.MakeHediff(
-                            degradationDef,
-                            victim,
-                            part)
+                            degradationDef, victim, part)
                         as Hediff_NaniteMechanicalDegradation;
 
                     if (degradation == null)
                         continue;
 
                     victim.health.AddHediff(
-                        degradation,
-                        part);
+                        degradation, part);
                 }
 
                 HediffComp_NaniteDamage comp =
                     degradation.TryGetComp<HediffComp_NaniteDamage>();
 
-                if (comp == null)
+                if (comp == null ||
+                    comp.AccumulatedDamage >= MaxDamage)
                     continue;
 
-                float damageBefore = comp.AccumulatedDamage;
+                targets.Add(new DamageTarget
+                {
+                    Part = part,
+                    Comp = comp
+                });
+            }
 
-                comp.ApplyDamage(effectStrength);
+            NaniteDisruptionResult result =
+                new NaniteDisruptionResult();
 
-                float damageAfter = comp.AccumulatedDamage;
-                float damageApplied =
-                    damageAfter - damageBefore;
+            result.IsMechanoid = true;
 
-                if (damageApplied <= 0f)
+            DistributeDamage(targets, budget, result);
+
+            return result.Parts.Count > 0 ? result : null;
+        }
+
+        private static void DistributeDamage(
+            List<DamageTarget> targets,
+            float budget,
+            NaniteDisruptionResult result)
+        {
+            if (targets.Count == 0 || budget <= 0f)
+                return;
+
+            float[] allocations = new float[targets.Count];
+
+            // Losowe wagi wyznaczamy raz na aktywację.
+            foreach (DamageTarget target in targets)
+            {
+                target.Weight = Rand.Range(0.1f, 1f);
+            }
+
+            float remaining = budget;
+
+            // Iteracyjnie rozdzielamy budżet.
+            // Gdy komponent osiągnie limit,
+            // jego niewykorzystana pula wraca do podziału.
+            for (int iteration = 0;
+                iteration < targets.Count + 1 &&
+                remaining > Epsilon;
+                iteration++)
+            {
+                float totalWeight = 0f;
+
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    float capacity =
+                        MaxDamage -
+                        targets[i].Comp.AccumulatedDamage -
+                        allocations[i];
+
+                    if (capacity > Epsilon)
+                        totalWeight += targets[i].Weight;
+                }
+
+                if (totalWeight <= 0f)
+                    break;
+
+                float distributed = 0f;
+
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    DamageTarget target = targets[i];
+
+                    float capacity =
+                        MaxDamage -
+                        target.Comp.AccumulatedDamage -
+                        allocations[i];
+
+                    if (capacity <= Epsilon)
+                        continue;
+
+                    float share =
+                        remaining *
+                        target.Weight / totalWeight;
+
+                    float amount = Mathf.Min(
+                        share, capacity);
+
+                    allocations[i] += amount;
+                    distributed += amount;
+                }
+
+                if (distributed <= Epsilon)
+                    break;
+
+                remaining = Mathf.Max(
+                    0f, remaining - distributed);
+            }
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                float amount = allocations[i];
+
+                if (amount <= Epsilon)
                     continue;
 
-                degradation.Severity = damageAfter;
+                DamageTarget target = targets[i];
+
+                float before = target.Comp.AccumulatedDamage;
+
+                target.Comp.ApplyDamage(amount);
+
+                float after = target.Comp.AccumulatedDamage;
+                float applied = after - before;
+
+                if (applied <= Epsilon)
+                    continue;
+
+                if (target.Comp.parent is
+                    Hediff_NaniteMechanicalDegradation degradation)
+                {
+                    degradation.Severity = after;
+                }
+
+                string partName =
+                    target.Comp.parent.Label;
+
+                if (target.Part != null)
+                    partName = target.Part.Label;
 
                 result.Parts.Add(
                     new NaniteDisruptionPartResult
                     {
-                        PartName = part.Label,
-                        AppliedPercent = damageApplied * 100f,
-                        TotalPercent = damageAfter * 100f
+                        PartName = partName,
+                        AppliedPercent = applied * 100f,
+                        TotalPercent = after * 100f
                     });
             }
-
-            if (result.Parts.Count == 0)
-                return null;
-
-            return result;
         }
 
         private static Hediff_NaniteMechanicalDegradation

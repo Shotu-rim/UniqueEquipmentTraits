@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using RimWorld;
 using Verse;
@@ -7,8 +8,15 @@ namespace UniqueEquipmentTraits.Effects
 {
     public class FracturingEffect : UETEffect
     {
+        private const float CrackCoefficient = 5f;
+        private const float HealthReference = 30f;
+        private const double HealthExponent = 0.75;
+
         public override void Apply(UETEffectContext context)
         {
+            if (context == null || context.PartDamage == null)
+                return;
+
             Pawn victim = context.Victim;
 
             if (victim == null || victim.Dead || victim.health == null)
@@ -16,15 +24,32 @@ namespace UniqueEquipmentTraits.Effects
 
             HediffSet hediffSet = victim.health.hediffSet;
 
-            List<BodyPartRecord> candidates =
+            if (hediffSet == null)
+                return;
+
+            HediffDef crackDef =
+                DefDatabase<HediffDef>.GetNamedSilentFail("Crack");
+
+            if (crackDef == null)
+            {
+                Log.Error("[UET] Fracturing: Crack HediffDef not found.");
+                return;
+            }
+
+            // Zbieramy cele przed modyfikacją stanu zdrowia.
+            List<KeyValuePair<BodyPartRecord, float>> bones =
+                new List<KeyValuePair<BodyPartRecord, float>>();
+
+            List<BodyPartRecord> replacements =
                 new List<BodyPartRecord>();
 
             foreach (KeyValuePair<BodyPartRecord, float> entry
                 in context.PartDamage)
             {
                 BodyPartRecord part = entry.Key;
+                float damage = entry.Value;
 
-                if (part == null || entry.Value <= 0f)
+                if (part == null || damage <= 0f)
                     continue;
 
                 if (!part.def.destroyableByDamage)
@@ -38,89 +63,121 @@ namespace UniqueEquipmentTraits.Effects
 
                 if (hediffSet.HasDirectlyAddedPartFor(part))
                 {
-                    candidates.Add(part);
+                    replacements.Add(part);
                     continue;
                 }
 
-                if (hediffSet
-                    .PartOrAnyAncestorHasDirectlyAddedParts(part))
+                // Nie traktujemy części pod protezą
+                // jako naturalnych kości.
+                if (hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(part))
                     continue;
 
                 if (!IsBone(part))
                     continue;
 
-                candidates.Add(part);
+                bones.Add(entry);
             }
 
-            // Diagnostyka także wtedy, gdy nie znaleziono celu.
-            if (candidates.Count == 0)
+            // Jedna losowa trafiona część zastępcza.
+            // Wybieramy ją przed nakładaniem Crack.
+            BodyPartRecord replacementTarget = null;
+            string replacementName = null;
+
+            if (replacements.Count > 0)
             {
-                return;
-            }
+                replacementTarget = replacements.RandomElement();
 
-
-            BodyPartRecord target = candidates.RandomElement();
-
-            bool isBionic =
-                hediffSet.HasDirectlyAddedPartFor(target);
-
-            string implantName = "unknown replacement";
-
-            if (isBionic)
-            {
                 foreach (Hediff hediff in hediffSet.hediffs)
                 {
-                    if (hediff.Part == target &&
+                    if (hediff.Part == replacementTarget &&
                         hediff is Hediff_AddedPart)
                     {
-                        implantName = hediff.Label;
+                        replacementName = hediff.Label;
                         break;
                     }
                 }
-
-                DestroyAddedPart(victim, target);
-            }
-            else
-            {
-                DestroyBone(victim, target);
             }
 
-            if (hediffSet.PartIsMissing(target))
+            // Crack na każdej trafionej naturalnej kości.
+            foreach (KeyValuePair<BodyPartRecord, float> entry in bones)
             {
-                if (isBionic)
+                if (victim.Dead)
+                    break;
+
+                BodyPartRecord part = entry.Key;
+
+                // Poprzednie obrażenia mogły zniszczyć
+                // część nadrzędną.
+                if (hediffSet.PartIsMissing(part))
+                    continue;
+
+                if (hediffSet.GetPartHealth(part) <= 0f)
+                    continue;
+
+                if (hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(part))
+                    continue;
+
+                float maxHealth = part.def.GetMaxHealth(victim);
+
+                if (maxHealth <= 0f)
+                    continue;
+
+                float damage = entry.Value;
+
+                float healthMultiplier = (float)Math.Pow(
+                    maxHealth / HealthReference,
+                    HealthExponent);
+
+                float crackDamage =
+                    CrackCoefficient *
+                    (float)Math.Sqrt(damage) *
+                    context.EffectStrength *
+                    healthMultiplier;
+
+                if (crackDamage <= 0f)
+                    continue;
+
+                Hediff_Injury injury = (Hediff_Injury)HediffMaker.MakeHediff(crackDef, victim, part);
+
+                injury.Severity = crackDamage;
+                injury.destroysBodyParts = true;
+
+                // Oznaczamy obrażenie jako pochodzące od Fracturing.
+                injury.sourceHediffDef =
+                    DefDatabase<HediffDef>.GetNamed("UET_FracturingSource");
+
+                victim.health.AddHediff(injury);
+
+                if (hediffSet.PartIsMissing(part))
                 {
                     context.Report(
-                        $"{context.Attacker.LabelShort} destroyed " +
-                        $"{context.Victim.LabelShort}'s {implantName} " +
-                        $"({target.Label}).");
+                        $"{context.Attacker.LabelShort} shattered " +
+                        $"{victim.LabelShort}'s {part.Label}.");
                 }
                 else
                 {
                     context.Report(
-                        $"{context.Attacker.LabelShort} shattered " +
-                        $"{context.Victim.LabelShort}'s {target.Label}.");
+                        $"{context.Attacker.LabelShort} fractured {victim.LabelShort}'s {part.Label}, dealing {crackDamage:F1} additional damage.");
                 }
             }
 
-        }
+            // Maksymalnie jedna część zastępcza.
+            if (replacementTarget != null &&
+                !victim.Dead &&
+                !hediffSet.PartIsMissing(replacementTarget) &&
+                hediffSet.HasDirectlyAddedPartFor(replacementTarget))
+            {
+                DestroyAddedPart(victim, replacementTarget);
 
-        private static void DestroyBone(
-            Pawn victim,
-            BodyPartRecord target)
-        {
-            float remainingHealth =
-                victim.health.hediffSet.GetPartHealth(target);
-
-            Hediff_Injury injury =
-                (Hediff_Injury)HediffMaker.MakeHediff(
-                    DefDatabase<HediffDef>.GetNamed("Crack"),
-                    victim,
-                    target);
-
-            injury.destroysBodyParts = true;
-            injury.Severity = remainingHealth + 1f;
-
-            victim.health.AddHediff(injury);
+                if (hediffSet.PartIsMissing(replacementTarget))
+                {
+                    context.Report(
+                        $"{context.Attacker.LabelShort} destroyed " +
+                        $"{victim.LabelShort}'s " +
+                        $"{replacementName ?? "replacement"} " +
+                        $"({replacementTarget.Label}).");
+                }
+            }
         }
 
         private static void DestroyAddedPart(
@@ -133,7 +190,7 @@ namespace UniqueEquipmentTraits.Effects
                     victim,
                     target);
 
-            missing.IsFresh = true;
+            missing.IsFresh = false;
 
             victim.health.AddHediff(missing);
         }

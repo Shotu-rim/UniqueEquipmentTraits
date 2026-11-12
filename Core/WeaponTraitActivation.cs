@@ -1,4 +1,4 @@
-﻿
+
 using RimWorld;
 using Verse;
 using UniqueEquipmentTraits.Traits;
@@ -17,14 +17,79 @@ namespace UniqueEquipmentTraits.Core
                 context.Weapon == null)
                 return;
 
-            if (context.Attacker.Dead ||
-                !context.DamageDealt)
-                return;
+            
 
             RimWorld.WeaponTraitDef trait =
                 GetUETTrait(context.Weapon);
 
             if (trait == null)
+                return;
+
+
+
+            if (trait.defName == "UET_Prismatic")
+            {
+                PrismaticEffect.Resolve(context);
+                return;
+            }
+
+
+            if (trait.defName == "UET_Flurry")
+            {
+                if (context.DamageDealt && !context.Attacker.Dead)
+                {
+                    CompWeaponTrait comp =
+                        context.Weapon.TryGetComp<CompWeaponTrait>();
+
+                    if (comp == null)
+                    {
+                        Log.Warning(
+                            "[UET Flurry] Brak CompWeaponTrait na broni: " +
+                            context.Weapon.LabelCap);
+                    }
+                    else
+                    {
+                        bool flurryActivated =
+                            comp.TryActivateFlurry(context.Attacker);
+
+                        if (flurryActivated)
+                        {
+                            Log.Message(
+                                "[UET Flurry] ACTIVATED! " +
+                                "Broń: " + context.Weapon.LabelCap +
+                                ", Pawn: " + context.Attacker.LabelShort);
+                        }
+                    }
+                }
+
+                return;
+            }
+
+
+            if (trait.defName == "UET_Tailwind")
+            {
+                if (context.DamageDealt && !context.Attacker.Dead)
+                {
+                    CompWeaponTrait comp =
+                        context.Weapon.TryGetComp<CompWeaponTrait>();
+
+                    if (comp == null)
+                    {
+                        Log.Warning(
+                            "[UET Tailwind] Missing CompWeaponTrait on weapon: " +
+                            context.Weapon.LabelCap);
+                    }
+                    else
+                    {
+                        comp.TryActivateTailwind(context.Attacker);
+                    }
+                }
+
+                return;
+            }
+
+
+            if (trait.defName == "UET_Sundering")
                 return;
 
             CompQuality qualityComp =
@@ -33,12 +98,46 @@ namespace UniqueEquipmentTraits.Core
             if (qualityComp == null)
                 return;
 
-            float activationChance =
-                WeaponTraitQuality.GetActivationChance(
-                    qualityComp.Quality);
+            // UET DIAGNOSTICS
+            UETActivationDiagnostics.RecordAttack(
+                qualityComp.Quality,
+                context.DamageDealt);
 
-            if (activationChance <= 0f ||
-                !Rand.Chance(activationChance))
+            if (context.Attacker.Dead ||
+                !context.DamageDealt)
+                return;
+
+            float activationChance =
+                 WeaponTraitQuality.GetActivationChance(
+                 qualityComp.Quality);
+
+            // Wyjątek dla Nanite Disruptor.
+            // Nie zmieniamy globalnej tabeli jakości.
+            if (trait.defName == "UET_NaniteDisruptor")
+            {
+                switch (qualityComp.Quality)
+                {
+                    case QualityCategory.Masterwork:
+                        activationChance = 0.35f;
+                        break;
+
+                    case QualityCategory.Legendary:
+                        activationChance = 0.45f;
+                        break;
+                }
+            }
+
+            if (activationChance <= 0f)
+                return;
+
+            bool activated = Rand.Chance(activationChance);
+
+            // UET DIAGNOSTICS
+            UETActivationDiagnostics.RecordRoll(
+                qualityComp.Quality,
+                activated);
+
+            if (!activated)
                 return;
 
             float effectStrength =
@@ -58,9 +157,16 @@ namespace UniqueEquipmentTraits.Core
                     context.PartDamage,
                     context.PartInjuryDefs);
 
-            UETEffectDispatcher.TryApply(
-                trait,
-                effectContext);
+            bool dispatched = UETEffectDispatcher.TryApply(
+    trait,
+    effectContext);
+
+            // UET DIAGNOSTICS
+            if (dispatched)
+            {
+                UETActivationDiagnostics.RecordDispatch(
+                    qualityComp.Quality);
+            }
         }
 
 

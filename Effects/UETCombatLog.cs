@@ -46,6 +46,8 @@ namespace UniqueEquipmentTraits.Effects
                     victim,
                     description);
 
+         
+
             Find.BattleLog.Add(entry);
         }
     }
