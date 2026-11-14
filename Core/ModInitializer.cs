@@ -17,10 +17,47 @@ namespace UniqueEquipmentTraits.Core
             LongEventHandler.ExecuteWhenFinished(() =>
             {
                 ArmorTraitCompInjector.Inject();
-                ArmorTraitDiagnostics.Run();
-          //      Log.Message("[UET ARMOR TEST] TEST STARTED");
+                var candidates =
+    UniqueArmorCandidateFinder.GetEligibleApparel();
 
-                
+                int stuffCount = 0;
+                int nonStuffCount = 0;
+
+                foreach (ThingDef def in candidates)
+                {
+                    if (def.MadeFromStuff)
+                        stuffCount++;
+                    else
+                        nonStuffCount++;
+                }
+
+                Log.Message(
+                    "[UET ARMOR UNIQUE] Eligible apparel: " +
+                    candidates.Count +
+                    " | Stuff-based: " + stuffCount +
+                    " | Non-stuff: " + nonStuffCount);
+                ArmorTraitDiagnostics.Run();
+                ThingDef testArmor =
+            DefDatabase<ThingDef>.GetNamedSilentFail(
+                "UET_Unique_Test_Armor");
+
+                if (testArmor != null)
+                {
+                    bool eligible =
+                        ArmorTraitEligibility.CanReceiveArmorTrait(
+                            testArmor);
+
+                    Log.Message(
+                        "[UET ARMOR UNIQUE TEST] Post-load eligibility: " +
+                        eligible +
+                        " | Original: Apparel_AirwireHeadset" +
+                        " | Has CompUniqueWeapon: " +
+                        testArmor.HasComp<CompUniqueWeapon>() +
+                        " | Has CompArmorTraits: " +
+                        testArmor.HasComp<CompArmorTraits>());
+                }
+
+
 
             });
         }
@@ -39,6 +76,7 @@ namespace UniqueEquipmentTraits.Core
                 Log.Message("[UET] Starting unique variant generator");
 
                 UniqueWeaponDefGenerator.Generate(hotReload);
+                UniqueArmorTestDefGenerator.Generate(hotReload);
 
                 Log.Message("[UET] Unique variant generator FINISHED");
             }

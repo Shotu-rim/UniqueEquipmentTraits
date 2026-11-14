@@ -69,6 +69,7 @@
     <Compile Include="Core\Armor\ArmorTraitActivationContext.cs" />
     <Compile Include="Core\Armor\ArmorTraitAnatomy.cs" />
     <Compile Include="Core\Armor\ArmorTraitCategory.cs" />
+    <Compile Include="Core\Armor\ArmorTraitCompatibility.cs" />
     <Compile Include="Core\Armor\ArmorTraitCompInjector.cs" />
     <Compile Include="Core\Armor\ArmorTraitCoverage.cs" />
     <Compile Include="Core\Armor\ArmorTraitDef.cs" />
@@ -83,6 +84,8 @@
     <Compile Include="Core\Armor\ArmorTraitWorker.cs" />
     <Compile Include="Core\Armor\ArmorTraitWorker_Default.cs" />
     <Compile Include="Core\Armor\CompArmorTraits.cs" />
+    <Compile Include="Core\Armor\UniqueArmorTestDefGenerator.cs" />
+    <Compile Include="Core\Armor\UniqueArmorVariantRegistry.cs" />
     <Compile Include="Core\MeleeAttackContext.cs" />
     <Compile Include="Core\ModInitializer.cs" />
     <Compile Include="Core\NaniteImplantDefInjector.cs" />
@@ -158,6 +161,9 @@
     <Compile Include="Traits\NaniteDisruptionUtility.cs" />
     <Compile Include="Traits\NeurotoxicUtility.cs" />
     <Compile Include="Traits\UETTraitExtension.cs" />
+    <Compile Include="Utilities\Patch_CompUniqueWeapon_PostPostMake_Armor.cs" />
+    <Compile Include="Utilities\UETDevArmorSpawnContext.cs" />
+    <Compile Include="Utilities\UETDevArmorSpawner.cs" />
     <Compile Include="Utilities\UETDevSpawnContext.cs" />
     <Compile Include="Utilities\UETDevWeaponDiagnostics.cs" />
     <Compile Include="Utilities\UETDevWeaponSpawner.cs" />

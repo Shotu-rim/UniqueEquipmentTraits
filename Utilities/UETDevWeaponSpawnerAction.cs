@@ -9,7 +9,7 @@ namespace UniqueEquipmentTraits.DevTools
     {
         [DebugAction(
             "Unique Equipment Traits",
-            "Open UET Weapon Spawner",
+            "Open UET Equipment Spawner",
             allowedGameStates = AllowedGameStates.PlayingOnMap)]
         private static void OpenSpawner()
         {

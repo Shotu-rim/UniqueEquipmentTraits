@@ -1,6 +1,8 @@
 ﻿
-using System.Collections.Generic;
 using RimWorld;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Verse;
 
 namespace UniqueEquipmentTraits.Core.Armor
@@ -60,6 +62,64 @@ namespace UniqueEquipmentTraits.Core.Armor
             {
                 traits = new List<ArmorTraitDef>();
             }
+        }
+        public override string CompInspectStringExtra()
+        {
+            if (traits == null || traits.Count == 0)
+                return null;
+
+            return "WeaponTraits".Translate() + ": " +
+                traits.Where(t => t != null)
+                      .Select(t => t.label)
+                      .ToCommaList()
+                      .CapitalizeFirst();
+        }
+
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
+        {
+            if (traits == null || traits.Count == 0)
+                yield break;
+
+            List<ArmorTraitDef> validTraits =
+                traits.Where(t => t != null).ToList();
+
+            if (validTraits.Count == 0)
+                yield break;
+
+            StringBuilder description = new StringBuilder();
+
+            description.AppendLine(
+                "Stat_ThingUniqueWeaponTrait_Desc".Translate());
+            description.AppendLine();
+
+            foreach (ArmorTraitDef trait in validTraits)
+            {
+                description.AppendLine(
+                    trait.LabelCap.Colorize(ColorLibrary.Yellow));
+                description.AppendLine(trait.description);
+                description.AppendLine();
+            }
+
+            yield return new StatDrawEntry(
+                StatCategoryDefOf.BasicsImportant,
+                "Stat_ThingUniqueWeaponTrait_Label".Translate(),
+                validTraits.Select(t => t.label)
+                           .ToCommaList()
+                           .CapitalizeFirst(),
+                description.ToString(),
+                1104);
+        }
+
+        public override string CompTipStringExtra()
+        {
+            if (traits == null || traits.Count == 0)
+                return null;
+
+            return "WeaponTraits".Translate() + ": " +
+                traits.Where(t => t != null)
+                      .Select(t => t.label)
+                      .ToCommaList()
+                      .CapitalizeFirst();
         }
     }
 }
