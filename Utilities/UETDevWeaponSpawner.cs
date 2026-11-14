@@ -35,21 +35,20 @@ namespace UniqueEquipmentTraits.Utilities
                 quality != QualityCategory.Legendary)
                 return null;
 
-            // Only UET traits can be selected.
+            // Only UET traits can be selected
             if (trait.GetModExtension<UETTraitExtension>() == null)
                 return null;
 
             ThingDef spawnDef = originalDef;
 
-            // Use the generated UET variant when available.
+            // Use generated UET variant if available
             if (UniqueWeaponVariantRegistry.TryGetVariant(
                     originalDef, out ThingDef variant))
             {
                 spawnDef = variant;
             }
 
-            // A unique weapon component is required for
-            // the Odyssey trait initialization pipeline.
+            // Unique weapon component required for Odyssey trait pipeline
             if (!spawnDef.HasComp<CompUniqueWeapon>())
             {
                 Log.Warning(
@@ -78,8 +77,7 @@ namespace UniqueEquipmentTraits.Utilities
                 stuffDef = null;
             }
 
-            // Check whether the selected trait belongs to
-            // a category supported by this unique weapon.
+            // Check whether selected trait belongs to a category supported by this unique weapon
             CompProperties_UniqueWeapon uniqueProps =
                 spawnDef.comps
                     .OfType<CompProperties_UniqueWeapon>()

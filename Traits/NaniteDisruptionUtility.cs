@@ -219,7 +219,7 @@ namespace UniqueEquipmentTraits.Traits
 
             float[] allocations = new float[targets.Count];
 
-            // Losowe wagi wyznaczamy raz na aktywację.
+            // Weight per activation
             foreach (DamageTarget target in targets)
             {
                 target.Weight = Rand.Range(0.1f, 1f);
@@ -227,9 +227,7 @@ namespace UniqueEquipmentTraits.Traits
 
             float remaining = budget;
 
-            // Iteracyjnie rozdzielamy budżet.
-            // Gdy komponent osiągnie limit,
-            // jego niewykorzystana pula wraca do podziału.
+            // Targets different parts and spends effect on them, to the limit, unspent points are used on another part
             for (int iteration = 0;
                 iteration < targets.Count + 1 &&
                 remaining > Epsilon;

@@ -9,12 +9,12 @@ namespace UniqueEquipmentTraits.Traits
 {
     public class CompWeaponTrait : ThingComp
     {
-        // Flurry is stored on the weapon, never on shared Tool/VerbProperties.
+        // Flurry is stored on weapon only
         private int flurryCharges;
         private Pawn flurryOwner;
         private bool flurryLastAttack;
 
-        // Tailwind state is stored on the weapon.
+        // Tailwind is stored on weapon only
         private int tailwindCharges;
         private Pawn tailwindOwner;
 
@@ -91,8 +91,7 @@ namespace UniqueEquipmentTraits.Traits
             flurryLastAttack = false;
         }
 
-        // Activation occurs only after actual damage has been registered.
-        // The triggering attack is not charged and is not accelerated.
+        // Activation after damage, triggering attack is not accelerated
 
         public bool TryActivateFlurry(Pawn pawn)
         {
@@ -113,7 +112,7 @@ namespace UniqueEquipmentTraits.Traits
             return ActivateFlurry(pawn);
         }
 
-        // Called by Prismatic after its own successful activation roll.
+        // Prismatic call
         public bool ActivatePrismaticFlurry(Pawn pawn)
         {
             if (!PrismaticEffect.HasPrismatic(parent))
@@ -157,7 +156,7 @@ namespace UniqueEquipmentTraits.Traits
         }
 
 
-        // Called once per completed attack attempt, including misses and dodges.
+        // Consume charge whether attack hits or fails
         public void ConsumeFlurryAttempt(Pawn pawn)
         {
             if (!FlurryActiveFor(pawn))
@@ -208,7 +207,7 @@ namespace UniqueEquipmentTraits.Traits
             return TailwindEffect.HasTailwind(parent);
         }
 
-        // Removes the active effect and clears its state.
+        // Removes effect
         public void ClearTailwind()
         {
             TailwindEffect.RemoveHediff(tailwindOwner);
@@ -217,8 +216,7 @@ namespace UniqueEquipmentTraits.Traits
             tailwindOwner = null;
         }
 
-        // Activates only after a successful damaging melee attack.
-        // The triggering attack does not consume a charge.
+        // Active after successful attack
 
         public bool TryActivateTailwind(Pawn pawn)
         {
@@ -239,7 +237,7 @@ namespace UniqueEquipmentTraits.Traits
             return ActivateTailwind(pawn);
         }
 
-        // Called by Prismatic after its own successful activation roll.
+        // Prismatic call
         public bool ActivatePrismaticTailwind(Pawn pawn)
         {
             if (!PrismaticEffect.HasPrismatic(parent))
@@ -274,7 +272,7 @@ namespace UniqueEquipmentTraits.Traits
         }
 
 
-        // Checks whether this pawn currently benefits from Tailwind.
+        // Check the owner for Tailwind
         public bool TailwindActiveFor(Pawn pawn)
         {
             return tailwindCharges > 0 &&
@@ -282,7 +280,7 @@ namespace UniqueEquipmentTraits.Traits
                    TailwindEffect.CanUseEffect(parent, pawn);
         }
 
-        // Called once after a resolved incoming melee attack attempt.
+        // Consumes charge after being attacked
         public void ConsumeTailwindAttempt(Pawn pawn)
         {
             if (!TailwindActiveFor(pawn))
@@ -296,7 +294,6 @@ namespace UniqueEquipmentTraits.Traits
                 TailwindEffect.SyncHediff(pawn);
         }
 
-        // Returns the bonus to the final melee dodge probability.
         public float TailwindDodgeBonus()
         {
             CompQuality quality =
@@ -307,8 +304,6 @@ namespace UniqueEquipmentTraits.Traits
                 : TailwindEffect.DodgeBonus(quality.Quality);
         }
 
-
-        // Wyłącznie do ręcznego testowania traitów.
         private bool DebugSetTrait(RimWorld.WeaponTraitDef newTrait)
         {
             CompUniqueWeapon uniqueComp =
@@ -467,7 +462,6 @@ namespace UniqueEquipmentTraits.Traits
         {
             RimWorld.WeaponTraitDef trait = null;
 
-            // Statystyki wyłącznie dla natywnych Unique Weapons Odyssey.
             CompUniqueWeapon uniqueComp =
                 parent.TryGetComp<CompUniqueWeapon>();
 
@@ -489,8 +483,7 @@ namespace UniqueEquipmentTraits.Traits
             if (trait == null)
                 yield break;
 
-            // Odyssey samodzielnie wyświetla nazwę traita.
-            // UET pokazuje tylko dodatkowe parametry.
+            // Show trait
             CompQuality qualityComp =
                 parent.TryGetComp<CompQuality>();
 

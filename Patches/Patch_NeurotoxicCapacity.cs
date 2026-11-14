@@ -45,8 +45,7 @@ namespace UniqueEquipmentTraits
             weakening = UnityEngine.Mathf.Clamp(
                 weakening, 0f, 0.60f);
 
-            // Dodajemy wpis do szczegółów zdolności
-            // tylko wtedy, gdy lista jest dostępna.
+            // Add Hediff to Overview
             if (impactors != null)
             {
                 impactors.Insert(
@@ -58,8 +57,7 @@ namespace UniqueEquipmentTraits
                     });
             }
 
-            // Faktyczne osłabienie musi działać
-            // również wtedy, gdy impactors == null.
+            // Weaken is working even if no impactors
             __result *= 1f - weakening;
             __result = GenMath.RoundedHundredth(__result);
         }

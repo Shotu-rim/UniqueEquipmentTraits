@@ -23,8 +23,7 @@ namespace UniqueEquipmentTraits.Effects
                 out affectedCapacities,
                 out appliedWeakening);
 
-            // Nie zgłaszamy zatrucia, jeśli nie
-            // udało się nałożyć żadnego osłabienia.
+            // No toxic if impossible
             if (affectedCapacities <= 0 ||
                 appliedWeakening <= 0f)
             {

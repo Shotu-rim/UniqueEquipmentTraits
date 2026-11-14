@@ -16,7 +16,7 @@ namespace UniqueEquipmentTraits.Patches
             RimWorld.WeaponTraitDef trait,
             ref bool __result)
         {
-            // Preserve every rejection made by Odyssey.
+            // Preserve Odyssey rejections
             if (!__result)
             {
                 return;
@@ -34,7 +34,7 @@ namespace UniqueEquipmentTraits.Patches
                 return;
             }
 
-            // Only restrict generated UET weapon variants.
+            // Restrict UET generated weapons
             if (!defName.StartsWith(
                     "UET_Unique_",
                     System.StringComparison.Ordinal) ||
@@ -45,7 +45,7 @@ namespace UniqueEquipmentTraits.Patches
                 return;
             }
 
-            // UET variants may receive only UET traits.
+            // UET weapons can receive only UET traits
             if (trait == null ||
                 trait.GetModExtension<UETTraitExtension>() == null)
             {

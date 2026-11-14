@@ -20,27 +20,24 @@ namespace UniqueEquipmentTraits.Effects
             if (!CanReceiveNeuralHeat(victim))
                 return;
 
-            // Actual Psychic Sensitivity, including modifiers.
+            // Sensitivity with modifiers
             float sensitivity =
                 victim.GetStatValue(StatDefOf.PsychicSensitivity);
 
-            // Completely psychically insensitive targets
-            // are immune to Disruptive.
+            // Immunity
             if (sensitivity <= 0f)
                 return;
 
             Pawn_PsychicEntropyTracker tracker =
                 victim.psychicEntropy;
 
-            // Maximum Neural Heat of the victim.
+            // Max victim's Neural Heat
             float maxHeat = tracker.MaxEntropy;
 
             if (maxHeat <= 0f)
                 return;
 
-            // Heat = 60 * EffectStrength
-            //      * (MaxHeat / 80)
-            //      * Sensitivity^0.25
+            // Heat = 60 * EffectStrength * (MaxHeat / 80) * Sensitivity^0.25 - example
             float amount =
                 NeuralHeatMultiplier *
                 context.EffectStrength *
@@ -85,12 +82,11 @@ namespace UniqueEquipmentTraits.Effects
                 return false;
             }
 
-            // Standard psylink is sufficient.
+            // For standard psylink
             if (pawn.psychicEntropy.Psylink != null)
                 return true;
 
-            // Also recognize abilities that consume Neural Heat,
-            // even when the pawn has no standard psylink.
+            // Identify abilities consuming Neural Heat. No psylink needed
             foreach (Ability ability
                 in pawn.abilities.AllAbilitiesForReading)
             {

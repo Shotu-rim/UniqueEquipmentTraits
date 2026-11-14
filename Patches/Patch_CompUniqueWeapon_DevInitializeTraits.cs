@@ -26,8 +26,7 @@ namespace UniqueEquipmentTraits.Utilities
             if (selectedTrait == null)
                 return true;
 
-            // The dev spawner supplies the trait directly.
-            // Do not run Odyssey's random selection.
+            // Dev spawner tool generates item directly without Odyssey
             if (!__instance.CanAddTrait(selectedTrait))
             {
                 Log.Error(

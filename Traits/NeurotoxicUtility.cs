@@ -51,7 +51,7 @@ namespace UniqueEquipmentTraits
             AddTarget(result, pawn, PawnCapacityDefOf.BloodPumping,
                 BodyPartTagDefOf.BloodPumpingSource);
 
-            // BloodFiltration: wybór gałęzi zgodnie z workerem Vanilli.
+            // BloodFiltration: Vanilla branch
             if (body.HasPartWithTag(BodyPartTagDefOf.BloodFiltrationKidney))
             {
                 AddTarget(result, pawn, PawnCapacityDefOf.BloodFiltration,
@@ -64,7 +64,7 @@ namespace UniqueEquipmentTraits
                     BodyPartTagDefOf.BloodFiltrationSource);
             }
 
-            // Metabolism: wyszukujemy Def po nazwie.
+            // Metabolism: Def search
             PawnCapacityDef metabolism =
                 DefDatabase<PawnCapacityDef>.GetNamedSilentFail("Metabolism");
 
@@ -143,7 +143,7 @@ namespace UniqueEquipmentTraits
                 return;
             }
 
-            // Ustalamy, ile osłabienia każda zdolność może jeszcze przyjąć.
+            // Overview counter, what's left to hit the limit
             List<CapacityTarget> eligible = new List<CapacityTarget>();
             List<float> available = new List<float>();
 
@@ -181,14 +181,13 @@ namespace UniqueEquipmentTraits
                 UnityEngine.Mathf.Min(effectStrength, totalAvailable);
 
 
-            // Losujemy dodatnie wagi dla poszczególnych zdolności.
+            // Weight counter
             List<float> weights = new List<float>();
 
             foreach (CapacityTarget target in eligible)
                 weights.Add(UnityEngine.Random.Range(0.1f, 1f));
 
-            // Rozdzielamy budżet proporcjonalnie do wag,
-            // uwzględniając limit każdej zdolności.
+            // Distribute points by weight
             List<float> allocations = new List<float>();
 
             for (int i = 0; i < eligible.Count; i++)
@@ -229,7 +228,7 @@ namespace UniqueEquipmentTraits
                 remainingBudget -= distributed;
             }
 
-            // Nakładamy wyliczone osłabienia na części ciała.
+            // Set effects on body parts
             for (int i = 0; i < eligible.Count; i++)
             {
                 float amount = allocations[i];
@@ -268,7 +267,7 @@ namespace UniqueEquipmentTraits
                     victim.health.AddHediff(newHediff, part);
                 }
 
-                // Zliczamy tylko faktycznie nałożone osłabienie.
+                // Count effect on affected parts
                 affectedCapacities++;
                 appliedWeakening += amount;
             }
@@ -299,7 +298,7 @@ namespace UniqueEquipmentTraits
             if (neurotoxins.Count == 0)
                 return;
 
-            // Jedna losowa instancja otrzymuje porcję regeneracji.
+            // Regen stats
             Hediff_Neurotoxic selected = neurotoxins.RandomElement();
 
             const float baseRecovery = 0.01f;
@@ -307,24 +306,21 @@ namespace UniqueEquipmentTraits
             const float minFinalFactor = 0.10f;
             const float starvationMultiplier = 0.40f;
 
-            // Im większe nagromadzenie neurotoksyn,
-            // tym wolniejsza naturalna regeneracja.
-            // Samo zatrucie nie obniża tempa poniżej 25%.
+            // More toxin, less healing, up to 25% of max heal
             float toxicityFactor = UnityEngine.Mathf.Max(
                 minToxicityFactor,
                 1f / (1f + totalToxicity));
 
             float recoveryFactor = toxicityFactor;
 
-            // Głód dodatkowo spowalnia regenerację,
-            // ale nie zatrzymuje jej całkowicie.
+            // Hunger reduces healing, but doesn't stop it
             if (pawn.needs?.food != null &&
                 pawn.needs.food.Starving)
             {
                 recoveryFactor *= starvationMultiplier;
             }
 
-            // Odpoczynek i łóżko przyspieszają regenerację.
+            // Rest and bed mods
             if (pawn.GetPosture() != PawnPosture.Standing)
             {
                 recoveryFactor *= 1.5f;
@@ -338,15 +334,13 @@ namespace UniqueEquipmentTraits
                 }
             }
 
-            // Uwzględniamy współczynnik leczenia organizmu.
+            // Body healing capacity
             recoveryFactor *=
                 UnityEngine.Mathf.Max(
                     0f,
                     pawn.GetStatValue(StatDefOf.InjuryHealingFactor));
 
-            // Bezwzględne minimum: 10% bazowej regeneracji.
-            // Obowiązuje również podczas głodu i przy
-            // zerowym InjuryHealingFactor.
+            // 10% healing limit (to give a chance for rescue) even with hunger
             recoveryFactor = UnityEngine.Mathf.Max(
                 minFinalFactor,
                 recoveryFactor);

@@ -17,7 +17,7 @@ namespace UniqueEquipmentTraits.Effects
 
             Pawn victim = context.Victim;
 
-            // The original attack's body parts and damage are used for both effects.
+            // Attack body parts and damage for both effects
             CorrodeEquipment(context);
 
             if (victim.Destroyed || victim.Dead || !victim.RaceProps.IsMechanoid)
@@ -27,16 +27,23 @@ namespace UniqueEquipmentTraits.Effects
             if (extraDamage <= 0f)
                 return;
 
-            // A single extra hit per activation, never one hit per affected body part.
-            // The attacker's weapon is not supplied to avoid counting this as another weapon hit.
+            // Single extra hit per activation. Never per affected body part. Weapon unsupplied
             DamageInfo damage = new DamageInfo(
                 DamageDefOf.Burn,
                 extraDamage,
                 armorPenetration: 999f,
                 instigator: context.Attacker);
 
-            victim.TakeDamage(damage);
-            context.Report("Corrosive: additional mechanoid damage " + extraDamage.ToString("0.##"));
+            DamageWorker.DamageResult result = victim.TakeDamage(damage);
+
+            if (result.totalDamageDealt > 0f)
+            {
+                context.Report(
+                    $"{context.Attacker.LabelShort} inflicted corrosive damage on " +
+                    $"{victim.LabelShort}'s chassis, dealing " +
+                    $"{result.totalDamageDealt:F1} damage.");
+            }
+
         }
 
         private static void CorrodeEquipment(UETEffectContext context)
@@ -70,8 +77,7 @@ namespace UniqueEquipmentTraits.Effects
                     }
                 }
 
-                // RimWorld does not record which specific hand holds equipped items.
-                // Therefore an equipped item may be selected for either manipulation limb.
+                // Item may be selected for either limb. Rim doesn't recognize that
                 if (victim.equipment != null && IsManipulationLimb(hitPart))
                 {
                     foreach (ThingWithComps equipment in victim.equipment.AllEquipmentListForReading)
@@ -81,7 +87,7 @@ namespace UniqueEquipmentTraits.Effects
                     }
                 }
 
-                // An uncovered hit part loses its share; no redistribution.
+                // Uncovered hit part loses share. No refunds
                 if (candidates.Count == 0)
                     continue;
 
@@ -113,10 +119,13 @@ namespace UniqueEquipmentTraits.Effects
 
                 item.HitPoints = hpBefore - actualDamage;
 
+
                 context.Report(
                     $"{context.Attacker.LabelShort} corroded " +
-                    $"{item.LabelShort}, reducing its durability by " +
-                    $"{actualDamage} HP ({hpBefore} → {item.HitPoints}).");
+                    $"{victim.LabelShort}'s {item.LabelShort}, dealing " +
+                    $"{actualDamage} durability damage " +
+                    $"({hpBefore} → {item.HitPoints} HP).");
+
 
                 if (item.HitPoints <= 0 && !item.Destroyed)
                     item.Destroy(DestroyMode.Vanish);

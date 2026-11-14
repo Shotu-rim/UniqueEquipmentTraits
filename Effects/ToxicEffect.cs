@@ -7,7 +7,7 @@ namespace UniqueEquipmentTraits.Effects
 {
     public class ToxicEffect : UETEffect
     {
-        // Roboczy współczynnik zatrucia.
+        // Toxic counter
         private const float ToxicCoefficient = 0.015f;
 
         public override void Apply(UETEffectContext context)
@@ -22,7 +22,7 @@ namespace UniqueEquipmentTraits.Effects
             if (victim.Dead || victim.health == null)
                 return;
 
-            // Toxic działa wyłącznie na organizmy biologiczne.
+            // Toxic only on biological thingies
             if (victim.RaceProps == null ||
                 !victim.RaceProps.IsFlesh ||
                 victim.RaceProps.IsMechanoid)
@@ -34,15 +34,15 @@ namespace UniqueEquipmentTraits.Effects
             if (damage <= 0f || effectStrength <= 0f)
                 return;
 
-            // Zabezpieczenie przed dzieleniem przez zero.
+            // DIvive by 0 exception
             float bodySize = Mathf.Max(0.1f, victim.BodySize);
 
-            // Odporność na zatrucie.
+            // Toxic resistance
             float resistance = Mathf.Clamp01(
                 victim.GetStatValue(StatDefOf.ToxicResistance)
             );
 
-            // Dawka przed zastosowaniem nasycenia.
+            // Check for Toxic before adding new one
             float rawDose =
                 damage *
                 ToxicCoefficient *
@@ -50,7 +50,7 @@ namespace UniqueEquipmentTraits.Effects
                 bodySize *
                 (10f * effectStrength);
 
-            // Pułap dawki zależny od jakości i rozmiaru.
+            // Max Toxic
             float capacity =
                 (0.18f + 0.2f * effectStrength) /
                 Mathf.Sqrt(Mathf.Max(1f, bodySize));
@@ -58,7 +58,6 @@ namespace UniqueEquipmentTraits.Effects
             if (rawDose <= 0f || capacity <= 0f)
                 return;
 
-            // Zatwierdzony wzór miękkiego nasycenia.
             float toxicIncrease =
                 rawDose * capacity / (rawDose + capacity);
 
@@ -73,7 +72,7 @@ namespace UniqueEquipmentTraits.Effects
                 return;
             }
 
-            // ToxicBuildup obejmuje cały organizm.
+            // Toxic for whole body
             Hediff toxic = victim.health.hediffSet
                 .GetFirstHediffOfDef(toxicDef);
 
@@ -87,7 +86,7 @@ namespace UniqueEquipmentTraits.Effects
                     victim
                 );
 
-                // Ustawiamy Severity przed dodaniem Hediffa.
+                // Severity before Hediff
                 toxic.Severity = toxicIncrease;
                 victim.health.AddHediff(toxic);
             }

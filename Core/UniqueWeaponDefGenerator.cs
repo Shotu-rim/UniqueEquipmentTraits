@@ -110,8 +110,7 @@ namespace UniqueEquipmentTraits.Core
 
             variant.defName = GetVariantName(original);
 
-            // Independent component list.
-            // Existing CompProperties are treated as read-only.
+            // Component list. Existing CompProperties read-only.
             variant.comps = original.comps != null
                 ? new List<CompProperties>(original.comps)
                 : new List<CompProperties>();
@@ -133,11 +132,22 @@ namespace UniqueEquipmentTraits.Core
             variant.comps.Add(uniqueProperties);
 
 
-            // Do not expose variants as ordinary trade goods.
-            variant.tradeability = Tradeability.None;
+            // Sellable Uniques
+            variant.tradeability = Tradeability.Sellable;
 
-            // Keep the original mod ownership for assets.
+            // Just in case
             variant.modContentPack = original.modContentPack;
+
+            // Independent tag list — do not modify the original weapon.
+            variant.thingSetMakerTags =
+                original.thingSetMakerTags != null
+                    ? new List<string>(original.thingSetMakerTags)
+                    : new List<string>();
+
+            if (!variant.thingSetMakerTags.Contains("UniqueWeapon"))
+            {
+                variant.thingSetMakerTags.Add("UniqueWeapon");
+            }
 
             return variant;
         }

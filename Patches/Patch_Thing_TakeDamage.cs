@@ -36,7 +36,6 @@ namespace UniqueEquipmentTraits.Patches
                 __result.totalDamageDealt <= 0f)
                 return;
 
-            // Rejestrujemy rzeczywiste obrażenia.
             context.RegisterDamage(
                 __result.totalDamageDealt);
 

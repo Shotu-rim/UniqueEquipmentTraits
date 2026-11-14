@@ -7,7 +7,7 @@ namespace UniqueEquipmentTraits.Crafting
 {
     public static class UniqueCraftingChance
     {
-        // Returns probability in the range 0..1.
+        // Returns probability 0-1
         public static float Calculate(
             int skillLevel,
             QualityCategory quality,

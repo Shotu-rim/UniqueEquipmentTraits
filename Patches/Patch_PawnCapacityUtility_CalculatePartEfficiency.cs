@@ -59,8 +59,6 @@ namespace UniqueEquipmentTraits.Patches
                 return original;
             }
 
-            // Nie usuwamy instrukcji z etykietami ani
-            // granicami bloków wyjątków.
             foreach (int index in matches)
             {
                 for (int offset = 1; offset <= 3; offset++)
@@ -82,8 +80,7 @@ namespace UniqueEquipmentTraits.Patches
 
             var codes = new List<CodeInstruction>(original);
 
-            // Przetwarzamy od końca, aby usuwanie instrukcji
-            // nie zmieniało indeksów wcześniejszych dopasowań.
+            // Counting backwords so indexes wont be changed
             for (int m = matches.Count - 1; m >= 0; m--)
             {
                 int index = matches[m];
@@ -93,10 +90,6 @@ namespace UniqueEquipmentTraits.Patches
 
                 codes.RemoveRange(index + 2, 2);
             }
-
-            Log.Message(
-                "[UET] Nanite transpiler: 3 efficiency reads patched."
-            );
 
             return codes;
         }

@@ -65,8 +65,7 @@ namespace UniqueEquipmentTraits.Effects
 
         public override void Apply(UETEffectContext context)
         {
-            // Sundering działa przed obliczeniem pancerza.
-            // Nie nakłada dodatkowych efektów po trafieniu.
+            // Sundering triggers before damage
         }
 
 
@@ -82,7 +81,7 @@ namespace UniqueEquipmentTraits.Effects
 
             RimWorld.WeaponTraitDef sundering = null;
 
-            // Sundering selected by Prismatic.
+            // Sundering selected by Prismatic
             if (context.PrismaticSelectedTrait != null &&
                 context.PrismaticSelectedTrait.defName == "UET_Sundering" &&
                 context.PrismaticActivated)
@@ -91,7 +90,7 @@ namespace UniqueEquipmentTraits.Effects
             }
             else
             {
-                // Regular Sundering present directly on the weapon.
+                // Sundering present on weapon
                 CompUniqueWeapon uniqueComp =
                     context.Weapon.TryGetComp<CompUniqueWeapon>();
 

@@ -61,11 +61,34 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Armor\ArmorReactionActivation.cs" />
+    <Compile Include="Core\Armor\ArmorReactionContext.cs" />
+    <Compile Include="Core\Armor\ArmorReactionDiagnostics.cs" />
+    <Compile Include="Core\Armor\ArmorReactionObservationPatches.cs" />
+    <Compile Include="Core\Armor\ArmorReactionSelection.cs" />
+    <Compile Include="Core\Armor\ArmorTraitActivationContext.cs" />
+    <Compile Include="Core\Armor\ArmorTraitAnatomy.cs" />
+    <Compile Include="Core\Armor\ArmorTraitCategory.cs" />
+    <Compile Include="Core\Armor\ArmorTraitCompInjector.cs" />
+    <Compile Include="Core\Armor\ArmorTraitCoverage.cs" />
+    <Compile Include="Core\Armor\ArmorTraitDef.cs" />
+    <Compile Include="Core\Armor\ArmorTraitDiagnostics.cs" />
+    <Compile Include="Core\Armor\ArmorTraitEligibility.cs" />
+    <Compile Include="Core\Armor\ArmorTraitHitDebugActions.cs" />
+    <Compile Include="Core\Armor\ArmorTraitHitDiagnostics.cs" />
+    <Compile Include="Core\Armor\ArmorTraitHitDiagnosticsRunner.cs" />
+    <Compile Include="Core\Armor\ArmorTraitHitHarmonyPatches.cs" />
+    <Compile Include="Core\Armor\ArmorTraitHitSequenceRecorder.cs" />
+    <Compile Include="Core\Armor\ArmorTraitTestAction.cs" />
+    <Compile Include="Core\Armor\ArmorTraitWorker.cs" />
+    <Compile Include="Core\Armor\ArmorTraitWorker_Default.cs" />
+    <Compile Include="Core\Armor\CompArmorTraits.cs" />
     <Compile Include="Core\MeleeAttackContext.cs" />
     <Compile Include="Core\ModInitializer.cs" />
     <Compile Include="Core\NaniteImplantDefInjector.cs" />
     <Compile Include="Core\UETActivationDiagnostics.cs" />
     <Compile Include="Core\UETDiagnosticsDebugActions.cs" />
+    <Compile Include="Core\UETEquipmentStateManager.cs" />
     <Compile Include="Core\UETStunUtility.cs" />
     <Compile Include="Core\UniqueCraftingChance.cs" />
     <Compile Include="Core\UniqueWeaponCompFactory.cs" />
@@ -110,12 +133,12 @@
     <Compile Include="Implants\CapacityImpactorNaniteDegradation.cs" />
     <Compile Include="Implants\HediffCompProperties_NaniteDamage.cs" />
     <Compile Include="Implants\HediffComp_NaniteDamage.cs" />
-    <Compile Include="Implants\NaniteDebugActions.cs" />
     <Compile Include="Implants\NaniteImplantUtility.cs" />
     <Compile Include="Mechanoids\Hediff_NaniteMechanicalDegradation.cs" />
     <Compile Include="Patches\Patch_ArmorUtility_ApplyArmor.cs" />
     <Compile Include="Patches\Patch_CompUniqueWeapon_CanAddTrait.cs" />
     <Compile Include="Patches\Patch_CompUniqueWeapon_DevInitializeTraits.cs" />
+    <Compile Include="Patches\Patch_EquipmentRemoved.cs" />
     <Compile Include="Utilities\Patch_CompUniqueWeapon_InitializeTraits.cs" />
     <Compile Include="Patches\Patch_DamageWorker_AddInjury.cs" />
     <Compile Include="Patches\Patch_NaniteCapacityDisplay.cs" />
@@ -129,22 +152,21 @@
     <Compile Include="Patches\Patch_Verb_MeleeAttackDamage.cs" />
     <Compile Include="Patches\Patch_Flurry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Traits\BloodseekerDiagnostics.cs" />
-    <Compile Include="Traits\BloodseekerHealingReport.cs" />
     <Compile Include="Traits\BloodseekerUtility.cs" />
     <Compile Include="Traits\CompProperties_WeaponTrait.cs" />
     <Compile Include="Traits\CompWeaponTrait.cs" />
     <Compile Include="Traits\NaniteDisruptionUtility.cs" />
     <Compile Include="Traits\NeurotoxicUtility.cs" />
     <Compile Include="Traits\UETTraitExtension.cs" />
-    <Compile Include="Traits\WeaponTraitDef.cs" />
     <Compile Include="Utilities\UETDevSpawnContext.cs" />
+    <Compile Include="Utilities\UETDevWeaponDiagnostics.cs" />
     <Compile Include="Utilities\UETDevWeaponSpawner.cs" />
     <Compile Include="Utilities\UETDevWeaponSpawnerAction.cs" />
     <Compile Include="Utilities\UETDevWeaponSpawnerWindow.cs" />
-    <Compile Include="Utilities\WeaponTraitUtility.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Effects\ArmorEffects\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

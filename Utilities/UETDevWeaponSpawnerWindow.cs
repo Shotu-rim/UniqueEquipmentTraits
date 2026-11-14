@@ -1,5 +1,4 @@
-﻿
-using RimWorld;
+﻿using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +34,9 @@ namespace UniqueEquipmentTraits.DevTools
 
             weapons = DefDatabase<ThingDef>.AllDefs
                 .Where(d =>
+                    d != null &&
+                    d.defName != null &&
+                    !d.defName.StartsWith("UET_Unique_", StringComparison.Ordinal) &&
                     d.IsWeapon &&
                     d.HasComp<CompQuality>() &&
                     (d.IsMeleeWeapon ||

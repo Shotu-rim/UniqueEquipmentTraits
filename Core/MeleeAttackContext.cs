@@ -88,7 +88,7 @@ namespace UniqueEquipmentTraits.Core
 
 
        
-
+        // For reports
 
         public MeleeAttackContext(
             Pawn attacker,

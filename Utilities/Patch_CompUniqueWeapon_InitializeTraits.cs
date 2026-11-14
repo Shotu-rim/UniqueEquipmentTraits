@@ -33,8 +33,7 @@ namespace UniqueEquipmentTraits.Patches
                     OriginalGetter != null &&
                     instruction.Calls(OriginalGetter))
                 {
-                    // The stack contains an IntRange address.
-                    // Add the CompUniqueWeapon instance.
+                    // Stack contains an IntRange address. Add CompUniqueWeapon
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
 
                     CodeInstruction replacement =
@@ -57,8 +56,7 @@ namespace UniqueEquipmentTraits.Patches
 
             if (patched)
             {
-                Log.Message(
-                    "[UET] Unique weapon trait count patch applied.");
+
             }
             else
             {
@@ -80,7 +78,7 @@ namespace UniqueEquipmentTraits.Patches
                 return 1;
             }
 
-            // Preserve native Odyssey behavior.
+            // Preserve Odyssey behavior
             return range.RandomInRange;
         }
     }

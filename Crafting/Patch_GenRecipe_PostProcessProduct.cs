@@ -117,8 +117,7 @@ namespace UniqueEquipmentTraits.Crafting
             }
             finally
             {
-                // Restore the previous context before replaying
-                // vanilla notifications and tales.
+                // Restore previous context before replaying notifications
                 activeContext = __state.Previous;
 
                 Thing finalProduct = __result;
@@ -176,11 +175,7 @@ namespace UniqueEquipmentTraits.Crafting
 
             if (product is MinifiedThing minified)
             {
-                // Keep minified products unchanged until their
-                // replacement lifecycle is implemented.
-                if (Prefs.DevMode)
-                    Log.Message(
-                        "[UET] Skipped minified crafting product.");
+                // Minified items unchanged (not implemented, never will?)
 
                 return;
             }
@@ -221,19 +216,7 @@ namespace UniqueEquipmentTraits.Crafting
                     qualityComp.Quality,
                     context.Inspired);
 
-            if (Prefs.DevMode)
-            {
-                Log.Message(
-                    "[UET] Crafting candidate: " +
-                    product.def.defName +
-                    " | Quality: " + qualityComp.Quality +
-                    " | Skill: " + skillLevel +
-                    " | Inspired: " + context.Inspired +
-                    " | Chance: " +
-                    (chance * 100f).ToString("F4") + "%");
-            }
-
-            // Existing formula, normal random roll.
+            // Existing formula, normal random roll
             if (!Rand.Chance(chance))
                 return;
 
@@ -268,7 +251,7 @@ namespace UniqueEquipmentTraits.Crafting
                     return;
                 }
 
-                // Preserve non-quality properties.
+                // Non-quality properties
                 uniqueWeapon.StyleDef = product.StyleDef;
                 uniqueWeapon.StyleSourcePrecept =
                     product.StyleSourcePrecept;
@@ -293,7 +276,7 @@ namespace UniqueEquipmentTraits.Crafting
                     }
                 }
 
-                // Create independent artistic data.
+                // Create artistic data
                 CompArt uniqueArt =
                     uniqueWeapon.TryGetComp<CompArt>();
 
@@ -304,7 +287,7 @@ namespace UniqueEquipmentTraits.Crafting
                         ArtGenerationContext.Colony);
                 }
 
-                // Odyssey's generated quality stays intact.
+                // Odyssey's generated quality
                 result = uniqueWeapon;
                 uniqueWeapon = null;
 
@@ -329,8 +312,7 @@ namespace UniqueEquipmentTraits.Crafting
             }
             finally
             {
-                // Dispose only of an unsuccessful new variant.
-                // Do not Destroy() the original crafted weapon.
+                // Dispose on unsuccessful variant. Do not Destroy() original weapon
                 if (uniqueWeapon != null &&
                     !uniqueWeapon.Destroyed)
                 {

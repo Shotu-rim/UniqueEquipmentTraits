@@ -53,10 +53,9 @@ namespace UniqueEquipmentTraits.Patches
                 if (damage <= 0f)
                     continue;
 
-                // Zachowujemy dotychczasową mechanikę.
                 __result *= 1f - damage;
 
-                // Dodajemy informację do szczegółów zdolności.
+                // Adding Hediff to Overview
                 if (impactors != null)
                 {
                     impactors.Add(new CapacityImpactorHediff

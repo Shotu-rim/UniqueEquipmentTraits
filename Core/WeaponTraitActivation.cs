@@ -111,8 +111,7 @@ namespace UniqueEquipmentTraits.Core
                  WeaponTraitQuality.GetActivationChance(
                  qualityComp.Quality);
 
-            // Wyjątek dla Nanite Disruptor.
-            // Nie zmieniamy globalnej tabeli jakości.
+            // Nanite Disruptor exception
             if (trait.defName == "UET_NaniteDisruptor")
             {
                 switch (qualityComp.Quality)

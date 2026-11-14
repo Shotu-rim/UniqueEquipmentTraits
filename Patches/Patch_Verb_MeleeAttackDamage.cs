@@ -35,7 +35,7 @@ namespace UniqueEquipmentTraits.Patches
             LocalTargetInfo target,
             out MeleeAttackContext __state)
         {
-            // State belongs to this specific Harmony invocation.
+            // State belongs to this specific Harmony
             __state = null;
 
             if (activeAttacks == null)
@@ -50,14 +50,14 @@ namespace UniqueEquipmentTraits.Patches
             MeleeAttackContext context =
                 new MeleeAttackContext(attacker, victim, weapon);
 
-            // Register the context before preparing effects.
+            // Register context before effects
             activeAttacks.Push(context);
             __state = context;
 
-            // Select Prismatic's trait for this attack.
+            // Select Prismatic's trait for attack
             PrismaticEffect.Prepare(context);
 
-            // Prepare regular Sundering.
+            // Prepare Sundering
             SunderingEffect.Prepare(context);
         }
 
@@ -71,7 +71,7 @@ namespace UniqueEquipmentTraits.Patches
 
             try
             {
-                // Do not execute effects after a failed attack call.
+                // Effect wont happen after failed attack
                 if (__exception == null)
                 {
                     WeaponTraitActivation.ProcessMeleeAttack(__state);
@@ -80,7 +80,7 @@ namespace UniqueEquipmentTraits.Patches
             }
             finally
             {
-                // Remove only the context belonging to this call.
+                // Remove context belonging to this call
                 if (activeAttacks != null &&
                     activeAttacks.Count > 0 &&
                     ReferenceEquals(

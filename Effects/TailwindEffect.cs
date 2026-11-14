@@ -58,7 +58,7 @@ namespace UniqueEquipmentTraits.Effects
         private const string TraitDefName = "UET_Tailwind";
         private const string HediffDefName = "UET_TailwindActive";
 
-        // Sprawdza, czy konkretna bron posiada Tailwind.
+        // Check for Tailwind
         internal static bool HasTailwind(ThingWithComps weapon)
         {
             if (weapon == null)
@@ -80,7 +80,6 @@ namespace UniqueEquipmentTraits.Effects
             return false;
         }
 
-        // Szansa aktywacji po zadaniu obrazen.
         internal static float ActivationChance(QualityCategory quality)
         {
             switch (quality)
@@ -95,8 +94,6 @@ namespace UniqueEquipmentTraits.Effects
                     return 0f;
             }
         }
-
-        // Liczba kolejnych atakow przeciwnika.
         internal static int InitialCharges(QualityCategory quality)
         {
             switch (quality)
@@ -112,8 +109,7 @@ namespace UniqueEquipmentTraits.Effects
             }
         }
 
-        // Premia do koncowej szansy na unik.
-        // 0.15f = 15 punktow procentowych.
+        // Dodge bonus for each charge
         internal static float DodgeBonus(QualityCategory quality)
         {
             switch (quality)
@@ -129,7 +125,7 @@ namespace UniqueEquipmentTraits.Effects
             }
         }
 
-        // Sprawdza, czy pawn nadal trzyma te sama bron.
+        // Check for weapon carrier
         internal static bool IsValidOwner(
             ThingWithComps weapon,
             Pawn pawn)

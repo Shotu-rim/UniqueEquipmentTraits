@@ -54,28 +54,10 @@ namespace UniqueEquipmentTraits.Effects
                 }
             }
 
-
-            Log.Message(
-                $"[UET DEBUG A] Before Apply: {trait.defName}");
-
             effect.Apply(context);
 
-            Log.Message(
-                $"[UET DEBUG B] After Apply: " +
-                $"trait={trait.defName}, " +
-                $"reports={context.Reports.Count}");
-
-            foreach (string report in context.Reports)
-            {
-                Log.Message(
-                    $"[UET DEBUG C] Report: {report}");
-            }
 
             UETCombatLog.Record(trait, context);
-
-            Log.Message(
-                $"[UET DEBUG D] Record finished: {trait.defName}");
-
 
             return true;
         }

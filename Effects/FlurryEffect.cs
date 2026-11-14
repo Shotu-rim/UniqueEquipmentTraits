@@ -67,7 +67,7 @@ namespace UniqueEquipmentTraits.Effects
         private const string FlurryTraitDefName = "UET_Flurry";
         private const string FlurryHediffDefName = "UET_FlurryActive";
 
-        // Sprawdza, czy konkretna broń posiada trait Flurry.
+        // Check weapon for Flurry
         internal static bool HasFlurry(ThingWithComps weapon)
         {
             if (weapon == null)
@@ -90,7 +90,6 @@ namespace UniqueEquipmentTraits.Effects
             return false;
         }
 
-        // Szansa aktywacji: Masterwork 30%, Legendary 35%.
         internal static float ActivationChance(QualityCategory quality)
         {
             switch (quality)
@@ -106,7 +105,7 @@ namespace UniqueEquipmentTraits.Effects
             }
         }
 
-        // Liczba ataków dostępnych po aktywacji.
+        // Charges after activation
         internal static int InitialCharges(QualityCategory quality)
         {
             switch (quality)
@@ -122,8 +121,7 @@ namespace UniqueEquipmentTraits.Effects
             }
         }
 
-        // Bonus szybkości ataku.
-        // +70% oznacza cooldown / 1.70.
+        // Bonuses
         internal static float SpeedBonus(QualityCategory quality)
         {
             switch (quality)
@@ -139,7 +137,7 @@ namespace UniqueEquipmentTraits.Effects
             }
         }
 
-        // Mnożnik obrażeń. Penetracja pancerza pozostaje bez zmian.
+        // Count damage, reduced by armor on hit
         internal static float DamageMultiplier(QualityCategory quality)
         {
             switch (quality)
@@ -155,7 +153,7 @@ namespace UniqueEquipmentTraits.Effects
             }
         }
 
-        // Sprawdza, czy pawn nadal używa tej samej broni.
+        // Check for the same weapon
         internal static bool IsValidOwner(
             ThingWithComps weapon,
             Pawn pawn)
@@ -168,7 +166,7 @@ namespace UniqueEquipmentTraits.Effects
                    HasFlurry(weapon);
         }
 
-        // Dodaje Hediff, jeśli jeszcze go nie ma.
+        // Add Hediff to Health
         internal static void SyncHediff(Pawn pawn)
         {
             if (pawn == null || pawn.health == null)
@@ -191,7 +189,7 @@ namespace UniqueEquipmentTraits.Effects
                 pawn.health.AddHediff(def);
         }
 
-        // Usuwa Hediff po zakończeniu efektu.
+        // Remove Hediff at the end
         internal static void RemoveHediff(Pawn pawn)
         {
             if (pawn == null || pawn.health == null)

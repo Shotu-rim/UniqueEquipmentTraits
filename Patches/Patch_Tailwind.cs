@@ -30,7 +30,7 @@ namespace UniqueEquipmentTraits.Patches
                 !comp.TailwindActiveFor(defender))
                 return;
 
-            // Preserve vanilla restrictions on dodging.
+            // Preserve restrictions on dodging
             if (!CanDodge(__instance, defender))
                 return;
 
@@ -47,8 +47,7 @@ namespace UniqueEquipmentTraits.Patches
             Verb_MeleeAttack attack,
             Pawn defender)
         {
-            // Surprise attacks cannot be dodged.
-            // Other vanilla restrictions are checked below.
+            // Surprise attacks cannot be dodged
             if (Traverse.Create(attack)
                 .Field("surpriseAttack")
                 .GetValue<bool>())

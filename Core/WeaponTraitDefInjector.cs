@@ -15,7 +15,7 @@ namespace UniqueEquipmentTraits.Core
             foreach (ThingDef weaponDef in
                 DefDatabase<ThingDef>.AllDefs.ToList())
             {
-                // All melee weapons, including modded ones.
+                // For all melee weapons, including mods (if properly defined for Rimworld)
                 if (!weaponDef.IsMeleeWeapon)
                     continue;
 

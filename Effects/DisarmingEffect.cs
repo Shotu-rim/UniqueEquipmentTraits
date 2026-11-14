@@ -20,7 +20,7 @@ namespace UniqueEquipmentTraits.Effects
 
             ThingWithComps weapon = victim.equipment.Primary;
 
-            // Przeciwnik nie ma broni do wytrącenia.
+            // No weapon to disarm
             if (weapon == null)
                 return;
 
@@ -32,7 +32,7 @@ namespace UniqueEquipmentTraits.Effects
                 victim.Position,
                 forbid: false);
 
-            // Raportujemy wyłącznie udane rozbrojenie.
+            // Report on success only
             if (!success || dropped == null)
                 return;
 

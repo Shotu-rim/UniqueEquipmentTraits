@@ -70,8 +70,7 @@ namespace UniqueEquipmentTraits.Effects
                 victim.health.AddHediff(crippling);
             }
 
-            // Ostatnia aktywacja zawsze wygrywa.
-            // Nadpisujemy zarówno siłę, jak i czas.
+            // Last activation matter, change both strength and time
             crippling.ApplyCrippling(
                 strength,
                 durationTicks);

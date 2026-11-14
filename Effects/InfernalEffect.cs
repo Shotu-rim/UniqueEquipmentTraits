@@ -39,11 +39,11 @@ namespace UniqueEquipmentTraits.Effects
                 return;
             }
 
-            // Podstawowe obrażenia zależne od jakości broni.
+            // Base damage counter
             float baseBurnDamage =
                 context.EffectStrength * BurnMultiplier;
 
-            // Łagodne skalowanie od łącznych obrażeń ataku.
+            // Easy growth
             float originalDamage =
                 Math.Max(0f, context.DamageAmount);
 
@@ -72,7 +72,7 @@ namespace UniqueEquipmentTraits.Effects
                 if (part == null)
                     continue;
 
-                // Pomijamy brakujące części ciała.
+                // Ignore missing
                 if (victim.health.hediffSet.PartIsMissing(part))
                     continue;
 
@@ -84,13 +84,11 @@ namespace UniqueEquipmentTraits.Effects
                     context.Attacker
                 );
 
-                // Obrażenia wyłącznie na trafionej części.
+                // Only hit
                 dinfo.SetHitPart(part);
 
-                // Infernal ignoruje pancerz.
                 dinfo.SetIgnoreArmor(true);
 
-                // Bez propagacji na inne części ciała.
                 dinfo.SetAllowDamagePropagation(false);
 
                 DamageResult result =

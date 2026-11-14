@@ -10,20 +10,20 @@ using Verse;
 
 namespace UniqueEquipmentTraits.Patches
 {
-    // Rejestruje rzeczywiście wykonane próby ataku.
-    // TryCastShot może zwrócić false zarówno przy pudle,
-    // jak i wtedy, gdy atak w ogóle nie został wykonany.
+    // This class actually is for both Flurry and Tailwind, haven't changed class names and probably will not
+    // Register attack attempts. TryCastShot can be false
+
     [HarmonyPatch(typeof(Verb_MeleeAttack), "TryCastShot")]
     internal static class Patch_Flurry_Attempt
     {
         internal sealed class Attempt
         {
-            // Flurry — atakujący
+            // Flurry — attacker
             internal CompWeaponTrait Comp;
             internal Pawn Pawn;
             internal bool WasActive;
 
-            // Tailwind — obrońca
+            // Tailwind — defender
             internal CompWeaponTrait DefenderComp;
             internal Pawn Defender;
             internal bool TailwindWasActive;
@@ -79,8 +79,7 @@ namespace UniqueEquipmentTraits.Patches
         }
 
 
-        // Oznaczamy próbę ataku dopiero po przejściu
-        // przez wstępne warunki TryCastShot.
+        // Attack register after TryCastShot
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> Transpiler(
             IEnumerable<CodeInstruction> instructions)
@@ -160,8 +159,7 @@ namespace UniqueEquipmentTraits.Patches
     }
 
 
-    // Zmniejsza obrażenia kolejnych ataków
-    // wykonywanych podczas aktywnego Flurry.
+    // Reduce charges after attack
     [HarmonyPatch(
     typeof(Verb_MeleeAttackDamage),
     "DamageInfosToApply")]

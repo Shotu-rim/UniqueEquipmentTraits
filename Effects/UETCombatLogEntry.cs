@@ -10,8 +10,6 @@ namespace UniqueEquipmentTraits.Effects
         private Pawn victim;
         private string description;
 
-        // Konstruktor bezparametrowy wymagany
-        // podczas wczytywania zapisanej gry.
         public UETCombatLogEntry()
         {
         }

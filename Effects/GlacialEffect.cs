@@ -22,7 +22,7 @@ namespace UniqueEquipmentTraits.Effects
             if (victim.Dead || victim.health == null)
                 return;
 
-            // Glacial nie działa na mechanoidy.
+            // Mechs are safe
             if (victim.RaceProps == null ||
                 victim.RaceProps.IsMechanoid)
                 return;
@@ -40,21 +40,19 @@ namespace UniqueEquipmentTraits.Effects
                 return;
             }
 
-            // Bazowe obrażenia zależne od EffectStrength.
+            // Base damage based on EffectStrength.
             float baseFrostbiteDamage =
                 context.EffectStrength * FrostbiteMultiplier;
 
-            // Łączne obrażenia pierwotnego ataku.
+            // Total damage
             float originalDamage = Math.Max(0f, context.DamageAmount);
 
-            // Powolny wzrost obrażeń Glacial.
-            // Przy 1 obrażeniu nie ma dodatkowego bonusu.
+            // Incremental increase of damage
             float bonusDamage =
                 DamageScaling *
                 (float)Math.Sqrt(Math.Max(0f, originalDamage - 1f));
 
-            // Jednakowe obrażenia bazowe na każdą
-            // trafioną część ciała.
+            // All damage the same on each hit part
             float frostbiteDamage =
                 baseFrostbiteDamage + bonusDamage;
 
@@ -74,7 +72,7 @@ namespace UniqueEquipmentTraits.Effects
                 if (part == null)
                     continue;
 
-                // Nie odmrażamy brakujących części ciała.
+                // No attack on missing parts
                 if (victim.health.hediffSet.PartIsMissing(part))
                     continue;
 
@@ -86,13 +84,12 @@ namespace UniqueEquipmentTraits.Effects
                     context.Attacker
                 );
 
-                // Odmrożenie dotyczy dokładnie trafionej części.
+                // Only hit part
                 dinfo.SetHitPart(part);
 
-                // Zimno przenika przez pancerz.
                 dinfo.SetIgnoreArmor(true);
 
-                // Bez rozprzestrzeniania obrażeń na inne części.
+                // No propagation on other body parts
                 dinfo.SetAllowDamagePropagation(false);
 
                 DamageResult result = victim.TakeDamage(dinfo);
@@ -107,8 +104,6 @@ namespace UniqueEquipmentTraits.Effects
                 }
             }
 
-            // Combat Log: raportujemy rzeczywiste
-            // obrażenia, a nie wyłącznie bazowe.
             if (partsAffected > 0)
             {
                 context.Report(

@@ -36,7 +36,7 @@ namespace UniqueEquipmentTraits.Effects
                 return;
             }
 
-            // Zbieramy cele przed modyfikacją stanu zdrowia.
+            // Checking what bofy parts are attacked
             List<KeyValuePair<BodyPartRecord, float>> bones =
                 new List<KeyValuePair<BodyPartRecord, float>>();
 
@@ -67,8 +67,7 @@ namespace UniqueEquipmentTraits.Effects
                     continue;
                 }
 
-                // Nie traktujemy części pod protezą
-                // jako naturalnych kości.
+                // Sub-parts for implants are not counted
                 if (hediffSet.PartOrAnyAncestorHasDirectlyAddedParts(part))
                     continue;
 
@@ -78,8 +77,7 @@ namespace UniqueEquipmentTraits.Effects
                 bones.Add(entry);
             }
 
-            // Jedna losowa trafiona część zastępcza.
-            // Wybieramy ją przed nakładaniem Crack.
+            // One implant, then CRACK!
             BodyPartRecord replacementTarget = null;
             string replacementName = null;
 
@@ -98,7 +96,7 @@ namespace UniqueEquipmentTraits.Effects
                 }
             }
 
-            // Crack na każdej trafionej naturalnej kości.
+            // Crack added to bone
             foreach (KeyValuePair<BodyPartRecord, float> entry in bones)
             {
                 if (victim.Dead)
@@ -106,8 +104,7 @@ namespace UniqueEquipmentTraits.Effects
 
                 BodyPartRecord part = entry.Key;
 
-                // Poprzednie obrażenia mogły zniszczyć
-                // część nadrzędną.
+                // Body part could be destroyed
                 if (hediffSet.PartIsMissing(part))
                     continue;
 
@@ -142,7 +139,6 @@ namespace UniqueEquipmentTraits.Effects
                 injury.Severity = crackDamage;
                 injury.destroysBodyParts = true;
 
-                // Oznaczamy obrażenie jako pochodzące od Fracturing.
                 injury.sourceHediffDef =
                     DefDatabase<HediffDef>.GetNamed("UET_FracturingSource");
 
@@ -161,7 +157,7 @@ namespace UniqueEquipmentTraits.Effects
                 }
             }
 
-            // Maksymalnie jedna część zastępcza.
+            // Max 1 implant
             if (replacementTarget != null &&
                 !victim.Dead &&
                 !hediffSet.PartIsMissing(replacementTarget) &&
