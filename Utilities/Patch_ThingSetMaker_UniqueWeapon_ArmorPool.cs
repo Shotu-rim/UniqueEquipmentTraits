@@ -15,6 +15,49 @@ namespace UniqueEquipmentTraits.Patches
     internal static class Patch_ThingSetMaker_UniqueWeapon_ArmorPool
     {
 
+        public static void LogPatchStatus()
+        {
+            MethodInfo target = AccessTools.Method(
+                typeof(ThingSetMaker_UniqueWeapon),
+                "Generate",
+                new[]
+                {
+            typeof(ThingSetMakerParams),
+            typeof(List<Thing>)
+                });
+
+            if (target == null)
+            {
+                Log.Error("[UET PATCH CHECK] Generate method NOT FOUND");
+                return;
+            }
+
+            var info = Harmony.GetPatchInfo(target);
+
+            if (info == null)
+            {
+                Log.Error("[UET PATCH CHECK] No Harmony patches registered");
+                return;
+            }
+
+            Log.Message("[UET PATCH CHECK] Generate patches:");
+
+            foreach (var patch in info.Prefixes)
+            {
+                Log.Message(
+                    "[UET PATCH CHECK] PREFIX: " +
+                    patch.owner + " | " + patch.PatchMethod);
+            }
+
+            foreach (var patch in info.Transpilers)
+            {
+                Log.Message(
+                    "[UET PATCH CHECK] TRANSPILER: " +
+                    patch.owner + " | " + patch.PatchMethod);
+            }
+        }
+
+
         private static readonly MethodInfo WhereMethod =
             typeof(Enumerable)
                 .GetMethods(BindingFlags.Public | BindingFlags.Static)
@@ -33,12 +76,24 @@ namespace UniqueEquipmentTraits.Patches
                 typeof(Patch_ThingSetMaker_UniqueWeapon_ArmorPool),
                 nameof(FilterCandidates));
 
+
         private static IEnumerable<ThingDef> FilterCandidates(
             IEnumerable<ThingDef> candidates)
         {
-            return candidates.Where(
-                UniqueArmorPoolFilter.CanGenerate);
+            Log.Message(
+                "[UET ARMOR POOL] FilterCandidates CALLED");
+
+            List<ThingDef> filtered = candidates
+                .Where(UniqueArmorPoolFilter.CanGenerate)
+                .ToList();
+
+            Log.Message(
+                "[UET ARMOR POOL] Candidates after filtering: " +
+                filtered.Count);
+
+            return filtered;
         }
+
 
         [HarmonyTargetMethods]
         private static IEnumerable<MethodBase> TargetMethods()
@@ -61,6 +116,23 @@ namespace UniqueEquipmentTraits.Patches
                 {
             typeof(ThingSetMakerParams)
                 });
+        }
+
+
+        [HarmonyPrefix]
+        private static void Prefix(MethodBase __originalMethod)
+        {
+            ThingSetMakerDef def = ThingSetMakerDefOf.Reward_UniqueWeapon;
+
+            Log.Message(
+                "[UET REWARD CHECK] " +
+                def.defName +
+                " | root: " +
+                def.root.GetType().FullName);
+
+            Log.Message(
+                "[UET ARMOR POOL] Entered: " +
+                __originalMethod.Name);
         }
 
 

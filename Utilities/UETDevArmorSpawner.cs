@@ -92,13 +92,12 @@ namespace UniqueEquipmentTraits.Utilities
                 stuffDef = null;
             }
 
-
-
-
             ThingWithComps armor = null;
 
             try
             {
+                UETDevArmorSpawnContext.Begin(
+                    variantDef, trait, quality);
 
                 armor = ThingMaker.MakeThing(
                     variantDef, stuffDef) as ThingWithComps;
@@ -110,6 +109,11 @@ namespace UniqueEquipmentTraits.Utilities
                     exception);
                 return null;
             }
+            finally
+            {
+                UETDevArmorSpawnContext.End();
+            }
+
 
             if (armor == null)
             {
@@ -117,21 +121,6 @@ namespace UniqueEquipmentTraits.Utilities
                     "[UET ARMOR UNIQUE] Created apparel is null.");
                 return null;
             }
-
-            CompArmorTraits traitComp =
-                armor.TryGetComp<CompArmorTraits>();
-
-            if (traitComp == null ||
-                !traitComp.AddTrait(trait))
-            {
-                Log.Error(
-                    "[UET ARMOR UNIQUE] Trait initialization failed.");
-
-                armor.Destroy();
-                return null;
-            }
-
-
 
             CompQuality qualityComp =
                 armor.TryGetComp<CompQuality>();

@@ -84,6 +84,9 @@
     <Compile Include="Core\Armor\ArmorTraitWorker.cs" />
     <Compile Include="Core\Armor\ArmorTraitWorker_Default.cs" />
     <Compile Include="Core\Armor\CompArmorTraits.cs" />
+    <Compile Include="Core\Armor\Naming\ArmorNameGenerator.cs" />
+    <Compile Include="Core\Armor\Naming\ArmorNameUtility.cs" />
+    <Compile Include="Core\Armor\Naming\ArmorNameVocabulary.cs" />
     <Compile Include="Core\Armor\UniqueArmorInitializer.cs" />
     <Compile Include="Core\Armor\UniqueArmorPoolFilter.cs" />
     <Compile Include="Core\Armor\UniqueArmorTestDefGenerator.cs" />
@@ -143,7 +146,6 @@
     <Compile Include="Patches\Patch_ArmorUtility_ApplyArmor.cs" />
     <Compile Include="Patches\Patch_CompUniqueWeapon_CanAddTrait.cs" />
     <Compile Include="Patches\Patch_CompUniqueWeapon_DevInitializeTraits.cs" />
-    <Compile Include="Patches\Patch_CompUniqueWeapon_PostPostMake_Armor.cs" />
     <Compile Include="Patches\Patch_EquipmentRemoved.cs" />
     <Compile Include="Utilities\Patch_CompUniqueWeapon_InitializeTraits.cs" />
     <Compile Include="Patches\Patch_DamageWorker_AddInjury.cs" />
@@ -165,6 +167,8 @@
     <Compile Include="Traits\NeurotoxicUtility.cs" />
     <Compile Include="Traits\UETTraitExtension.cs" />
     <Compile Include="Utilities\Patch_CompUniqueWeapon_PostPostMake_Armor.cs" />
+    <Compile Include="Utilities\Patch_ThingSetMaker_Generate_UETDiagnostics.cs" />
+    <Compile Include="Utilities\Patch_ThingSetMaker_MarketValue_AllowedThingDefs.cs" />
     <Compile Include="Utilities\Patch_ThingSetMaker_UniqueWeapon_ArmorPool.cs" />
     <Compile Include="Utilities\UETDevArmorSpawnContext.cs" />
     <Compile Include="Utilities\UETDevArmorSpawner.cs" />

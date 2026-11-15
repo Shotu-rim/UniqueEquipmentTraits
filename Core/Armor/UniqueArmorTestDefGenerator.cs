@@ -21,11 +21,21 @@ namespace UniqueEquipmentTraits.Core.Armor
             int registered = 0;
             int skipped = 0;
 
-            List<ThingDef> candidates =
-                DefDatabase<ThingDef>.AllDefs
-                    .Where(IsPreResolveCandidate)
-                    .OrderBy(def => def.defName)
-                    .ToList();
+            ThingSetMakerDef rewardDef =
+                ThingSetMakerDefOf.Reward_UniqueWeapon;
+
+            Log.Message(
+                "[UET REWARD CHECK] " +
+                rewardDef.defName +
+                " | root: " +
+                rewardDef.root.GetType().FullName);
+
+            List<ThingDef> candidates = DefDatabase<ThingDef>.AllDefs
+                .Where(IsPreResolveCandidate)
+                .OrderBy(def => def.defName)
+                .ToList();
+
+
 
             foreach (ThingDef original in candidates)
             {
@@ -52,6 +62,10 @@ namespace UniqueEquipmentTraits.Core.Armor
                         original, null);
 
                 variant.defName = variantName;
+                // Wariant UET nie powinien trafiać do zwykłego
+                // losowania wyposażenia pawnów.
+                variant.generateCommonality = 0f;
+                variant.generateAllowChance = 0f;
 
                 variant.comps =
                     original.comps != null

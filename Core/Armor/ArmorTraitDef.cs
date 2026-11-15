@@ -10,7 +10,8 @@ namespace UniqueEquipmentTraits.Core.Armor
         public bool reactive = false;
 
         public List<ArmorTraitCategory> allowedCategories;
-
+        public List<string> nameAdjectives;
+        public List<string> nameConcepts;
 
         public System.Type workerClass;
 

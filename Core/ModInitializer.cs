@@ -14,6 +14,10 @@ namespace UniqueEquipmentTraits.Core
             var harmony = new Harmony("shotu.uniqueequipmenttraits");
             harmony.PatchAll();
 
+            UniqueEquipmentTraits.Patches
+    .Patch_ThingSetMaker_UniqueWeapon_ArmorPool
+    .LogPatchStatus();
+
             LongEventHandler.ExecuteWhenFinished(() =>
             {
                 ArmorTraitCompInjector.Inject();

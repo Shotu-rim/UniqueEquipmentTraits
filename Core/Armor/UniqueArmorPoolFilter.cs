@@ -7,6 +7,7 @@ namespace UniqueEquipmentTraits.Core.Armor
 {
     public static class UniqueArmorPoolFilter
     {
+
         public static bool CanGenerate(ThingDef def)
         {
             if (def == null)
@@ -15,16 +16,23 @@ namespace UniqueEquipmentTraits.Core.Armor
             if (!def.HasComp<CompUniqueWeapon>())
                 return false;
 
-            // Leave ordinary Odyssey and UET weapons unchanged.
+            // Nie ingerujemy w zwykłe unikalne bronie Odyssey.
             if (!UniqueArmorInitializer.IsUniqueArmor(def))
                 return true;
 
-            // Unique armor must have at least one compatible trait.
-            return DefDatabase<ArmorTraitDef>.AllDefs
-                .Any(trait =>
-                    trait != null &&
-                    ArmorTraitCompatibility.CanApply(
-                        def, trait));
+            bool compatible =
+                DefDatabase<ArmorTraitDef>.AllDefs
+                    .Any(trait =>
+                        trait != null &&
+                        ArmorTraitCompatibility.CanApply(def, trait));
+
+            Log.Message(
+                "[UET ARMOR POOL] " +
+                def.defName +
+                " | Compatible: " + compatible);
+
+            return compatible;
         }
+
     }
 }

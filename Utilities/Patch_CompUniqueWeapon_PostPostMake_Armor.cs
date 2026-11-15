@@ -1,8 +1,10 @@
 ﻿
+using System.Collections.Generic;
+using System.Reflection;
 using HarmonyLib;
 using RimWorld;
-using System.Collections.Generic;
 using UniqueEquipmentTraits.Core.Armor;
+using UniqueEquipmentTraits.Core.Armor.Naming;
 using Verse;
 
 namespace UniqueEquipmentTraits.Utilities
@@ -10,6 +12,15 @@ namespace UniqueEquipmentTraits.Utilities
     [HarmonyPatch(typeof(CompUniqueWeapon), "PostPostMake")]
     public static class Patch_CompUniqueWeapon_PostPostMake_Armor
     {
+        // Prywatne pole Odyssey, które przechowuje
+        // nazwę i zapisuje ją w PostExposeData().
+        private static readonly FieldInfo NameField =
+            AccessTools.Field(
+                typeof(CompUniqueWeapon), "name");
+
+        private static readonly FieldInfo TraitsField =
+            AccessTools.Field(
+                typeof(CompUniqueWeapon), "traits");
 
         public static bool Prefix(CompUniqueWeapon __instance)
         {
@@ -18,6 +29,7 @@ namespace UniqueEquipmentTraits.Utilities
             if (parent == null || parent.def == null)
                 return true;
 
+            // Zwykłe bronie Odyssey pozostają bez zmian.
             if (!UniqueArmorInitializer.IsUniqueArmor(parent.def))
                 return true;
 
@@ -30,21 +42,19 @@ namespace UniqueEquipmentTraits.Utilities
             if (armorComp == null || quality == null)
             {
                 Log.Error(
-                    "[UET ARMOR UNIQUE] Missing required components: " +
+                    "[UET ARMOR UNIQUE] Missing components: " +
                     parent.def.defName);
 
                 return false;
             }
 
-            // Odyssey expects this list to exist.
-            if (__instance.TraitsListForReading == null)
+            // Odyssey oczekuje niepustej listy traitów broni.
+            if (__instance.TraitsListForReading == null &&
+                TraitsField != null)
             {
-                AccessTools.Field(
-                    typeof(CompUniqueWeapon),
-                    "traits")
-                    .SetValue(
-                        __instance,
-                        new List<WeaponTraitDef>());
+                TraitsField.SetValue(
+                    __instance,
+                    new List<WeaponTraitDef>());
             }
 
             bool devSpawn =
@@ -52,7 +62,6 @@ namespace UniqueEquipmentTraits.Utilities
 
             if (devSpawn)
             {
-                // Preserve the user's selections in Dev Spawner.
                 quality.SetQuality(
                     UETDevArmorSpawnContext.SelectedQuality,
                     ArtGenerationContext.Outsider);
@@ -63,6 +72,11 @@ namespace UniqueEquipmentTraits.Utilities
                 bool added =
                     selectedTrait != null &&
                     armorComp.AddTrait(selectedTrait);
+
+                if (added)
+                {
+                    AssignName(__instance, parent, selectedTrait);
+                }
 
                 Log.Message(
                     "[UET ARMOR UNIQUE] Dev spawn: " +
@@ -76,7 +90,7 @@ namespace UniqueEquipmentTraits.Utilities
                 return false;
             }
 
-            // Natural generation through Odyssey.
+            // Naturalne generowanie przez Odyssey.
             quality.SetQuality(
                 QualityUtility.GenerateQuality(
                     QualityGenerator.Super),
@@ -84,6 +98,14 @@ namespace UniqueEquipmentTraits.Utilities
 
             bool initialized =
                 UniqueArmorInitializer.InitializeTraits(parent);
+
+            if (initialized && armorComp.Traits.Count > 0)
+            {
+                AssignName(
+                    __instance,
+                    parent,
+                    armorComp.Traits[0]);
+            }
 
             Log.Message(
                 "[UET ARMOR UNIQUE] Natural spawn: " +
@@ -94,5 +116,56 @@ namespace UniqueEquipmentTraits.Utilities
             return false;
         }
 
+        private static void AssignName(
+            CompUniqueWeapon uniqueComp,
+            ThingWithComps armor,
+            ArmorTraitDef trait)
+        {
+            if (uniqueComp == null ||
+                armor == null ||
+                trait == null)
+            {
+                return;
+            }
+
+            if (NameField == null)
+            {
+                Log.Error(
+                    "[UET ARMOR NAME] Odyssey name field not found.");
+                return;
+            }
+
+            // Nie nadpisujemy istniejącej nazwy.
+            string existing =
+                NameField.GetValue(uniqueComp) as string;
+
+            if (!string.IsNullOrWhiteSpace(existing))
+                return;
+
+            string generated =
+                ArmorNameGenerator.Generate(armor, trait);
+
+            if (string.IsNullOrWhiteSpace(generated))
+            {
+                Log.Warning(
+                    "[UET ARMOR NAME] Generation failed for " +
+                    armor.def.defName +
+                    " | Trait: " + trait.defName);
+                return;
+            }
+
+            NameField.SetValue(uniqueComp, generated);
+
+            // Zachowujemy zachowanie Odyssey dla CompArt.
+            CompArt art = armor.TryGetComp<CompArt>();
+
+            if (art != null)
+                art.Title = generated;
+
+            Log.Message(
+                "[UET ARMOR NAME] Generated: " +
+                generated +
+                " | Trait: " + trait.defName);
+        }
     }
 }
