@@ -66,6 +66,21 @@ namespace UniqueEquipmentTraits.Core.Armor
                         new CompProperties_ArmorTraits());
                 }
 
+                if (!variant.comps.Any(comp =>
+                    comp is CompProperties_UniqueWeapon))
+                {
+                    variant.comps.Add(
+                        new CompProperties_UniqueWeapon
+                        {
+                            weaponCategories = new List<WeaponCategoryDef>(),
+                            namerLabels = new List<string>
+                            {
+                original.label ?? original.defName
+                            }
+                        });
+                }
+
+
                 // Komponent Odyssey dodamy dopiero
                 // po zabezpieczeniu naturalnego generatora.
                 // Na razie wariant nie może trafić

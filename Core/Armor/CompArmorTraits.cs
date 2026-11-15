@@ -39,14 +39,22 @@ namespace UniqueEquipmentTraits.Core.Armor
             }
         }
 
+
         public bool AddTrait(ArmorTraitDef trait)
         {
             if (trait == null || traits.Contains(trait))
                 return false;
 
+            if (parent == null ||
+                !ArmorTraitCompatibility.CanApply(parent.def, trait))
+            {
+                return false;
+            }
+
             traits.Add(trait);
             return true;
         }
+
 
         public override void PostExposeData()
         {

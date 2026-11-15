@@ -422,6 +422,21 @@ namespace UniqueEquipmentTraits.DevTools
                 false);
         }
 
+        private List<ArmorTraitDef> GetCompatibleArmorTraits()
+        {
+            if (selectedApparel == null)
+                return new List<ArmorTraitDef>();
+
+            return DefDatabase<ArmorTraitDef>.AllDefs
+                .Where(t =>
+                    t != null &&
+                    ArmorTraitCompatibility.CanApply(
+                        selectedApparel, t))
+                .OrderBy(t => t.label)
+                .ThenBy(t => t.defName)
+                .ToList();
+        }
+
         private void SelectApparel(ThingDef apparel)
         {
             selectedApparel = apparel;
@@ -434,9 +449,13 @@ namespace UniqueEquipmentTraits.DevTools
             if (apparel.MadeFromStuff)
                 selectedApparelStuff = GenStuff.DefaultStuffFor(apparel);
 
-            selectedArmorTrait =
-                DefDatabase<ArmorTraitDef>.GetNamedSilentFail(
-                    "UET_TestReactive");
+
+            List<ArmorTraitDef> traits =
+                GetCompatibleArmorTraits();
+
+            if (traits.Count > 0)
+                selectedArmorTrait = traits[0];
+
         }
 
         private void DrawApparelCategoryButton(
@@ -599,6 +618,10 @@ namespace UniqueEquipmentTraits.DevTools
 
             DrawQualityButton(rect, ref y);
 
+
+            List<ArmorTraitDef> compatibleTraits =
+                GetCompatibleArmorTraits();
+
             string traitLabel = selectedArmorTrait != null
                 ? selectedArmorTrait.LabelCap.ToString()
                 : "No compatible trait";
@@ -607,21 +630,17 @@ namespace UniqueEquipmentTraits.DevTools
                 new Rect(0f, y, rect.width, 30f),
                 "Trait: " + traitLabel))
             {
-                ArmorTraitDef testTrait =
-                    DefDatabase<ArmorTraitDef>.GetNamedSilentFail(
-                        "UET_TestReactive");
+                List<FloatMenuOption> options =
+                    compatibleTraits
+                        .Select(t => new FloatMenuOption(
+                            t.LabelCap.ToString(),
+                            () => selectedArmorTrait = t))
+                        .ToList();
 
-                if (testTrait != null)
-                {
-                    Find.WindowStack.Add(
-                        new FloatMenu(new List<FloatMenuOption>
-                        {
-                    new FloatMenuOption(
-                        testTrait.LabelCap.ToString(),
-                        () => selectedArmorTrait = testTrait)
-                        }));
-                }
+                if (options.Count > 0)
+                    Find.WindowStack.Add(new FloatMenu(options));
             }
+
 
             y += 50f;
 

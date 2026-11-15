@@ -1,14 +1,16 @@
 ﻿
 using HarmonyLib;
 using RimWorld;
-using Verse;
+using System.Collections.Generic;
 using UniqueEquipmentTraits.Core.Armor;
+using Verse;
 
 namespace UniqueEquipmentTraits.Utilities
 {
     [HarmonyPatch(typeof(CompUniqueWeapon), "PostPostMake")]
     public static class Patch_CompUniqueWeapon_PostPostMake_Armor
     {
+
         public static bool Prefix(CompUniqueWeapon __instance)
         {
             ThingWithComps parent = __instance.parent;
@@ -16,18 +18,8 @@ namespace UniqueEquipmentTraits.Utilities
             if (parent == null || parent.def == null)
                 return true;
 
-            // Zwykłe bronie Odyssey i UET pozostają nietknięte.
-            if (parent.def.apparel == null ||
-                parent.def.defName == null ||
-                !parent.def.defName.StartsWith("UET_Unique_") ||
-                !parent.def.defName.EndsWith("_Armor"))
-            {
+            if (!UniqueArmorInitializer.IsUniqueArmor(parent.def))
                 return true;
-            }
-
-            // Od tego miejsca obsługujemy wyłącznie
-            // specjalny wariant pancerza UET.
-
 
             CompQuality quality =
                 parent.TryGetComp<CompQuality>();
@@ -44,61 +36,63 @@ namespace UniqueEquipmentTraits.Utilities
                 return false;
             }
 
+            // Odyssey expects this list to exist.
+            if (__instance.TraitsListForReading == null)
+            {
+                AccessTools.Field(
+                    typeof(CompUniqueWeapon),
+                    "traits")
+                    .SetValue(
+                        __instance,
+                        new List<WeaponTraitDef>());
+            }
+
             bool devSpawn =
                 UETDevArmorSpawnContext.Matches(parent);
 
-            ArmorTraitDef selectedTrait;
-            QualityCategory selectedQuality;
-
             if (devSpawn)
             {
-                // Equipment Spawner:
-                // używamy traitu i jakości wybranych przez użytkownika.
-                selectedTrait =
+                // Preserve the user's selections in Dev Spawner.
+                quality.SetQuality(
+                    UETDevArmorSpawnContext.SelectedQuality,
+                    ArtGenerationContext.Outsider);
+
+                ArmorTraitDef selectedTrait =
                     UETDevArmorSpawnContext.SelectedTrait;
 
-                selectedQuality =
-                    UETDevArmorSpawnContext.SelectedQuality;
-            }
-            else
-            {
-                // Tymczasowa ścieżka naturalnego generowania.
-                // Pełne losowanie traitów dodamy później.
-                selectedTrait =
-                    DefDatabase<ArmorTraitDef>.GetNamedSilentFail(
-                        "UET_TestReactive");
+                bool added =
+                    selectedTrait != null &&
+                    armorComp.AddTrait(selectedTrait);
 
-                selectedQuality =
-                    QualityUtility.GenerateQuality(
-                        QualityGenerator.Super);
-            }
-
-            if (selectedTrait == null)
-            {
-                Log.Error(
-                    "[UET ARMOR UNIQUE] No trait available for " +
-                    parent.def.defName);
+                Log.Message(
+                    "[UET ARMOR UNIQUE] Dev spawn: " +
+                    parent.def.defName +
+                    " | Trait: " +
+                    (selectedTrait != null
+                        ? selectedTrait.defName
+                        : "null") +
+                    " | Added: " + added);
 
                 return false;
             }
 
+            // Natural generation through Odyssey.
             quality.SetQuality(
-                selectedQuality,
+                QualityUtility.GenerateQuality(
+                    QualityGenerator.Super),
                 ArtGenerationContext.Outsider);
 
-            bool added = armorComp.AddTrait(selectedTrait);
+            bool initialized =
+                UniqueArmorInitializer.InitializeTraits(parent);
 
             Log.Message(
-                "[UET ARMOR UNIQUE] Created: " +
+                "[UET ARMOR UNIQUE] Natural spawn: " +
                 parent.def.defName +
                 " | Quality: " + quality.Quality +
-                " | Trait: " + selectedTrait.defName +
-                " | Added: " + added);
+                " | Initialized: " + initialized);
 
-
-            // Pomijamy oryginalną inicjalizację Odyssey
-            // wyłącznie dla unikalnego pancerza UET.
             return false;
         }
+
     }
 }

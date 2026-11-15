@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using Verse;
 
 namespace UniqueEquipmentTraits.Core.Armor
@@ -7,6 +8,9 @@ namespace UniqueEquipmentTraits.Core.Armor
     {
         // Czy trait aktywuje się w reakcji na trafienie?
         public bool reactive = false;
+
+        public List<ArmorTraitCategory> allowedCategories;
+
 
         public System.Type workerClass;
 

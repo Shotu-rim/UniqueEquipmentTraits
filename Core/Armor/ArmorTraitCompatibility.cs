@@ -1,4 +1,5 @@
 ﻿
+using System.Linq;
 using Verse;
 
 namespace UniqueEquipmentTraits.Core.Armor
@@ -18,7 +19,19 @@ namespace UniqueEquipmentTraits.Core.Armor
                 return false;
             }
 
-            return true;
+            // Brak ograniczeń oznacza uniwersalny trait.
+            if (trait.allowedCategories == null ||
+                trait.allowedCategories.Count == 0)
+            {
+                return true;
+            }
+
+            // Pancerz musi pokrywać przynajmniej jedną
+            // z dozwolonych kategorii traitu.
+            return ArmorTraitEligibility
+                .GetCategories(apparelDef)
+                .Any(category =>
+                    trait.allowedCategories.Contains(category));
         }
     }
 }
