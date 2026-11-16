@@ -58,8 +58,28 @@ namespace UniqueEquipmentTraits.Utilities
             }
 
             bool devSpawn =
-                UETDevArmorSpawnContext.Matches(parent);
-                     
+    UETDevArmorSpawnContext.Matches(parent);
+
+            // Naturalnie generowane unikatowe pancerze
+            // otrzymują jakość jak unikatowe bronie Odyssey.
+            // Dev Spawner zachowuje własną kontrolę jakości.
+            if (UETWorldConversionContext.IsActive)
+            {
+                // Zachowaj jakość oryginalnego przedmiotu
+                // już podczas inicjalizacji unikatowego wariantu.
+                quality.SetQuality(
+                    UETWorldConversionContext.SourceQuality,
+                    ArtGenerationContext.Outsider);
+            }
+            else if (!devSpawn)
+            {
+                // Naturalne nagrody Odyssey.
+                quality.SetQuality(
+                    QualityUtility.GenerateQuality(
+                        QualityGenerator.Super),
+                    ArtGenerationContext.Outsider);
+            }
+
             bool initialized =
                 UniqueArmorInitializer.InitializeTraits(parent);
 

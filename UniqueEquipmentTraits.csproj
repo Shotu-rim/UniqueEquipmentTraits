@@ -170,6 +170,8 @@
     <Compile Include="Traits\UETTraitExtension.cs" />
     <Compile Include="Utilities\Patch_CompUniqueWeapon_PostPostMake_Armor.cs" />
     <Compile Include="Utilities\Patch_CompUniqueWeapon_PostPostMake_WorldQuality.cs" />
+    <Compile Include="Utilities\Patch_StockGenerator_MiscItems_HandlesThingDef.cs" />
+    <Compile Include="Utilities\Patch_StockGenerator_Tag_HandlesThingDef.cs" />
     <Compile Include="Utilities\Patch_ThingSetMaker_Generate_UETDiagnostics.cs" />
     <Compile Include="Utilities\Patch_ThingSetMaker_Generate_UETWorldConversion.cs" />
     <Compile Include="Utilities\Patch_ThingSetMaker_MarketValue_AllowedThingDefs.cs" />
@@ -177,6 +179,7 @@
     <Compile Include="Utilities\Patch_ThingSetMaker_UniqueWeapon_ArmorPool.cs" />
     <Compile Include="Utilities\UETDevArmorSpawnContext.cs" />
     <Compile Include="Utilities\UETDevArmorSpawner.cs" />
+    <Compile Include="Utilities\UETDevForceConversion.cs" />
     <Compile Include="Utilities\UETDevSpawnContext.cs" />
     <Compile Include="Utilities\UETDevWeaponDiagnostics.cs" />
     <Compile Include="Utilities\UETDevWeaponSpawner.cs" />
