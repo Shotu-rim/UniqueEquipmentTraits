@@ -124,6 +124,7 @@
     <Compile Include="Effects\Hediff_Neurotoxic.cs" />
     <Compile Include="Effects\Hediff_SerratedBleeding.cs" />
     <Compile Include="Effects\InfernalEffect.cs" />
+    <Compile Include="Effects\MindflowEffect.cs" />
     <Compile Include="Effects\NaniteDisruptionEffect.cs" />
     <Compile Include="Effects\NaniteDisruptionResult.cs" />
     <Compile Include="Effects\NeurotoxicEffect.cs" />

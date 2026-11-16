@@ -45,8 +45,13 @@ namespace UniqueEquipmentTraits.Core.Armor
 
             foreach (ArmorTraitDef trait in selectedComp.Traits)
             {
-                if (trait != null && trait.reactive)
+
+                if (trait != null &&
+                    trait.activationType == ArmorTraitActivationType.Reactive)
+                {
                     reactiveTraits.Add(trait);
+                }
+
             }
 
             if (reactiveTraits.Count == 0)

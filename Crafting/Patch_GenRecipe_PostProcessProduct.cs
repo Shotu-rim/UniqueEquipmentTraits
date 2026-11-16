@@ -291,14 +291,27 @@ namespace UniqueEquipmentTraits.Crafting
                 result = uniqueWeapon;
                 uniqueWeapon = null;
 
+                bool isPrismatic = uniqueComp.TraitsListForReading[0].defName ==
+                    "UET_Prismatic";
 
+                if (isPrismatic)
+                {
+                    Messages.Message(
+                        worker.LabelShort +
+                        " has achieved the impossible, forging a weapon that defies all known science!",
+                        result,
+                        MessageTypeDefOf.PositiveEvent);
+                }
+                else
+                {
+                    Messages.Message(
+                        worker.LabelShort +
+                        " has transcended the limits of craftsmanship, " +
+                        "forging a weapon imbued with extraordinary power.",
+                        result,
+                        MessageTypeDefOf.PositiveEvent);
+                }
 
-                Messages.Message(
-                    worker.LabelShort +
-                    " has transcended the limits of craftsmanship, " +
-                    "forging a weapon imbued with extraordinary power.",
-                    result,
-                    MessageTypeDefOf.PositiveEvent);
 
 
                 if (Prefs.DevMode)

@@ -4,10 +4,17 @@ using Verse;
 
 namespace UniqueEquipmentTraits.Core.Armor
 {
+    public enum ArmorTraitActivationType
+    {
+        Passive,
+        Reactive,
+        Activated
+    }
+
     public class ArmorTraitDef : Def
     {
-        // Czy trait aktywuje się w reakcji na trafienie?
-        public bool reactive = false;
+        public ArmorTraitActivationType activationType =
+            ArmorTraitActivationType.Passive;
 
         public List<ArmorTraitCategory> allowedCategories;
         public List<string> nameAdjectives;
@@ -33,6 +40,5 @@ namespace UniqueEquipmentTraits.Core.Armor
                 return worker;
             }
         }
-
     }
 }

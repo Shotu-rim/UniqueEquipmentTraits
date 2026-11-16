@@ -31,8 +31,13 @@ namespace UniqueEquipmentTraits.Core.Armor
             {
                 foreach (ArmorTraitDef trait in traits)
                 {
-                    if (trait != null && trait.reactive)
+
+                    if (trait != null &&
+                        trait.activationType == ArmorTraitActivationType.Reactive)
+                    {
                         return true;
+                    }
+
                 }
 
                 return false;
