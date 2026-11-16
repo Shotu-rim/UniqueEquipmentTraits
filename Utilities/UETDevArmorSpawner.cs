@@ -144,6 +144,8 @@ namespace UniqueEquipmentTraits.Utilities
             qualityComp.SetQuality(
                 quality,
                 ArtGenerationContext.Outsider);
+            // Assign a random author to dev-spawned unique armor.
+            UETArtAuthorUtility.EnsureRandomAuthor(armor);
 
             Log.Message(
                 "[UET ARMOR UNIQUE TEST] Created: " +

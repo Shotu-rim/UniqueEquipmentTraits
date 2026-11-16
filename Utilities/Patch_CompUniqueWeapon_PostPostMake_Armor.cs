@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
@@ -12,8 +13,6 @@ namespace UniqueEquipmentTraits.Utilities
     [HarmonyPatch(typeof(CompUniqueWeapon), "PostPostMake")]
     public static class Patch_CompUniqueWeapon_PostPostMake_Armor
     {
-        // Prywatne pole Odyssey, które przechowuje
-        // nazwę i zapisuje ją w PostExposeData().
         private static readonly FieldInfo NameField =
             AccessTools.Field(
                 typeof(CompUniqueWeapon), "name");
@@ -29,7 +28,6 @@ namespace UniqueEquipmentTraits.Utilities
             if (parent == null || parent.def == null)
                 return true;
 
-            // Zwykłe bronie Odyssey pozostają bez zmian.
             if (!UniqueArmorInitializer.IsUniqueArmor(parent.def))
                 return true;
 
@@ -48,7 +46,6 @@ namespace UniqueEquipmentTraits.Utilities
                 return false;
             }
 
-            // Odyssey oczekuje niepustej listy traitów broni.
             if (__instance.TraitsListForReading == null &&
                 TraitsField != null)
             {
@@ -60,7 +57,6 @@ namespace UniqueEquipmentTraits.Utilities
             bool devSpawn =
                 UETDevArmorSpawnContext.Matches(parent);
 
-            // Ustawiamy jakość przed inicjalizacją traitów.
             if (devSpawn)
             {
                 quality.SetQuality(
@@ -85,18 +81,22 @@ namespace UniqueEquipmentTraits.Utilities
 
             if (devSpawn)
             {
-                // Dev Spawner przypisuje dokładnie wybrany trait.
                 initialized = armorComp.AddTrait(
                     UETDevArmorSpawnContext.SelectedTrait);
             }
             else
             {
-                // Naturalna generacja zachowuje losowanie traitu.
                 initialized =
                     UniqueArmorInitializer.InitializeTraits(parent);
             }
-
-            // Nazwa odpowiada rzeczywiście przypisanemu traitowi.
+            Log.Message(
+    "[UET ART DEBUG] Prefix reached | " +
+    "Item: " + parent.def.defName +
+    " | Traits: " + armorComp.Traits.Count +
+    " | Existing name: " +
+    (NameField != null
+        ? (NameField.GetValue(__instance) as string ?? "(null)")
+        : "(field missing)"));
             if (armorComp.Traits.Count > 0)
             {
                 AssignName(
@@ -133,7 +133,6 @@ namespace UniqueEquipmentTraits.Utilities
                 return;
             }
 
-            // Nie nadpisujemy istniejącej nazwy.
             string existing =
                 NameField.GetValue(uniqueComp) as string;
 
@@ -152,12 +151,8 @@ namespace UniqueEquipmentTraits.Utilities
                 return;
             }
 
-            // Nazwa zapisywana przez komponent Odyssey.
             NameField.SetValue(uniqueComp, generated);
 
-            // CompArt został już zainicjalizowany
-            // podczas ustawiania jakości przedmiotu.
-            // Zachowujemy tę samą nazwę jako tytuł historii.
             CompArt art = armor.TryGetComp<CompArt>();
 
             if (art != null)
@@ -169,6 +164,82 @@ namespace UniqueEquipmentTraits.Utilities
                 "[UET ARMOR NAME] Generated: " +
                 generated +
                 " | Trait: " + trait.defName);
+
+            LogArmorArtDiagnostic(
+                armor,
+                trait,
+                generated,
+                art);
+        }
+
+        private static void LogArmorArtDiagnostic(
+            ThingWithComps armor,
+            ArmorTraitDef trait,
+            string generatedName,
+            CompArt art)
+        {
+            string pawnName = "Not identified";
+
+            // Diagnostic only: recognize possessive names.
+            int possessiveIndex =
+                generatedName.IndexOf(
+                    "'s ",
+                    StringComparison.Ordinal);
+
+            if (possessiveIndex > 0)
+            {
+                pawnName = generatedName.Substring(
+                    0, possessiveIndex);
+            }
+
+            string artTitle = "No CompArt";
+            string history = "No CompArt";
+            string taleStatus = "No CompArt";
+
+            if (art != null)
+            {
+                artTitle = art.Title;
+                taleStatus =
+                    art.TaleRef != null
+                        ? "Present"
+                        : "Missing";
+
+                try
+                {
+                    history = art.GetDescriptionPart();
+
+                    if (string.IsNullOrWhiteSpace(history))
+                        history = "(Empty description)";
+                }
+                catch (Exception ex)
+                {
+                    history =
+                        "Description generation failed: " +
+                        ex;
+                }
+            }
+
+            CompQuality quality =
+                armor.TryGetComp<CompQuality>();
+
+            string qualityText =
+                quality != null
+                    ? quality.Quality.ToString()
+                    : "Unknown";
+
+            Log.Message(
+                "\n========== UET ARMOR ART DIAGNOSTIC ==========\n" +
+                "Item: " + armor.def.label + "\n" +
+                "DefName: " + armor.def.defName + "\n" +
+                "Quality: " + qualityText + "\n" +
+                "Trait: " + trait.defName + "\n" +
+                "Generated name: " + generatedName + "\n" +
+                "Pawn name (inferred): " + pawnName + "\n" +
+                "Art title: " + artTitle + "\n" +
+                "TaleReference: " + taleStatus + "\n" +
+                "History and author (vanilla text):\n" +
+                history + "\n" +
+                "==============================================");
         }
     }
 }

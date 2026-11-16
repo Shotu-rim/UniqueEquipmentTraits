@@ -36,6 +36,8 @@ namespace UniqueEquipmentTraits.Utilities
             quality.SetQuality(
                 UETWorldConversionContext.SourceQuality,
                 ArtGenerationContext.Outsider);
+            // Assign author
+            UETArtAuthorUtility.EnsureRandomAuthor(parent);
         }
     }
 }

@@ -21,6 +21,19 @@ namespace UniqueEquipmentTraits.Core.Armor
             int registered = 0;
             int skipped = 0;
 
+            RulePackDef armorDescription =
+                DefDatabase<RulePackDef>.GetNamedSilentFail(
+                "UET_ArtDescription_Armor");
+
+            if (armorDescription == null)
+            {
+                Log.Error(
+                    "[UET ARMOR ART] Missing RulePackDef: " +
+                    "UET_ArtDescription_Armor");
+
+                return;
+            }
+
             List<ThingDef> candidates = DefDatabase<ThingDef>.AllDefs
                 .Where(IsPreResolveCandidate)
                 .OrderBy(def => def.defName)
@@ -52,6 +65,7 @@ namespace UniqueEquipmentTraits.Core.Armor
                         original, null);
 
                 variant.defName = variantName;
+
                 // Wariant UET nie powinien trafiać do zwykłego
                 // losowania wyposażenia pawnów.
                 variant.generateCommonality = 0f;
@@ -85,9 +99,28 @@ namespace UniqueEquipmentTraits.Core.Armor
                 }
 
 
-                if (!variant.comps.Any(comp =>
-                    comp is CompProperties_Art))
+                CompProperties_Art existingArt =
+                    variant.comps
+                        .OfType<CompProperties_Art>()
+                        .FirstOrDefault();
+
+                if (existingArt != null)
                 {
+                    // Clone to avoid modifying the original apparel's CompArt.
+                    CompProperties_Art variantArt =
+                        (CompProperties_Art)CloneMethod.Invoke(
+                            existingArt, null);
+
+                    variantArt.descriptionMaker = armorDescription;
+                    variantArt.minQualityForArtistic =
+                        QualityCategory.Masterwork;
+
+                    int index = variant.comps.IndexOf(existingArt);
+                    variant.comps[index] = variantArt;
+                }
+                else
+                {
+                    // Preserve the existing naming rules for now.
                     CompProperties_Art sourceArt =
                         DefDatabase<ThingDef>.AllDefs
                             .Where(def => def.comps != null)
@@ -104,7 +137,7 @@ namespace UniqueEquipmentTraits.Core.Armor
                             new CompProperties_Art
                             {
                                 nameMaker = sourceArt.nameMaker,
-                                descriptionMaker = sourceArt.descriptionMaker,
+                                descriptionMaker = armorDescription,
                                 minQualityForArtistic =
                                     QualityCategory.Masterwork
                             });
@@ -112,13 +145,10 @@ namespace UniqueEquipmentTraits.Core.Armor
                     else
                     {
                         Log.Warning(
-                            "[UET ARMOR ART] No suitable art rules found: " +
+                            "[UET ARMOR ART] No suitable name rules found: " +
                             variant.defName);
                     }
                 }
-
-
-
 
                 // Komponent Odyssey dodamy dopiero
                 // po zabezpieczeniu naturalnego generatora.

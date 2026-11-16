@@ -120,6 +120,8 @@ namespace UniqueEquipmentTraits.Utilities
             compQuality?.SetQuality(
                 quality,
                 ArtGenerationContext.Outsider);
+            // Assign a random author to dev-spawned unique weapons.
+            UETArtAuthorUtility.EnsureRandomAuthor(weapon);
 
             CompUniqueWeapon uniqueComp =
                 weapon.TryGetComp<CompUniqueWeapon>();

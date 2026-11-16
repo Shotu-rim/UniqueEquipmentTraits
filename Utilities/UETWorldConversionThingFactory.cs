@@ -81,6 +81,14 @@ namespace UniqueEquipmentTraits.Utilities
                 replacementQuality.SetQuality(
                     sourceQuality.Quality,
                     ArtGenerationContext.Outsider);
+                // Assign a random author to world-generated
+                // unique armor, without overwriting an existing author.
+
+                if (replacement.def.IsApparel)
+                {
+                    UETArtAuthorUtility.EnsureRandomAuthor(
+                        replacement as ThingWithComps);
+                }
 
                 if (original.def.useHitPoints &&
                     replacement.def.useHitPoints)
