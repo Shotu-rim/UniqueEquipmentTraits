@@ -21,15 +21,6 @@ namespace UniqueEquipmentTraits.Core.Armor
             int registered = 0;
             int skipped = 0;
 
-            ThingSetMakerDef rewardDef =
-                ThingSetMakerDefOf.Reward_UniqueWeapon;
-
-            Log.Message(
-                "[UET REWARD CHECK] " +
-                rewardDef.defName +
-                " | root: " +
-                rewardDef.root.GetType().FullName);
-
             List<ThingDef> candidates = DefDatabase<ThingDef>.AllDefs
                 .Where(IsPreResolveCandidate)
                 .OrderBy(def => def.defName)
@@ -40,9 +31,8 @@ namespace UniqueEquipmentTraits.Core.Armor
             foreach (ThingDef original in candidates)
             {
                 string variantName =
-                    "UET_Unique_" +
-                    original.defName +
-                    "_Armor";
+                    UniqueVariantNameGenerator.GetVariantName(
+                    original, "Armor");
 
                 ThingDef existing =
                     DefDatabase<ThingDef>

@@ -1,9 +1,10 @@
 ﻿
-using System;
-using System.Collections.Generic;
 using HarmonyLib;
 using RimWorld;
+using System;
+using System.Collections.Generic;
 using Verse;
+using static UnityEngine.Scripting.GarbageCollector;
 
 namespace UniqueEquipmentTraits.Utilities
 {
@@ -13,163 +14,247 @@ namespace UniqueEquipmentTraits.Utilities
         new Type[] { typeof(ThingSetMakerParams) })]
     public static class Patch_ThingSetMaker_Generate_UETDiagnostics
     {
-        private static int nextOperationId;
-
-        [HarmonyPrefix]
-        public static void Prefix(
-            ThingSetMaker __instance,
-            out int __state)
+        private sealed class GeneratorStats
         {
-            __state = ++nextOperationId;
-
-            if (!Prefs.DevMode)
-                return;
-
-            Log.Message(
-                "[UET][WORLD][" + __state + "][START] " +
-                "Generator: " + __instance.GetType().FullName);
+            public int Calls;
+            public int RootCalls;
+            public int NestedCalls;
+            public int Unique;
+            public int Candidates;
+            public int Skipped;
         }
 
-        [HarmonyPostfix]
-        public static void Postfix(
-            ThingSetMaker __instance,
-            List<Thing> __result,
-            int __state)
+        private sealed class GenerationContext
         {
+            public readonly HashSet<Thing> Seen =
+                new HashSet<Thing>();
+
+            public readonly HashSet<Thing> Candidates =
+                new HashSet<Thing>();
+        }
+
+        private sealed class CallState
+        {
+            public bool Active;
+            public bool Root;
+            public GenerationContext Context;
+        }
+
+        [ThreadStatic]
+        private static int depth;
+
+        [ThreadStatic]
+        private static GenerationContext currentContext;
+        [ThreadStatic]
+        private static int worldConversionDepth;
+
+        private static readonly Dictionary<string, GeneratorStats>
+            statistics = new Dictionary<string, GeneratorStats>();
+
+        private static int totalOperations;
+        private static int totalUnique;
+        private static int totalCandidates;
+        private static int totalSkipped;
+
+        [HarmonyPrefix]
+        private static void Prefix(
+            ThingSetMaker __instance,
+            out CallState __state)
+        {
+            __state = new CallState();
+
+            // World Conversion must track nesting even outside DevMode.
+            worldConversionDepth++;
+
             if (!Prefs.DevMode)
                 return;
 
-            string source = __instance.GetType().Name;
+            __state.Active = true;
+            __state.Root = depth == 0;
 
-            if (__result == null)
+            if (__state.Root)
             {
-                Log.Warning(
-                    "[UET][WORLD][" + __state +
-                    "][RESULT] NULL | Source: " + source);
-                return;
+                currentContext = new GenerationContext();
+                totalOperations++;
             }
 
-            Log.Message(
-                "[UET][WORLD][" + __state +
-                "][RESULT] Source: " + source +
-                " | Count: " + __result.Count);
+            __state.Context = currentContext;
+            depth++;
 
-            int candidates = 0;
-            int skipped = 0;
+            string source = __instance.GetType().FullName;
 
-            for (int i = 0; i < __result.Count; i++)
+            GeneratorStats stats = GetStats(source);
+
+            stats.Calls++;
+
+            if (__state.Root)
+                stats.RootCalls++;
+            else
+                stats.NestedCalls++;
+        }
+
+
+        [HarmonyPostfix]
+        private static void Postfix(
+            ThingSetMaker __instance,
+            List<Thing> __result,
+            CallState __state)
+        {
+            try
             {
-                Thing thing = __result[i];
-
-                if (thing == null)
+                // Only process the outermost Generate() call.
+                if (worldConversionDepth == 1 &&
+                    __result != null)
                 {
-                    Log.Warning(
-                        "[UET][WORLD][" + __state +
-                        "][ITEM " + i + "] NULL");
-                    skipped++;
-                    continue;
+                    UETWorldConversionProcessor.Process(__result);
                 }
 
-                bool minified = thing is MinifiedThing;
+                // Existing diagnostics remain DevMode-only.
+                if (__state != null && __state.Active)
+                {
+                    if (__result != null)
+                    {
+                        AnalyzeResults(
+                            __instance.GetType().FullName,
+                            __result,
+                            __state.Context);
+                    }
+                }
+            }
+            finally
+            {
+                if (__state != null && __state.Active)
+                {
+                    depth--;
 
-                Thing inspected = thing;
+                    if (__state.Root)
+                        currentContext = null;
+                }
+
+                worldConversionDepth--;
+            }
+        }
+
+
+        private static void AnalyzeResults(
+            string source,
+            List<Thing> things,
+            GenerationContext context)
+        {
+            GeneratorStats stats = GetStats(source);
+
+            foreach (Thing original in things)
+            {
+                if (original == null)
+                    continue;
+
+                Thing thing = original;
 
                 if (thing is MinifiedThing wrapper)
-                    inspected = wrapper.InnerThing;
+                    thing = wrapper.InnerThing;
 
-                if (inspected == null || inspected.def == null)
+                if (thing == null || thing.def == null)
+                    continue;
+
+                // Ten sam przedmiot może pojawić się
+                // w wynikach kilku zagnieżdżonych generatorów.
+                if (!context.Seen.Add(thing))
+                    continue;
+
+                CompUniqueWeapon unique =
+                    thing.TryGetComp<CompUniqueWeapon>();
+
+                if (unique != null)
                 {
-                    Log.Warning(
-                        "[UET][WORLD][" + __state +
-                        "][ITEM " + i +
-                        "] Missing inner Thing or ThingDef");
-                    skipped++;
+                    stats.Unique++;
+                    totalUnique++;
                     continue;
                 }
 
-                ThingDef def = inspected.def;
+                ThingDef def = thing.def;
 
-                CompQuality qualityComp =
-                    inspected.TryGetComp<CompQuality>();
+                if (!def.IsMeleeWeapon && !def.IsApparel)
+                {
+                    stats.Skipped++;
+                    totalSkipped++;
+                    continue;
+                }
 
-                CompUniqueWeapon uniqueComp =
-                    inspected.TryGetComp<CompUniqueWeapon>();
+                CompQuality quality =
+                    thing.TryGetComp<CompQuality>();
 
-                bool hasQuality = qualityComp != null;
-                bool alreadyUnique = uniqueComp != null;
+                if (quality == null ||
+                    (quality.Quality != QualityCategory.Masterwork &&
+                     quality.Quality != QualityCategory.Legendary))
+                {
+                    stats.Skipped++;
+                    totalSkipped++;
+                    continue;
+                }
 
-                bool melee = def.IsMeleeWeapon;
-                bool apparel = def.IsApparel;
+                context.Candidates.Add(thing);
 
-                bool supportedType = melee || apparel;
-
-                QualityCategory quality =
-                    hasQuality
-                        ? qualityComp.Quality
-                        : QualityCategory.Awful;
-
-                bool eligibleQuality =
-                    hasQuality &&
-                    (quality == QualityCategory.Masterwork ||
-                     quality == QualityCategory.Legendary);
+                stats.Candidates++;
+                totalCandidates++;
 
                 Log.Message(
-                    "[UET][WORLD][" + __state +
-                    "][ITEM " + i + "]" +
-                    " Def: " + def.defName +
+                    "[UET][WORLD][CANDIDATE] " +
+                    "Source: " + source +
+                    " | Def: " + def.defName +
+                    " | Quality: " + quality.Quality +
                     " | Stuff: " +
-                    (inspected.Stuff != null
-                        ? inspected.Stuff.defName
-                        : "none") +
-                    " | Quality: " +
-                    (hasQuality
-                        ? quality.ToString()
-                        : "none") +
-                    " | Minified: " + minified +
-                    " | Melee: " + melee +
-                    " | Apparel: " + apparel +
-                    " | CompUniqueWeapon: " + alreadyUnique);
+                    (thing.Stuff != null
+                        ? thing.Stuff.defName
+                        : "none"));
+            }
+        }
 
-                string reason;
-
-                if (alreadyUnique)
-                {
-                    reason = "ALREADY_UNIQUE";
-                }
-                else if (!supportedType)
-                {
-                    reason = "UNSUPPORTED_TYPE";
-                }
-                else if (!hasQuality)
-                {
-                    reason = "NO_QUALITY_COMP";
-                }
-                else if (!eligibleQuality)
-                {
-                    reason = "QUALITY_BELOW_MASTERWORK";
-                }
-                else
-                {
-                    reason = "PRELIMINARY_CANDIDATE";
-                }
-
-                if (reason == "PRELIMINARY_CANDIDATE")
-                    candidates++;
-                else
-                    skipped++;
-
-                Log.Message(
-                    "[UET][WORLD][" + __state +
-                    "][CHECK " + i + "] " +
-                    "Result: " + reason);
+        private static GeneratorStats GetStats(string source)
+        {
+            if (!statistics.TryGetValue(
+                source, out GeneratorStats stats))
+            {
+                stats = new GeneratorStats();
+                statistics.Add(source, stats);
             }
 
+            return stats;
+        }
+
+        public static void PrintSummary()
+        {
             Log.Message(
-                "[UET][WORLD][" + __state +
-                "][END] Source: " + source +
-                " | Items: " + __result.Count +
-                " | PreliminaryCandidates: " + candidates +
-                " | Skipped: " + skipped);
+                "[UET][WORLD][SUMMARY] " +
+                "RootOperations: " + totalOperations +
+                " | AlreadyUnique: " + totalUnique +
+                " | PreliminaryCandidates: " + totalCandidates +
+                " | Skipped: " + totalSkipped);
+
+            foreach (KeyValuePair<string, GeneratorStats> entry
+                in statistics)
+            {
+                GeneratorStats stats = entry.Value;
+
+                Log.Message(
+                    "[UET][WORLD][GENERATOR] " +
+                    entry.Key +
+                    " | Calls: " + stats.Calls +
+                    " | Root: " + stats.RootCalls +
+                    " | Nested: " + stats.NestedCalls +
+                    " | Unique: " + stats.Unique +
+                    " | Candidates: " + stats.Candidates +
+                    " | Skipped: " + stats.Skipped);
+            }
+        }
+
+        public static void ResetStatistics()
+        {
+            statistics.Clear();
+
+            totalOperations = 0;
+            totalUnique = 0;
+            totalCandidates = 0;
+            totalSkipped = 0;
         }
     }
 }

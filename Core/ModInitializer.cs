@@ -41,27 +41,6 @@ namespace UniqueEquipmentTraits.Core
                     " | Stuff-based: " + stuffCount +
                     " | Non-stuff: " + nonStuffCount);
                 ArmorTraitDiagnostics.Run();
-                ThingDef testArmor =
-            DefDatabase<ThingDef>.GetNamedSilentFail(
-                "UET_Unique_Test_Armor");
-
-                if (testArmor != null)
-                {
-                    bool eligible =
-                        ArmorTraitEligibility.CanReceiveArmorTrait(
-                            testArmor);
-
-                    Log.Message(
-                        "[UET ARMOR UNIQUE TEST] Post-load eligibility: " +
-                        eligible +
-                        " | Original: Apparel_AirwireHeadset" +
-                        " | Has CompUniqueWeapon: " +
-                        testArmor.HasComp<CompUniqueWeapon>() +
-                        " | Has CompArmorTraits: " +
-                        testArmor.HasComp<CompArmorTraits>());
-                }
-
-
 
             });
         }

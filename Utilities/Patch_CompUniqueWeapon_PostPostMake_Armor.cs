@@ -59,43 +59,7 @@ namespace UniqueEquipmentTraits.Utilities
 
             bool devSpawn =
                 UETDevArmorSpawnContext.Matches(parent);
-
-            if (devSpawn)
-            {
-                quality.SetQuality(
-                    UETDevArmorSpawnContext.SelectedQuality,
-                    ArtGenerationContext.Outsider);
-
-                ArmorTraitDef selectedTrait =
-                    UETDevArmorSpawnContext.SelectedTrait;
-
-                bool added =
-                    selectedTrait != null &&
-                    armorComp.AddTrait(selectedTrait);
-
-                if (added)
-                {
-                    AssignName(__instance, parent, selectedTrait);
-                }
-
-                Log.Message(
-                    "[UET ARMOR UNIQUE] Dev spawn: " +
-                    parent.def.defName +
-                    " | Trait: " +
-                    (selectedTrait != null
-                        ? selectedTrait.defName
-                        : "null") +
-                    " | Added: " + added);
-
-                return false;
-            }
-
-            // Naturalne generowanie przez Odyssey.
-            quality.SetQuality(
-                QualityUtility.GenerateQuality(
-                    QualityGenerator.Super),
-                ArtGenerationContext.Outsider);
-
+                     
             bool initialized =
                 UniqueArmorInitializer.InitializeTraits(parent);
 

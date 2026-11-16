@@ -99,6 +99,7 @@
     <Compile Include="Core\UETEquipmentStateManager.cs" />
     <Compile Include="Core\UETStunUtility.cs" />
     <Compile Include="Core\UniqueCraftingChance.cs" />
+    <Compile Include="Core\UniqueVariantNameGenerator.cs" />
     <Compile Include="Core\UniqueWeaponCompFactory.cs" />
     <Compile Include="Core\UniqueWeaponDebugActions.cs" />
     <Compile Include="Core\UniqueWeaponDefGenerator.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Patches\Patch_CompUniqueWeapon_CanAddTrait.cs" />
     <Compile Include="Patches\Patch_CompUniqueWeapon_DevInitializeTraits.cs" />
     <Compile Include="Patches\Patch_EquipmentRemoved.cs" />
+    <Compile Include="Utilities\DebugAction_UETWorldDiagnostics.cs" />
     <Compile Include="Utilities\Patch_CompUniqueWeapon_InitializeTraits.cs" />
     <Compile Include="Patches\Patch_DamageWorker_AddInjury.cs" />
     <Compile Include="Patches\Patch_NaniteCapacityDisplay.cs" />
@@ -167,8 +169,11 @@
     <Compile Include="Traits\NeurotoxicUtility.cs" />
     <Compile Include="Traits\UETTraitExtension.cs" />
     <Compile Include="Utilities\Patch_CompUniqueWeapon_PostPostMake_Armor.cs" />
+    <Compile Include="Utilities\Patch_CompUniqueWeapon_PostPostMake_WorldQuality.cs" />
     <Compile Include="Utilities\Patch_ThingSetMaker_Generate_UETDiagnostics.cs" />
+    <Compile Include="Utilities\Patch_ThingSetMaker_Generate_UETWorldConversion.cs" />
     <Compile Include="Utilities\Patch_ThingSetMaker_MarketValue_AllowedThingDefs.cs" />
+    <Compile Include="Utilities\Patch_ThingSetMaker_UMWUnique_ArmorPool.cs" />
     <Compile Include="Utilities\Patch_ThingSetMaker_UniqueWeapon_ArmorPool.cs" />
     <Compile Include="Utilities\UETDevArmorSpawnContext.cs" />
     <Compile Include="Utilities\UETDevArmorSpawner.cs" />
@@ -177,6 +182,12 @@
     <Compile Include="Utilities\UETDevWeaponSpawner.cs" />
     <Compile Include="Utilities\UETDevWeaponSpawnerAction.cs" />
     <Compile Include="Utilities\UETDevWeaponSpawnerWindow.cs" />
+    <Compile Include="Utilities\UETUniqueRewardThingFactory.cs" />
+    <Compile Include="Utilities\UETWorldConversionContext.cs" />
+    <Compile Include="Utilities\UETWorldConversionDefResolver.cs" />
+    <Compile Include="Utilities\UETWorldConversionEligibility.cs" />
+    <Compile Include="Utilities\UETWorldConversionProcessor.cs" />
+    <Compile Include="Utilities\UETWorldConversionThingFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Effects\ArmorEffects\" />

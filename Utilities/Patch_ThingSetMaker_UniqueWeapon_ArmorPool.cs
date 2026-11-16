@@ -1,12 +1,13 @@
 ﻿
+using HarmonyLib;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using HarmonyLib;
-using RimWorld;
 using UniqueEquipmentTraits.Core.Armor;
+using UniqueEquipmentTraits.Utilities;
 using Verse;
 
 namespace UniqueEquipmentTraits.Patches
@@ -75,6 +76,18 @@ namespace UniqueEquipmentTraits.Patches
             AccessTools.Method(
                 typeof(Patch_ThingSetMaker_UniqueWeapon_ArmorPool),
                 nameof(FilterCandidates));
+
+        private static readonly MethodInfo OriginalMakeThingMethod =
+    AccessTools.Method(
+        typeof(ThingMaker),
+        nameof(ThingMaker.MakeThing),
+        new[] { typeof(ThingDef), typeof(ThingDef) });
+
+        private static readonly MethodInfo UETMakeThingMethod =
+    AccessTools.Method(
+        typeof(UETUniqueRewardThingFactory),
+        nameof(UETUniqueRewardThingFactory.MakeThing),
+        new[] { typeof(ThingDef), typeof(ThingDef) });
 
 
         private static IEnumerable<ThingDef> FilterCandidates(
@@ -167,12 +180,39 @@ namespace UniqueEquipmentTraits.Patches
 
                 return codes;
             }
+            bool isGenerate = original.Name == "Generate";
+
+            int makeThingMatches = isGenerate
+                ? codes.Count(code => code.Calls(OriginalMakeThingMethod))
+                : 0;
+
+            if (isGenerate && makeThingMatches != 1)
+            {
+                Log.Error(
+                    "[UET REWARD] Expected one ThingMaker.MakeThing call, found " +
+                    makeThingMatches +
+                    ". Original method preserved.");
+
+                return codes;
+            }
 
             List<CodeInstruction> result =
                 new List<CodeInstruction>();
 
             foreach (CodeInstruction instruction in codes)
             {
+                if (isGenerate && instruction.Calls(OriginalMakeThingMethod))
+                {
+                    CodeInstruction replacement =
+                        new CodeInstruction(instruction);
+
+                    replacement.opcode = OpCodes.Call;
+                    replacement.operand = UETMakeThingMethod;
+
+                    result.Add(replacement);
+                    continue;
+                }
+
                 result.Add(instruction);
 
                 if (instruction.Calls(WhereMethod))

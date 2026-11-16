@@ -137,14 +137,8 @@ namespace UniqueEquipmentTraits.Utilities
         // Mirrors UniqueWeaponDefGenerator.GetVariantName; in case
         private static string ExpectedVariantName(ThingDef original)
         {
-            string packageId = original.modContentPack != null
-                ? original.modContentPack.PackageId : "unknown";
-            byte[] bytes = Encoding.UTF8.GetBytes(packageId + ":" + original.defName);
-            byte[] hash;
-            using (SHA256 sha = SHA256.Create()) hash = sha.ComputeHash(bytes);
-            StringBuilder suffix = new StringBuilder();
-            for (int i = 0; i < 12; i++) suffix.Append(hash[i].ToString("x2"));
-            return "UET_Unique_" + suffix + "_Weapon";
+            return UniqueVariantNameGenerator.GetVariantName(
+                original, "Weapon");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Linq;
 using RimWorld;
 using Verse;
@@ -7,32 +8,51 @@ namespace UniqueEquipmentTraits.Core.Armor
 {
     public static class UniqueArmorPoolFilter
     {
-
         public static bool CanGenerate(ThingDef def)
         {
-            if (def == null)
+            if (def == null || !def.HasComp<CompUniqueWeapon>())
                 return false;
 
-            if (!def.HasComp<CompUniqueWeapon>())
-                return false;
+            bool isUETArmor =
+                UniqueArmorInitializer.IsUniqueArmor(def);
 
-            // Nie ingerujemy w zwykłe unikalne bronie Odyssey.
-            if (!UniqueArmorInitializer.IsUniqueArmor(def))
+            bool isUETMelee =
+                def.defName != null &&
+                def.defName.StartsWith(
+                    "UET_Unique_",
+                    StringComparison.Ordinal) &&
+                def.IsMeleeWeapon;
+
+            // Nie ingerujemy w oryginalne unikatowe bronie Odyssey.
+            if (!isUETArmor && !isUETMelee)
                 return true;
 
-            bool compatible =
-                DefDatabase<ArmorTraitDef>.AllDefs
+            // Wariant UET musi mieć dostępny materiał,
+            // jeżeli wymaga go jego definicja.
+            if (def.MadeFromStuff &&
+                !GenStuff.AllowedStuffsFor(
+                    def,
+                    TechLevel.Undefined,
+                    checkAllowedInStuffGeneration: true
+                ).Any())
+            {
+                return false;
+            }
+
+            // Unikatowy pancerz musi mieć przynajmniej
+            // jeden kompatybilny trait.
+            if (isUETArmor)
+            {
+                return DefDatabase<ArmorTraitDef>.AllDefs
                     .Any(trait =>
                         trait != null &&
-                        ArmorTraitCompatibility.CanApply(def, trait));
+                        ArmorTraitCompatibility.CanApply(
+                            def, trait));
+            }
 
-            Log.Message(
-                "[UET ARMOR POOL] " +
-                def.defName +
-                " | Compatible: " + compatible);
-
-            return compatible;
+            // Walidację traitów broni białej
+            // dodamy po sprawdzeniu jej inicjalizatora.
+            return true;
         }
-
     }
 }
