@@ -97,10 +97,55 @@ namespace UniqueEquipmentTraits.Core.Armor.Naming
         // Generuje fikcyjną postać analogicznie
         // do mechanizmu używanego przez Odyssey.
 
+
+        public static void TestOdysseyPawnGeneration()
+        {
+            Log.Message("[UET PAWN TEST] Starting.");
+
+            try
+            {
+                TaleData_Pawn data =
+                    TaleData_Pawn.GenerateRandom(humanLike: true);
+
+                if (data == null || data.name == null)
+                {
+                    Log.Warning("[UET PAWN TEST] No pawn name generated.");
+                    return;
+                }
+
+                Log.Message(
+                    "[UET PAWN TEST] Success: " +
+                    data.name.ToStringFull);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("[UET PAWN TEST] Failed: " + ex);
+            }
+        }
+
         public static string GetRandomPawnName()
         {
-            return null;
+            Gender gender = Rand.Bool
+                ? Gender.Male
+                : Gender.Female;
+
+            Name name = PawnBioAndNameGenerator.GenerateFullPawnName(
+                ThingDefOf.Human,
+                gender: gender,
+                nameCategory: PawnNameCategory.HumanStandard,
+                forceNoNick: true);
+
+            if (name == null)
+                return null;
+
+            NameTriple triple = name as NameTriple;
+
+            if (triple != null)
+                return triple.First;
+
+            return name.ToStringShort;
         }
+
 
 
         // Buduje angielski dopełniacz imienia.

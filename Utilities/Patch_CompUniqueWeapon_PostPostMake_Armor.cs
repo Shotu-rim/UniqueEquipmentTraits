@@ -58,32 +58,46 @@ namespace UniqueEquipmentTraits.Utilities
             }
 
             bool devSpawn =
-    UETDevArmorSpawnContext.Matches(parent);
+                UETDevArmorSpawnContext.Matches(parent);
 
-            // Naturalnie generowane unikatowe pancerze
-            // otrzymują jakość jak unikatowe bronie Odyssey.
-            // Dev Spawner zachowuje własną kontrolę jakości.
-            if (UETWorldConversionContext.IsActive)
+            // Ustawiamy jakość przed inicjalizacją traitów.
+            if (devSpawn)
             {
-                // Zachowaj jakość oryginalnego przedmiotu
-                // już podczas inicjalizacji unikatowego wariantu.
+                quality.SetQuality(
+                    UETDevArmorSpawnContext.SelectedQuality,
+                    ArtGenerationContext.Outsider);
+            }
+            else if (UETWorldConversionContext.IsActive)
+            {
                 quality.SetQuality(
                     UETWorldConversionContext.SourceQuality,
                     ArtGenerationContext.Outsider);
             }
-            else if (!devSpawn)
+            else
             {
-                // Naturalne nagrody Odyssey.
                 quality.SetQuality(
                     QualityUtility.GenerateQuality(
                         QualityGenerator.Super),
                     ArtGenerationContext.Outsider);
             }
 
-            bool initialized =
-                UniqueArmorInitializer.InitializeTraits(parent);
+            bool initialized;
 
-            if (initialized && armorComp.Traits.Count > 0)
+            if (devSpawn)
+            {
+                // Dev Spawner przypisuje dokładnie wybrany trait.
+                initialized = armorComp.AddTrait(
+                    UETDevArmorSpawnContext.SelectedTrait);
+            }
+            else
+            {
+                // Naturalna generacja zachowuje losowanie traitu.
+                initialized =
+                    UniqueArmorInitializer.InitializeTraits(parent);
+            }
+
+            // Nazwa odpowiada rzeczywiście przypisanemu traitowi.
+            if (armorComp.Traits.Count > 0)
             {
                 AssignName(
                     __instance,
@@ -138,13 +152,18 @@ namespace UniqueEquipmentTraits.Utilities
                 return;
             }
 
+            // Nazwa zapisywana przez komponent Odyssey.
             NameField.SetValue(uniqueComp, generated);
 
-            // Zachowujemy zachowanie Odyssey dla CompArt.
+            // CompArt został już zainicjalizowany
+            // podczas ustawiania jakości przedmiotu.
+            // Zachowujemy tę samą nazwę jako tytuł historii.
             CompArt art = armor.TryGetComp<CompArt>();
 
             if (art != null)
+            {
                 art.Title = generated;
+            }
 
             Log.Message(
                 "[UET ARMOR NAME] Generated: " +

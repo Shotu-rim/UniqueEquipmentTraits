@@ -186,6 +186,7 @@
     <Compile Include="Utilities\UETDevWeaponSpawner.cs" />
     <Compile Include="Utilities\UETDevWeaponSpawnerAction.cs" />
     <Compile Include="Utilities\UETDevWeaponSpawnerWindow.cs" />
+    <Compile Include="Utilities\UETPawnGenerationTest.cs" />
     <Compile Include="Utilities\UETUniqueRewardThingFactory.cs" />
     <Compile Include="Utilities\UETWorldConversionContext.cs" />
     <Compile Include="Utilities\UETWorldConversionDefResolver.cs" />

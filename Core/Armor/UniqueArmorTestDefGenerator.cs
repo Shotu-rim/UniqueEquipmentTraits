@@ -85,6 +85,41 @@ namespace UniqueEquipmentTraits.Core.Armor
                 }
 
 
+                if (!variant.comps.Any(comp =>
+                    comp is CompProperties_Art))
+                {
+                    CompProperties_Art sourceArt =
+                        DefDatabase<ThingDef>.AllDefs
+                            .Where(def => def.comps != null)
+                            .SelectMany(def => def.comps)
+                            .OfType<CompProperties_Art>()
+                            .FirstOrDefault(comp =>
+                                comp.nameMaker != null &&
+                                comp.descriptionMaker != null &&
+                                !comp.mustBeFullGrave);
+
+                    if (sourceArt != null)
+                    {
+                        variant.comps.Add(
+                            new CompProperties_Art
+                            {
+                                nameMaker = sourceArt.nameMaker,
+                                descriptionMaker = sourceArt.descriptionMaker,
+                                minQualityForArtistic =
+                                    QualityCategory.Masterwork
+                            });
+                    }
+                    else
+                    {
+                        Log.Warning(
+                            "[UET ARMOR ART] No suitable art rules found: " +
+                            variant.defName);
+                    }
+                }
+
+
+
+
                 // Komponent Odyssey dodamy dopiero
                 // po zabezpieczeniu naturalnego generatora.
                 // Na razie wariant nie może trafić
