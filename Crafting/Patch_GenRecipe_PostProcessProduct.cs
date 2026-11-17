@@ -1,15 +1,27 @@
 ﻿
-using System;
 using HarmonyLib;
 using RimWorld;
-using Verse;
+using System;
 using UniqueEquipmentTraits.Core;
+using Verse;
 
 namespace UniqueEquipmentTraits.Crafting
 {
+    /// <summary>
+    /// Handles the conversion of crafted melee weapons into UET unique variants.
+    /// Preserves crafting notifications and artwork events during conversion,
+    /// evaluates unique crafting chances, and transfers item properties.
+    /// Other mods can integrate with this system through compatible
+    /// unique weapon variants and crafting definitions.
+    /// </summary>
     [HarmonyPatch(typeof(GenRecipe), "PostProcessProduct")]
     public static class Patch_GenRecipe_PostProcessProduct
     {
+        /// <summary>
+        /// Stores temporary state for a single crafting operation.
+        /// Tracks inspiration and deferred notifications while supporting
+        /// nested crafting contexts on the current thread.
+        /// </summary>
         internal sealed class CraftContext
         {
             internal Thing Product;
@@ -117,7 +129,7 @@ namespace UniqueEquipmentTraits.Crafting
             }
             finally
             {
-                // Restore previous context before replaying notifications
+                // Restore previous context before replaying events
                 activeContext = __state.Previous;
 
                 Thing finalProduct = __result;
@@ -175,8 +187,7 @@ namespace UniqueEquipmentTraits.Crafting
 
             if (product is MinifiedThing minified)
             {
-                // Minified items unchanged (not implemented, never will?)
-
+                // Minified products are not supported by conversion
                 return;
             }
 
@@ -216,7 +227,7 @@ namespace UniqueEquipmentTraits.Crafting
                     qualityComp.Quality,
                     context.Inspired);
 
-            // Existing formula, normal random roll
+            // Roll unique crafting chance
             if (!Rand.Chance(chance))
                 return;
 
@@ -251,7 +262,7 @@ namespace UniqueEquipmentTraits.Crafting
                     return;
                 }
 
-                // Non-quality properties
+                // Preserve non-quality properties
                 uniqueWeapon.StyleDef = product.StyleDef;
                 uniqueWeapon.StyleSourcePrecept =
                     product.StyleSourcePrecept;
@@ -276,7 +287,7 @@ namespace UniqueEquipmentTraits.Crafting
                     }
                 }
 
-                // Create artistic data
+                // Initialize artwork
                 CompArt uniqueArt =
                     uniqueWeapon.TryGetComp<CompArt>();
 
@@ -287,11 +298,12 @@ namespace UniqueEquipmentTraits.Crafting
                         ArtGenerationContext.Colony);
                 }
 
-                // Odyssey's generated quality
+                // Use the quality generated for the unique variant
                 result = uniqueWeapon;
                 uniqueWeapon = null;
 
-                bool isPrismatic = uniqueComp.TraitsListForReading[0].defName ==
+                bool isPrismatic =
+                    uniqueComp.TraitsListForReading[0].defName ==
                     "UET_Prismatic";
 
                 if (isPrismatic)
@@ -311,21 +323,10 @@ namespace UniqueEquipmentTraits.Crafting
                         result,
                         MessageTypeDefOf.PositiveEvent);
                 }
-
-
-
-                if (Prefs.DevMode)
-                {
-                    Log.Message(
-                        "[UET] Crafted unique weapon: " +
-                        result.def.defName +
-                        " | Quality: " +
-                        result.TryGetComp<CompQuality>()?.Quality);
-                }
             }
             finally
             {
-                // Dispose on unsuccessful variant. Do not Destroy() original weapon
+                // Dispose of unsuccessful variants without destroying the original
                 if (uniqueWeapon != null &&
                     !uniqueWeapon.Destroyed)
                 {
