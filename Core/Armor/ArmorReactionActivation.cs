@@ -23,6 +23,7 @@ namespace UniqueEquipmentTraits.Core.Armor
             }
         }
 
+
         internal static bool TryActivate(int stackNumber)
         {
             float chance = GetActivationChance(stackNumber);
@@ -31,16 +32,10 @@ namespace UniqueEquipmentTraits.Core.Armor
                 return false;
 
             if (chance >= 1f)
-            {
-                Log.Message(
-                    "[UET ARMOR DEBUG 4E] Activation code reached, stack=" +
-                    stackNumber +
-                    " chance=" + chance);
-
                 return true;
-            }
 
             return Rand.Chance(chance);
         }
+
     }
 }

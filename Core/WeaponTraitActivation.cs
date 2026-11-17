@@ -17,7 +17,7 @@ namespace UniqueEquipmentTraits.Core
                 context.Weapon == null)
                 return;
 
-            
+
 
             RimWorld.WeaponTraitDef trait =
                 GetUETTrait(context.Weapon);
@@ -98,11 +98,6 @@ namespace UniqueEquipmentTraits.Core
             if (qualityComp == null)
                 return;
 
-            // UET DIAGNOSTICS
-            UETActivationDiagnostics.RecordAttack(
-                qualityComp.Quality,
-                context.DamageDealt);
-
             if (context.Attacker.Dead ||
                 !context.DamageDealt)
                 return;
@@ -131,11 +126,6 @@ namespace UniqueEquipmentTraits.Core
 
             bool activated = Rand.Chance(activationChance);
 
-            // UET DIAGNOSTICS
-            UETActivationDiagnostics.RecordRoll(
-                qualityComp.Quality,
-                activated);
-
             if (!activated)
                 return;
 
@@ -156,16 +146,9 @@ namespace UniqueEquipmentTraits.Core
                     context.PartDamage,
                     context.PartInjuryDefs);
 
-            bool dispatched = UETEffectDispatcher.TryApply(
-    trait,
-    effectContext);
-
-            // UET DIAGNOSTICS
-            if (dispatched)
-            {
-                UETActivationDiagnostics.RecordDispatch(
-                    qualityComp.Quality);
-            }
+            UETEffectDispatcher.TryApply(
+            trait,
+            effectContext);
         }
 
 

@@ -21,27 +21,7 @@ namespace UniqueEquipmentTraits.Core
             LongEventHandler.ExecuteWhenFinished(() =>
             {
                 ArmorTraitCompInjector.Inject();
-                var candidates =
-    UniqueArmorCandidateFinder.GetEligibleApparel();
-
-                int stuffCount = 0;
-                int nonStuffCount = 0;
-
-                foreach (ThingDef def in candidates)
-                {
-                    if (def.MadeFromStuff)
-                        stuffCount++;
-                    else
-                        nonStuffCount++;
-                }
-
-                Log.Message(
-                    "[UET ARMOR UNIQUE] Eligible apparel: " +
-                    candidates.Count +
-                    " | Stuff-based: " + stuffCount +
-                    " | Non-stuff: " + nonStuffCount);
-                ArmorTraitDiagnostics.Run();
-
+               
             });
         }
         [HarmonyPatch(
@@ -52,50 +32,12 @@ namespace UniqueEquipmentTraits.Core
             [HarmonyPostfix]
             public static void Postfix(bool hotReload)
             {
-                Log.Message("[UET] Patch_ImpliedDefs Postfix CALLED");
 
                 WeaponTraitDefInjector.Inject();
-
-                Log.Message("[UET] Starting unique variant generator");
-
                 UniqueWeaponDefGenerator.Generate(hotReload);
                 UniqueArmorTestDefGenerator.Generate(hotReload);
 
-                Log.Message("[UET] Unique variant generator FINISHED");
             }
         }
-
-        [StaticConstructorOnStartup]
-        public static class UETDiagnostics
-        {
-            static UETDiagnostics()
-            {
-
-
-                int meleeWeapons = 0;
-                int odysseyWeapons = 0;
-
-                foreach (ThingDef def in DefDatabase<ThingDef>.AllDefs)
-                {
-                    if (!def.IsMeleeWeapon ||
-                        def.weaponTags == null ||
-                        def.weaponTags.Count == 0)
-                    {
-                        continue;
-                    }
-
-                    meleeWeapons++;
-
-                    if (def.HasComp<RimWorld.CompUniqueWeapon>())
-                    {
-                        odysseyWeapons++;
-                    }
-                }
-
-
-
-            }
-        }
-
     }
 }

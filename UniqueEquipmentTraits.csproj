@@ -73,13 +73,7 @@
     <Compile Include="Core\Armor\ArmorTraitCompInjector.cs" />
     <Compile Include="Core\Armor\ArmorTraitCoverage.cs" />
     <Compile Include="Core\Armor\ArmorTraitDef.cs" />
-    <Compile Include="Core\Armor\ArmorTraitDiagnostics.cs" />
     <Compile Include="Core\Armor\ArmorTraitEligibility.cs" />
-    <Compile Include="Core\Armor\ArmorTraitHitDebugActions.cs" />
-    <Compile Include="Core\Armor\ArmorTraitHitDiagnostics.cs" />
-    <Compile Include="Core\Armor\ArmorTraitHitDiagnosticsRunner.cs" />
-    <Compile Include="Core\Armor\ArmorTraitHitHarmonyPatches.cs" />
-    <Compile Include="Core\Armor\ArmorTraitHitSequenceRecorder.cs" />
     <Compile Include="Core\Armor\ArmorTraitTestAction.cs" />
     <Compile Include="Core\Armor\ArmorTraitWorker.cs" />
     <Compile Include="Core\Armor\ArmorTraitWorker_Default.cs" />
@@ -94,8 +88,6 @@
     <Compile Include="Core\MeleeAttackContext.cs" />
     <Compile Include="Core\ModInitializer.cs" />
     <Compile Include="Core\NaniteImplantDefInjector.cs" />
-    <Compile Include="Core\UETActivationDiagnostics.cs" />
-    <Compile Include="Core\UETDiagnosticsDebugActions.cs" />
     <Compile Include="Core\UETEquipmentStateManager.cs" />
     <Compile Include="Core\UETStunUtility.cs" />
     <Compile Include="Core\UniqueCraftingChance.cs" />
@@ -180,7 +172,6 @@
     <Compile Include="Utilities\Patch_ThingSetMaker_UMWUnique_ArmorPool.cs" />
     <Compile Include="Utilities\Patch_ThingSetMaker_UniqueWeapon_ArmorPool.cs" />
     <Compile Include="Utilities\UETArtAuthorUtility.cs" />
-    <Compile Include="Utilities\UETArtRulesDiagnostic.cs" />
     <Compile Include="Utilities\UETDevArmorSpawnContext.cs" />
     <Compile Include="Utilities\UETDevArmorSpawner.cs" />
     <Compile Include="Utilities\UETDevForceConversion.cs" />
