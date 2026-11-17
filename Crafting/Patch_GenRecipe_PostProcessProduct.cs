@@ -3,12 +3,13 @@ using HarmonyLib;
 using RimWorld;
 using System;
 using UniqueEquipmentTraits.Core;
+using UniqueEquipmentTraits.Core.Armor;
 using Verse;
 
 namespace UniqueEquipmentTraits.Crafting
 {
     /// <summary>
-    /// Handles the conversion of crafted melee weapons into UET unique variants.
+    /// Handles the conversion of crafted melee weapons and armor into UET unique variants.
     /// Preserves crafting notifications and artwork events during conversion,
     /// evaluates unique crafting chances, and transfers item properties.
     /// Other mods can integrate with this system through compatible
@@ -80,21 +81,21 @@ namespace UniqueEquipmentTraits.Crafting
             if (product == null || worker == null)
                 return;
 
-            Thing weapon = product;
+            Thing item = product;
 
-            if (weapon is MinifiedThing minified)
-                weapon = minified.InnerThing;
+            if (item is MinifiedThing minified)
+                item = minified.InnerThing;
 
-            if (weapon == null ||
-                weapon.def == null ||
-                !weapon.def.IsMeleeWeapon ||
-                weapon.TryGetComp<CompUniqueWeapon>() != null ||
-                weapon.TryGetComp<CompQuality>() == null)
+            if (item == null ||
+                item.def == null ||
+                (!item.def.IsMeleeWeapon && item.def.apparel == null) ||
+                item.TryGetComp<CompUniqueWeapon>() != null ||
+                item.TryGetComp<CompQuality>() == null)
                 return;
 
             __state = new CraftContext
             {
-                Product = weapon,
+                Product = item,
                 Previous = activeContext,
                 Inspired =
                     worker.InspirationDef ==
@@ -193,8 +194,18 @@ namespace UniqueEquipmentTraits.Crafting
 
             if (product == null ||
                 product.def == null ||
-                !product.def.IsMeleeWeapon ||
+                (!product.def.IsMeleeWeapon && product.def.apparel == null) ||
                 product.TryGetComp<CompUniqueWeapon>() != null)
+                return;
+
+            bool isArmor = product.def.apparel != null;
+
+            ThingDef variantDef;
+            bool hasVariant = isArmor
+                ? UniqueArmorVariantRegistry.TryGetVariant(product.def, out variantDef)
+                : UniqueWeaponVariantRegistry.TryGetVariant(product.def, out variantDef);
+
+            if (!hasVariant)
                 return;
 
             CompQuality qualityComp =
@@ -231,50 +242,56 @@ namespace UniqueEquipmentTraits.Crafting
             if (!Rand.Chance(chance))
                 return;
 
-            if (!UniqueWeaponVariantRegistry.TryGetVariant(
-                    product.def,
-                    out ThingDef variantDef))
-            {
-                Log.Warning(
-                    "[UET] Missing unique variant for " +
-                    product.def.defName);
-                return;
-            }
-
-            Thing uniqueWeapon = null;
+            Thing uniqueItem = null;
 
             try
             {
-                uniqueWeapon = ThingMaker.MakeThing(
+                uniqueItem = ThingMaker.MakeThing(
                     variantDef,
                     product.Stuff);
 
                 CompUniqueWeapon uniqueComp =
-                    uniqueWeapon.TryGetComp<CompUniqueWeapon>();
+                    uniqueItem.TryGetComp<CompUniqueWeapon>();
 
-                if (uniqueComp == null ||
-                    uniqueComp.TraitsListForReading == null ||
-                    uniqueComp.TraitsListForReading.Count != 1)
+                if (isArmor)
+                {
+                    CompArmorTraits armorComp =
+                        uniqueItem.TryGetComp<CompArmorTraits>();
+
+                    if (uniqueComp == null ||
+                        armorComp == null ||
+                        armorComp.Traits == null ||
+                        armorComp.Traits.Count == 0)
+                    {
+                        Log.Warning(
+                            "[UET] Crafted unique armor has no armor trait: " +
+                            variantDef.defName);
+                        return;
+                    }
+                }
+                else if (uniqueComp == null ||
+                         uniqueComp.TraitsListForReading == null ||
+                         uniqueComp.TraitsListForReading.Count != 1)
                 {
                     Log.Warning(
-                        "[UET] Unique conversion failed: " +
+                        "[UET] Unique weapon conversion failed: " +
                         "invalid trait count.");
                     return;
                 }
 
                 // Preserve non-quality properties
-                uniqueWeapon.StyleDef = product.StyleDef;
-                uniqueWeapon.StyleSourcePrecept =
+                uniqueItem.StyleDef = product.StyleDef;
+                uniqueItem.StyleSourcePrecept =
                     product.StyleSourcePrecept;
-                uniqueWeapon.overrideGraphicIndex =
+                uniqueItem.overrideGraphicIndex =
                     product.overrideGraphicIndex;
-                uniqueWeapon.stackCount = product.stackCount;
+                uniqueItem.stackCount = product.stackCount;
 
                 CompIngredients sourceIngredients =
                     product.TryGetComp<CompIngredients>();
 
                 CompIngredients targetIngredients =
-                    uniqueWeapon.TryGetComp<CompIngredients>();
+                    uniqueItem.TryGetComp<CompIngredients>();
 
                 if (sourceIngredients != null &&
                     targetIngredients != null)
@@ -289,7 +306,7 @@ namespace UniqueEquipmentTraits.Crafting
 
                 // Initialize artwork
                 CompArt uniqueArt =
-                    uniqueWeapon.TryGetComp<CompArt>();
+                    uniqueItem.TryGetComp<CompArt>();
 
                 if (uniqueArt != null)
                 {
@@ -299,38 +316,49 @@ namespace UniqueEquipmentTraits.Crafting
                 }
 
                 // Use the quality generated for the unique variant
-                result = uniqueWeapon;
-                uniqueWeapon = null;
+                result = uniqueItem;
+                uniqueItem = null;
 
-                bool isPrismatic =
-                    uniqueComp.TraitsListForReading[0].defName ==
-                    "UET_Prismatic";
-
-                if (isPrismatic)
+                if (isArmor)
                 {
                     Messages.Message(
                         worker.LabelShort +
-                        " has achieved the impossible, forging a weapon that defies all known science!",
+                        " has crafted a unique piece of armor imbued with extraordinary power.",
                         result,
                         MessageTypeDefOf.PositiveEvent);
                 }
                 else
                 {
-                    Messages.Message(
-                        worker.LabelShort +
-                        " has transcended the limits of craftsmanship, " +
-                        "forging a weapon imbued with extraordinary power.",
-                        result,
-                        MessageTypeDefOf.PositiveEvent);
+                    bool isPrismatic =
+                        uniqueComp.TraitsListForReading[0].defName ==
+                        "UET_Prismatic";
+
+                    if (isPrismatic)
+                    {
+                        Messages.Message(
+                            worker.LabelShort +
+                            " has achieved the impossible, forging a weapon that defies all known science!",
+                            result,
+                            MessageTypeDefOf.PositiveEvent);
+                    }
+                    else
+                    {
+                        Messages.Message(
+                            worker.LabelShort +
+                            " has transcended the limits of craftsmanship, " +
+                            "forging a weapon imbued with extraordinary power.",
+                            result,
+                            MessageTypeDefOf.PositiveEvent);
+                    }
                 }
             }
             finally
             {
                 // Dispose of unsuccessful variants without destroying the original
-                if (uniqueWeapon != null &&
-                    !uniqueWeapon.Destroyed)
+                if (uniqueItem != null &&
+                    !uniqueItem.Destroyed)
                 {
-                    uniqueWeapon.Destroy();
+                    uniqueItem.Destroy();
                 }
             }
         }

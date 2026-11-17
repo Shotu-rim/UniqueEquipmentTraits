@@ -78,11 +78,28 @@ namespace UniqueEquipmentTraits.Patches
 
             try
             {
-                // Effect wont happen after failed attack
+                // Effects should not run after a failed attack
                 if (__exception == null)
                 {
-                    WeaponTraitActivation.ProcessMeleeAttack(__state);
-                    SunderingEffect.RecordCombatLog(__state);
+                    try
+                    {
+                        WeaponTraitActivation.ProcessMeleeAttack(__state);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(
+                            "[UET] Melee trait activation failed: " + ex);
+                    }
+
+                    try
+                    {
+                        SunderingEffect.RecordCombatLog(__state);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(
+                            "[UET] Sundering combat log failed: " + ex);
+                    }
                 }
             }
             finally
@@ -99,5 +116,6 @@ namespace UniqueEquipmentTraits.Patches
 
             return __exception;
         }
+
     }
 }
