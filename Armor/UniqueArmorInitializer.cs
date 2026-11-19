@@ -40,23 +40,34 @@ namespace UniqueEquipmentTraits.Core.Armor
             if (comp == null)
                 return false;
 
-            // Do not assign another trait.
+            // 1 trait allowed
             if (comp.Traits.Count > 0)
                 return false;
 
             List<ArmorTraitDef> candidates =
                 DefDatabase<ArmorTraitDef>.AllDefs
                     .Where(trait =>
-                        trait != null &&
-                        ArmorTraitCompatibility.CanApply(
-                            armor.def, trait))
+                            trait != null &&
+                            ArmorTraitCompatibility.CanApply(
+                                armor, trait))
                     .ToList();
 
             if (candidates.Count == 0)
                 return false;
 
+            List<ArmorTraitDef> weightedCandidates =
+    candidates
+        .Where(trait =>
+            trait.commonality > 0f &&
+            trait.canGenerateAlone)
+        .ToList();
+
+            if (weightedCandidates.Count == 0)
+                return false;
+
             ArmorTraitDef selected =
-                candidates.RandomElement();
+                weightedCandidates.RandomElementByWeight(
+                    trait => trait.commonality);
 
             return comp.AddTrait(selected);
         }

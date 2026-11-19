@@ -61,6 +61,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Armor\ArmorDamageInterceptionContext.cs" />
+    <Compile Include="Armor\ArmorDamageInterceptionScope.cs" />
+    <Compile Include="Armor\ArmorPassiveDamageUtility.cs" />
     <Compile Include="Armor\ArmorReactionActivation.cs" />
     <Compile Include="Armor\ArmorReactionContext.cs" />
     <Compile Include="Armor\ArmorReactionDiagnostics.cs" />
@@ -69,11 +72,23 @@
     <Compile Include="Armor\ArmorTraitActivationContext.cs" />
     <Compile Include="Armor\ArmorTraitAnatomy.cs" />
     <Compile Include="Armor\ArmorTraitCategory.cs" />
+    <Compile Include="Armor\ArmorTraitChargeUtility.cs" />
     <Compile Include="Armor\ArmorTraitCompatibility.cs" />
     <Compile Include="Armor\ArmorTraitCompInjector.cs" />
     <Compile Include="Armor\ArmorTraitCoverage.cs" />
     <Compile Include="Armor\ArmorTraitDef.cs" />
     <Compile Include="Armor\ArmorTraitEligibility.cs" />
+    <Compile Include="Armor\ArmorTraitState.cs" />
+    <Compile Include="Armor\ArmorTraitWorker_TestHediff.cs" />
+    <Compile Include="Armor\Hediffs\ArmorTraitHediffUtility.cs" />
+    <Compile Include="Armor\Hediffs\HediffComp_ArmorTraitSource.cs" />
+    <Compile Include="Armor\IArmorDamageInterceptor.cs" />
+    <Compile Include="Armor\PassiveEffects\ArmorTraitWorker_Aegis.cs" />
+    <Compile Include="Armor\Patches\Patch_ApparelLifecycle.cs" />
+    <Compile Include="Armor\Patches\Patch_ArmorDamageInterception.cs" />
+    <Compile Include="Armor\Patches\Patch_CorpseArmorEffectExpiration.cs" />
+    <Compile Include="Armor\Patches\Patch_PawnArmorEffectExpiration.cs" />
+    <Compile Include="Armor\Patches\Patch_PawnDeathArmorCleanup.cs" />
     <Compile Include="DevTools\ArmorTraitTestAction.cs" />
     <Compile Include="Armor\ArmorTraitWorker.cs" />
     <Compile Include="Armor\ArmorTraitWorker_Default.cs" />
@@ -87,6 +102,14 @@
     <Compile Include="Armor\UniqueArmorVariantRegistry.cs" />
     <Compile Include="Combat\MeleeAttackContext.cs" />
     <Compile Include="Core\ModInitializer.cs" />
+    <Compile Include="EffectsDisplay\Patches\Patch_HealthCardUtility_DrawPawnHealthCard.cs" />
+    <Compile Include="EffectsDisplay\Patches\Patch_HealthCardUtility_VisibleHediffs.cs" />
+    <Compile Include="EffectsDisplay\Patches\Patch_ITab_Pawn_Health_Size.cs" />
+    <Compile Include="EffectsDisplay\UETArmorEffectDisplayAdapter.cs" />
+    <Compile Include="EffectsDisplay\UETEffectDisplayEntry.cs" />
+    <Compile Include="EffectsDisplay\UETEffectDisplayManager.cs" />
+    <Compile Include="EffectsDisplay\UETEffectsPanel.cs" />
+    <Compile Include="EffectsDisplay\UETWeaponEffectDisplayAdapter.cs" />
     <Compile Include="Weapons\Patches\Health\NaniteImplantDefInjector.cs" />
     <Compile Include="Weapons\UETEquipmentStateManager.cs" />
     <Compile Include="Weapons\Effects\UETStunUtility.cs" />
@@ -186,7 +209,10 @@
     <Compile Include="Generation\WorldGeneration\UETWorldConversionProcessor.cs" />
     <Compile Include="Generation\WorldGeneration\UETWorldConversionThingFactory.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Armor\ActivatedEffects\" />
+    <Folder Include="Armor\ReactiveEffects\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -1,13 +1,14 @@
 ﻿using RimWorld;
 using Verse;
+using UniqueEquipmentTraits.Core.Armor;
 
 namespace UniqueEquipmentTraits.Effects
 {
     /// <summary>
-    /// Records UET weapon trait activations and their reported effects
+    /// Records UET weapon and armor trait effects
     /// in RimWorld's native combat log.
-    /// Combines effect reports into a single entry for each recorded activation.
-    /// Used internally by the UET effect reporting system.
+    /// Weapon effects are grouped by activation,
+    /// while armor effects provide their own descriptions.
     /// </summary>
     internal static class UETCombatLog
     {
@@ -54,5 +55,34 @@ namespace UniqueEquipmentTraits.Effects
 
             Find.BattleLog.Add(entry);
         }
+
+        internal static void Record(
+            ArmorTraitDef trait,
+            Pawn wearer,
+            string description,
+            Pawn otherPawn = null)
+        {
+            if (trait == null ||
+                wearer == null ||
+                string.IsNullOrWhiteSpace(description))
+            {
+                return;
+            }
+
+            if (Current.Game == null ||
+                Find.BattleLog == null)
+            {
+                return;
+            }
+
+            UETCombatLogEntry entry =
+                new UETCombatLogEntry(
+                    wearer,
+                    otherPawn,
+                    description);
+
+            Find.BattleLog.Add(entry);
+        }
+
     }
 }

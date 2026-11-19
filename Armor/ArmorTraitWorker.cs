@@ -1,17 +1,54 @@
-﻿namespace UniqueEquipmentTraits.Core.Armor
+﻿
+using RimWorld;
+using Verse;
+
+namespace UniqueEquipmentTraits.Core.Armor
 {
     /// <summary>
     /// Base class for custom armor trait effect workers.
-    /// Provides an overridable activation hook for reactive armor traits.
-    /// Other mods can inherit from this class and override OnActivated()
-    /// to implement their own armor trait effects.
+    /// Handles activation and equipment lifecycle events.
     /// </summary>
     public abstract class ArmorTraitWorker
     {
+        // Checks whether trait can be activated
+        public virtual bool CanActivate(
+            ArmorTraitActivationContext context)
+        {
+            return true;
+        }
+
+        // Executes trait
         public virtual void OnActivated(
             ArmorTraitActivationContext context)
         {
         }
+
+
+        public virtual void OnEquipped(
+            Pawn pawn,
+            Apparel apparel,
+            ArmorTraitDef trait)
+        {
+
+        }
+
+        public virtual void OnUnequipped(
+            Pawn pawn,
+            Apparel apparel,
+            ArmorTraitDef trait)
+        {
+
+        }
+
+        public virtual void OnWearerDied(
+            Pawn pawn,
+            Apparel apparel,
+            ArmorTraitDef trait)
+        {
+
+
+            OnUnequipped(pawn, apparel, trait);
+        }
+
     }
 }
-

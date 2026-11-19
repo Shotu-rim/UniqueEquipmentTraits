@@ -10,6 +10,7 @@ namespace UniqueEquipmentTraits.Effects
     public class Hediff_TailwindActive : HediffWithComps
     {
         public override Color LabelColor => Color.green;
+        public override bool Visible => false;
 
         public override string TipStringExtra
         {
@@ -41,9 +42,7 @@ namespace UniqueEquipmentTraits.Effects
                 string details =
                     "Melee dodge chance: +" +
                     (dodgeBonus * 100f).ToString("0") +
-                    " percentage points\n" +
-                    "Charges remaining: " +
-                    remaining + " / " + maximum;
+                    "%";
 
                 return string.IsNullOrEmpty(original)
                     ? details

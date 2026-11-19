@@ -1,5 +1,6 @@
 ﻿
 using RimWorld;
+using UniqueEquipmentTraits.Core;
 using UnityEngine;
 using Verse;
 using CompWeaponTrait = UniqueEquipmentTraits.Traits.CompWeaponTrait;
@@ -10,6 +11,7 @@ namespace UniqueEquipmentTraits.Effects
     public class Hediff_FlurryActive : HediffWithComps
     {
         public override Color LabelColor => Color.green;
+        public override bool Visible => false;
 
         public override string TipStringExtra
         {
@@ -48,9 +50,8 @@ namespace UniqueEquipmentTraits.Effects
                     "Melee attack speed: +" +
                     (speedBonus * 100f).ToString("0") + "%\n" +
                     "Melee damage: -" +
-                    ((1f - damageMultiplier) * 100f).ToString("0") + "%\n" +
-                    "Charges remaining: " +
-                    remaining + " / " + maximum;
+                    ((1f - damageMultiplier) * 100f).ToString("0") + "%";
+
 
                 return string.IsNullOrEmpty(original)
                     ? details
@@ -122,17 +123,7 @@ namespace UniqueEquipmentTraits.Effects
         // Bonuses
         internal static float SpeedBonus(QualityCategory quality)
         {
-            switch (quality)
-            {
-                case QualityCategory.Masterwork:
-                    return 0.70f;
-
-                case QualityCategory.Legendary:
-                    return 0.90f;
-
-                default:
-                    return 0f;
-            }
+            return 2f * WeaponTraitQuality.GetEffectStrength(quality);
         }
 
         // Count damage, reduced by armor on hit

@@ -102,6 +102,44 @@ namespace UniqueEquipmentTraits.Core.Armor
 
             return ArmorTraitCategory.None;
         }
+        public static string GetDisplayCategory(
+    BodyPartRecord part)
+        {
+            ArmorTraitCategory category = GetCategory(part);
+
+            switch (category)
+            {
+                case ArmorTraitCategory.Helmet:
+                    return "Head";
+
+                case ArmorTraitCategory.Neck:
+                    return "Neck";
+
+                case ArmorTraitCategory.Shoulders:
+                    return "Shoulder";
+
+                case ArmorTraitCategory.Torso:
+                    return "Torso";
+
+                case ArmorTraitCategory.Arms:
+                    return "Arms";
+
+                case ArmorTraitCategory.Hands:
+                    return "Hands";
+
+                case ArmorTraitCategory.Waist:
+                    return "Waist";
+
+                case ArmorTraitCategory.Legs:
+                    return "Legs";
+
+                case ArmorTraitCategory.Feet:
+                    return "Feet";
+
+                default:
+                    return "Body";
+            }
+        }
 
         private static ArmorTraitCategory GetCategoryFromTags(
             BodyPartRecord part)

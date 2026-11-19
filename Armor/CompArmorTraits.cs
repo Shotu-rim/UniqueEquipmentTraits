@@ -19,20 +19,29 @@ namespace UniqueEquipmentTraits.Core.Armor
             compClass = typeof(CompArmorTraits);
         }
     }
+
     /// <summary>
-    /// Stores and manages traits assigned to individual armor items.
-    /// Validates trait compatibility, persists traits across saves,
-    /// and displays their information in the game interface.
-    /// Other mods can use AddTrait() and Traits to integrate custom armor traits.
+    /// Stores one armor trait and its persistent runtime state
+    /// on an individual apparel item.
+    /// Other mods can use AddTrait(), Traits and State
+    /// to integrate custom armor traits.
     /// </summary>
     public class CompArmorTraits : ThingComp
     {
         private List<ArmorTraitDef> traits =
             new List<ArmorTraitDef>();
 
+        private ArmorTraitState state =
+            new ArmorTraitState();
+
         public IReadOnlyList<ArmorTraitDef> Traits
         {
             get { return traits; }
+        }
+
+        public ArmorTraitState State
+        {
+            get { return state; }
         }
 
         public bool HasReactiveTrait
@@ -41,35 +50,151 @@ namespace UniqueEquipmentTraits.Core.Armor
             {
                 foreach (ArmorTraitDef trait in traits)
                 {
-
                     if (trait != null &&
-                        trait.activationType == ArmorTraitActivationType.Reactive)
+                        trait.activationType ==
+                        ArmorTraitActivationType.Reactive)
                     {
                         return true;
                     }
-
                 }
 
                 return false;
             }
         }
 
+        //public override void CompTickRare()
+        //{
+        //    base.CompTickRare();
+
+        //    if (state == null ||
+        //        traits == null ||
+        //        traits.Count == 0)
+        //    {
+        //        return;
+        //    }
+
+        //    Apparel apparel = parent as Apparel;
+
+        //    if (apparel == null)
+        //        return;
+
+        //    Pawn wearer = apparel.Wearer;
+
+        //    if (wearer == null || wearer.health == null)
+        //        return;
+
+        //    foreach (ArmorTraitDef trait in traits)
+        //    {
+        //        if (trait == null ||
+        //            trait.activationType !=
+        //                ArmorTraitActivationType.Reactive)
+        //        {
+        //            continue;
+        //        }
+
+        //        if (state.ActiveEffectEndTick < 0)
+        //            continue;
+
+        //        if (state.IsEffectActive)
+        //            continue;
+
+        //        ArmorTraitHediffUtility.Remove(
+        //            wearer,
+        //            apparel,
+        //            trait);
+        //    }
+        //}
+
+        public override void CompTickRare()
+        {
+            base.CompTickRare();
+
+            Apparel apparel = parent as Apparel;
+
+            if (apparel == null || apparel.Wearer == null)
+                return;
+
+        }
+
+
+        /// <summary>
+        /// Checks whether this apparel item can participate
+        /// in reactive armor trait selection.
+        /// </summary>
+
+        public bool CanActivateReactive()
+        {
+            if (!HasReactiveTrait || state == null)
+                return false;
+
+            ArmorTraitDef trait = null;
+
+            foreach (ArmorTraitDef candidate in traits)
+            {
+                if (candidate != null &&
+                    candidate.activationType ==
+                    ArmorTraitActivationType.Reactive)
+                {
+                    trait = candidate;
+                    break;
+                }
+            }
+
+            if (trait == null)
+                return false;
+
+            if (state.IsEffectActive)
+            {
+                if (trait.blocksReactivationWhileActive)
+                    return false;
+            }
+            else if (state.IsOnCooldown)
+            {
+                return false;
+            }
+
+            if (!state.HasAvailableCharge)
+                return false;
+
+            return true;
+        }
+
+
 
         public bool AddTrait(ArmorTraitDef trait)
         {
-            if (trait == null || traits.Contains(trait))
+            if (trait == null ||
+                traits == null ||
+                traits.Count > 0)
+            {
                 return false;
+            }
 
             if (parent == null ||
-                !ArmorTraitCompatibility.CanApply(parent.def, trait))
+                !ArmorTraitCompatibility.CanApply(
+                    parent, trait))
             {
                 return false;
             }
 
             traits.Add(trait);
+
+            state = new ArmorTraitState();
+
+            QualityCategory quality;
+
+            if (parent.TryGetQuality(out quality))
+            {
+                int maximum =
+                    ArmorTraitChargeUtility.GetMaxCharges(
+                        trait,
+                        quality);
+
+                state.ConfigureCharges(maximum, quality);
+            }
+
             return true;
         }
-
 
         public override void PostExposeData()
         {
@@ -80,12 +205,20 @@ namespace UniqueEquipmentTraits.Core.Armor
                 "uetArmorTraits",
                 LookMode.Def);
 
-            if (Scribe.mode == LoadSaveMode.PostLoadInit
-                && traits == null)
+            Scribe_Deep.Look(
+                ref state,
+                "uetArmorTraitState");
+
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
-                traits = new List<ArmorTraitDef>();
+                if (traits == null)
+                    traits = new List<ArmorTraitDef>();
+
+                if (state == null)
+                    state = new ArmorTraitState();
             }
         }
+
         public override string CompInspectStringExtra()
         {
             if (traits == null || traits.Count == 0)
@@ -109,17 +242,23 @@ namespace UniqueEquipmentTraits.Core.Armor
             if (validTraits.Count == 0)
                 yield break;
 
-            StringBuilder description = new StringBuilder();
+            StringBuilder description =
+                new StringBuilder();
 
             description.AppendLine(
                 "Stat_ThingUniqueWeaponTrait_Desc".Translate());
+
             description.AppendLine();
 
             foreach (ArmorTraitDef trait in validTraits)
             {
                 description.AppendLine(
-                    trait.LabelCap.Colorize(ColorLibrary.Yellow));
-                description.AppendLine(trait.description);
+                    trait.LabelCap.Colorize(
+                        ColorLibrary.Yellow));
+
+                description.AppendLine(
+                    trait.description);
+
                 description.AppendLine();
             }
 

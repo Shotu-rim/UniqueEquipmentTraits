@@ -1,4 +1,5 @@
 ﻿
+using RimWorld;
 using System.Collections.Generic;
 using Verse;
 
@@ -25,10 +26,18 @@ namespace UniqueEquipmentTraits.Core.Armor
     {
         public ArmorTraitActivationType activationType =
             ArmorTraitActivationType.Passive;
+        public int cooldownTicks = 0;
+        public int activeEffectTicks = 0;
+        public bool blocksReactivationWhileActive = true;
 
         public List<ArmorTraitCategory> allowedCategories;
+        public List<StuffCategoryDef> allowedStuffCategories;
         public List<string> nameAdjectives;
         public List<string> nameConcepts;
+        public float commonality = 1f;
+        public bool canGenerateAlone = true;
+        public List<string> exclusionTags;
+        public bool usesCharges = false;
 
         public System.Type workerClass;
 

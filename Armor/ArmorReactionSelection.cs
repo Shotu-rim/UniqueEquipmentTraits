@@ -6,9 +6,8 @@ using Verse;
 namespace UniqueEquipmentTraits.Core.Armor
 {
     /// <summary>
-    /// Randomly selects an eligible armor item and one of its reactive traits.
-    /// Filters out armor without reactive traits before selection.
-    /// UET extensions can use TrySelect() to reuse this selection mechanism.
+    /// Randomly selects an eligible apparel item
+    /// with a ready reactive armor trait.
     /// </summary>
     internal static class ArmorReactionSelection
     {
@@ -23,7 +22,8 @@ namespace UniqueEquipmentTraits.Core.Armor
             if (candidates == null || candidates.Count == 0)
                 return false;
 
-            List<Apparel> eligible = new List<Apparel>();
+            List<Apparel> eligible =
+                new List<Apparel>();
 
             foreach (Apparel apparel in candidates)
             {
@@ -33,8 +33,13 @@ namespace UniqueEquipmentTraits.Core.Armor
                 CompArmorTraits comp =
                     apparel.TryGetComp<CompArmorTraits>();
 
-                if (comp != null && comp.HasReactiveTrait)
-                    eligible.Add(apparel);
+                if (comp == null ||
+                    !comp.CanActivateReactive())
+                {
+                    continue;
+                }
+
+                eligible.Add(apparel);
             }
 
             if (eligible.Count == 0)
@@ -45,28 +50,19 @@ namespace UniqueEquipmentTraits.Core.Armor
             CompArmorTraits selectedComp =
                 selectedApparel.TryGetComp<CompArmorTraits>();
 
-            List<ArmorTraitDef> reactiveTraits =
-                new List<ArmorTraitDef>();
-
             foreach (ArmorTraitDef trait in selectedComp.Traits)
             {
-
                 if (trait != null &&
-                    trait.activationType == ArmorTraitActivationType.Reactive)
+                    trait.activationType ==
+                    ArmorTraitActivationType.Reactive)
                 {
-                    reactiveTraits.Add(trait);
+                    selectedTrait = trait;
+                    return true;
                 }
-
             }
 
-            if (reactiveTraits.Count == 0)
-            {
-                selectedApparel = null;
-                return false;
-            }
-
-            selectedTrait = reactiveTraits.RandomElement();
-            return true;
+            selectedApparel = null;
+            return false;
         }
     }
 }

@@ -8,8 +8,8 @@ namespace UniqueEquipmentTraits.Core.Armor
     /// <summary>
     /// Tracks reactive armor candidates during melee attacks.
     /// Observes hit body parts, prevents armor reuse, and processes
-    /// up to three reaction stacks with independent activation chances.
-    /// UET extensions can supply hit events through ObservePart().
+    /// up to three non-empty reaction stacks with independent
+    /// activation chances.
     /// </summary>
     internal sealed class ArmorReactionContext
     {
@@ -24,7 +24,9 @@ namespace UniqueEquipmentTraits.Core.Armor
 
         internal int EligibleStacks;
 
-        internal ArmorReactionContext(Pawn attacker, Pawn defender)
+        internal ArmorReactionContext(
+            Pawn attacker,
+            Pawn defender)
         {
             Attacker = attacker;
             Defender = defender;
@@ -43,52 +45,69 @@ namespace UniqueEquipmentTraits.Core.Armor
             if (Defender.apparel == null)
                 return;
 
-            List<Apparel> candidates = new List<Apparel>();
+            if (EligibleStacks >= 3)
+                return;
+
+            List<Apparel> candidates =
+                new List<Apparel>();
 
             foreach (Apparel apparel in Defender.apparel.WornApparel)
             {
-                if (apparel == null ||
-                    !ArmorTraitCoverage.CoversBodyPart(apparel.def, part))
+                if (apparel == null)
+                    continue;
+
+                if (!ArmorTraitCoverage.CoversBodyPart(
+                    apparel.def,
+                    part))
                 {
                     continue;
                 }
 
+                if (Participated.Contains(apparel))
+                    continue;
+
                 CompArmorTraits comp =
                     apparel.TryGetComp<CompArmorTraits>();
 
-                // Only armor with reactive traits participates in random
-                if (comp == null || !comp.HasReactiveTrait)
+                if (comp == null ||
+                    !comp.CanActivateReactive())
+                {
                     continue;
+                }
 
-                if (!Participated.Contains(apparel))
-                    candidates.Add(apparel);
+                candidates.Add(apparel);
             }
 
-            if (EligibleStacks >= 3)
-                return;
-
+            // Empty candidate lists never consume a stack
             if (candidates.Count == 0)
                 return;
-
-            EligibleStacks++;
-
-            // Exclude participating armor from subsequent stacks, not just the selected one
-            foreach (Apparel apparel in candidates)
-                Participated.Add(apparel);
 
             Apparel selectedApparel;
             ArmorTraitDef selectedTrait;
 
-            bool selected = ArmorReactionSelection.TrySelect(
+            // Select from ready candidates before consuming a stack
+            if (!ArmorReactionSelection.TrySelect(
                 candidates,
                 out selectedApparel,
-                out selectedTrait);
-
-            if (!selected)
+                out selectedTrait))
+            {
                 return;
+            }
 
-            if (!ArmorReactionActivation.TryActivate(EligibleStacks))
+            // This is now a valid, non-empty reaction stack
+            EligibleStacks++;
+
+            // Every candidate participates, even when activation roll fails
+            foreach (Apparel apparel in candidates)
+            {
+                Participated.Add(apparel);
+            }
+
+            if (!ArmorReactionActivation.TryActivate(
+                EligibleStacks))
+            {
                 return;
+            }
 
             ArmorTraitActivationContext activationContext =
                 new ArmorTraitActivationContext(
@@ -101,7 +120,33 @@ namespace UniqueEquipmentTraits.Core.Armor
                     dinfo,
                     injurySeverity);
 
-            selectedTrait.Worker.OnActivated(activationContext);
+
+            ArmorTraitWorker worker = selectedTrait.Worker;
+
+            if (!worker.CanActivate(activationContext))
+                return;
+
+            CompArmorTraits selectedComp =
+                selectedApparel.TryGetComp<CompArmorTraits>();
+
+            if (selectedComp == null ||
+                !selectedComp.CanActivateReactive())
+            {
+                return;
+            }
+
+            // Consume one charge after activation
+
+            if (!selectedComp.State.TryConsumeCharge())
+                return;
+
+            worker.OnActivated(activationContext);
+
+                selectedComp.State.StartActivation(
+                selectedTrait.activeEffectTicks,
+                selectedTrait.cooldownTicks);
+                selectedComp.State.SetLastTriggeredPart(part);
+
         }
     }
 }
