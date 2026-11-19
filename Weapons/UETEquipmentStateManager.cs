@@ -31,6 +31,21 @@ namespace UniqueEquipmentTraits.Core
             comp.ClearTailwind();
         }
 
+        private static void NotifyRegenerationApparelChanged(Pawn pawn)
+        {
+            if (pawn == null || pawn.Dead || Current.Game == null)
+                return;
+
+            ArmorTraitRegenerationTracker tracker =
+                Current.Game.GetComponent<
+                    ArmorTraitRegenerationTracker>();
+
+            if (tracker == null)
+                return;
+
+            tracker.NotifyApparelChanged(pawn);
+        }
+
         // ARMOR TRAITS
 
         public static void NotifyApparelAdded(
@@ -39,7 +54,7 @@ namespace UniqueEquipmentTraits.Core
         {
             if (pawn == null || apparel == null)
                 return;
-
+            NotifyRegenerationApparelChanged(pawn);
             CompArmorTraits comp =
                 apparel.TryGetComp<CompArmorTraits>();
 
@@ -64,7 +79,7 @@ namespace UniqueEquipmentTraits.Core
         {
             if (pawn == null || apparel == null)
                 return;
-
+            NotifyRegenerationApparelChanged(pawn);
             // Remove all hediffs originating from this item.
             ArmorTraitHediffUtility.RemoveAllFromApparel(
                 pawn,

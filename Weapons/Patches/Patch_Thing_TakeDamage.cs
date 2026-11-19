@@ -26,8 +26,7 @@ namespace UniqueEquipmentTraits.Patches
                 return;
 
             if (context.Attacker == null ||
-                context.Victim == null ||
-                context.Weapon == null)
+                context.Victim == null)
                 return;
 
             if (__instance != context.Victim)

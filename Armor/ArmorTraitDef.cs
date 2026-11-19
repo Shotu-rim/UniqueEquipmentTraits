@@ -29,11 +29,52 @@ namespace UniqueEquipmentTraits.Core.Armor
         public int cooldownTicks = 0;
         public int activeEffectTicks = 0;
         public bool blocksReactivationWhileActive = true;
-
+        // Skill bonus configuration
+        public SkillDef boostedSkill;
+        public int masterworkSkillBonus = 1;
+        public int legendarySkillBonus = 2;
+        public bool legendaryOnly = false;
         public List<ArmorTraitCategory> allowedCategories;
         public List<StuffCategoryDef> allowedStuffCategories;
         public List<string> nameAdjectives;
         public List<string> nameConcepts;
+
+
+        // Passive movement speed bonus configuration
+        public float masterworkMoveSpeedBonus = 0f;
+        public float legendaryMoveSpeedBonus = 0f;
+        // Passive critical hit configuration
+        public float masterworkCriticalChance = 0f;
+        public float legendaryCriticalChance = 0f;
+        public float masterworkCriticalDamageBonus = 0f;
+        public float legendaryCriticalDamageBonus = 0f;
+        // Passive neural heat recovery configuration
+        public float masterworkNeuralHeatRecoveryBonus = 0f;
+        public float legendaryNeuralHeatRecoveryBonus = 0f;
+        // Passive illness handlers
+        public float masterworkImmunityGainBonus = 0f;
+        public float legendaryImmunityGainBonus = 0f;
+
+        public float masterworkDiseaseRiskReduction = 0f;
+        public float legendaryDiseaseRiskReduction = 0f;
+
+        // Regeneration
+        public float masterworkRegenerationInterval = 0f;
+        public float legendaryRegenerationInterval = 0f;
+
+        // Reinforced
+        public float masterworkArmorRatingBonus = 0f;
+        public float legendaryArmorRatingBonus = 0f;
+
+        public float masterworkMassIncrease = 0f;
+        public float legendaryMassIncrease = 0f;
+
+
+        // Passive dodge bonus configuration
+        public float masterworkDodgeMultiplier = 0f;
+        public float legendaryDodgeMultiplier = 0f;
+        public float masterworkDodgeFlatBonus = 0f;
+        public float legendaryDodgeFlatBonus = 0f;
         public float commonality = 1f;
         public bool canGenerateAlone = true;
         public List<string> exclusionTags;

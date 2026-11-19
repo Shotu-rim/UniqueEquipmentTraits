@@ -231,6 +231,56 @@ namespace UniqueEquipmentTraits.Core.Armor
                       .CapitalizeFirst();
         }
 
+        public override float GetStatFactor(StatDef stat)
+        {
+            float factor = base.GetStatFactor(stat);
+
+            if (traits == null || traits.Count == 0)
+                return factor;
+
+            bool isArmor =
+                stat == StatDefOf.ArmorRating_Sharp ||
+                stat == StatDefOf.ArmorRating_Blunt ||
+                stat == StatDefOf.ArmorRating_Heat;
+
+            bool isMass = stat == StatDefOf.Mass;
+
+            if (!isArmor && !isMass)
+                return factor;
+
+            QualityCategory quality;
+
+            if (parent == null ||
+                !parent.TryGetQuality(out quality))
+                return factor;
+
+            foreach (ArmorTraitDef trait in traits)
+            {
+                if (trait == null)
+                    continue;
+
+                float bonus = 0f;
+
+                if (quality == QualityCategory.Masterwork)
+                {
+                    bonus = isArmor
+                        ? trait.masterworkArmorRatingBonus
+                        : trait.masterworkMassIncrease;
+                }
+                else if (quality == QualityCategory.Legendary)
+                {
+                    bonus = isArmor
+                        ? trait.legendaryArmorRatingBonus
+                        : trait.legendaryMassIncrease;
+                }
+
+                if (bonus > 0f)
+                    factor *= 1f + bonus;
+            }
+
+            return factor;
+        }
+
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {
             if (traits == null || traits.Count == 0)
@@ -250,6 +300,7 @@ namespace UniqueEquipmentTraits.Core.Armor
 
             description.AppendLine();
 
+
             foreach (ArmorTraitDef trait in validTraits)
             {
                 description.AppendLine(
@@ -259,8 +310,345 @@ namespace UniqueEquipmentTraits.Core.Armor
                 description.AppendLine(
                     trait.description);
 
+                if (trait.boostedSkill != null)
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        int bonus = 0;
+
+                        if (quality == QualityCategory.Masterwork &&
+                            !trait.legendaryOnly)
+                        {
+                            bonus = trait.masterworkSkillBonus;
+                        }
+                        else if (quality == QualityCategory.Legendary)
+                        {
+                            bonus = trait.legendarySkillBonus;
+                        }
+
+                        if (bonus > 0)
+                        {
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                (trait.boostedSkill.LabelCap +
+                                ": +" + bonus)
+                                .Colorize(ColorLibrary.Green));
+                        }
+                    }
+                }
+
+
+                if (trait.masterworkDodgeMultiplier > 0f ||
+                    trait.legendaryDodgeMultiplier > 0f ||
+                    trait.masterworkDodgeFlatBonus > 0f ||
+                    trait.legendaryDodgeFlatBonus > 0f)
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        float multiplier = 0f;
+                        float flatBonus = 0f;
+
+                        if (quality == QualityCategory.Masterwork)
+                        {
+                            multiplier =
+                                trait.masterworkDodgeMultiplier;
+
+                            flatBonus =
+                                trait.masterworkDodgeFlatBonus;
+                        }
+                        else if (quality == QualityCategory.Legendary)
+                        {
+                            multiplier =
+                                trait.legendaryDodgeMultiplier;
+
+                            flatBonus =
+                                trait.legendaryDodgeFlatBonus;
+                        }
+
+                        if (multiplier > 0f || flatBonus > 0f)
+                        {
+                            description.AppendLine();
+
+                            if (multiplier > 0f)
+                            {
+                                description.AppendLine(
+                                    ("Melee dodge chance: +" +
+                                    (multiplier * 100f).ToString("0.#") +
+                                    "% (relative)")
+                                    .Colorize(ColorLibrary.Green));
+                            }
+
+                            if (flatBonus > 0f)
+                            {
+                                description.AppendLine(
+                                    ("Melee dodge chance: +" +
+                                    (flatBonus * 100f).ToString("0.#") +
+                                    " percentage points")
+                                    .Colorize(ColorLibrary.Green));
+                            }
+                        }
+                    }
+                }
+
+                if (trait.masterworkCriticalChance > 0f ||
+                    trait.legendaryCriticalChance > 0f)
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        float criticalChance = 0f;
+                        float criticalDamageBonus = 0f;
+
+                        if (quality == QualityCategory.Masterwork)
+                        {
+                            criticalChance =
+                                trait.masterworkCriticalChance;
+
+                            criticalDamageBonus =
+                                trait.masterworkCriticalDamageBonus;
+                        }
+                        else if (quality == QualityCategory.Legendary)
+                        {
+                            criticalChance =
+                                trait.legendaryCriticalChance;
+
+                            criticalDamageBonus =
+                                trait.legendaryCriticalDamageBonus;
+                        }
+
+                        if (criticalChance > 0f)
+                        {
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                ("Critical hit chance: +" +
+                                (criticalChance * 100f).ToString("0.##") +
+                                " percentage points")
+                                .Colorize(ColorLibrary.Green));
+
+                            description.AppendLine(
+                                ("Critical damage bonus: +" +
+                                (criticalDamageBonus * 100f).ToString("0.##") +
+                                "%")
+                                .Colorize(ColorLibrary.Green));
+                        }
+                    }
+                }
+
+                if (trait.masterworkNeuralHeatRecoveryBonus > 0f ||
+                    trait.legendaryNeuralHeatRecoveryBonus > 0f)
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        float recoveryBonus = 0f;
+
+                        if (quality == QualityCategory.Masterwork)
+                        {
+                            recoveryBonus =
+                                trait.masterworkNeuralHeatRecoveryBonus;
+                        }
+                        else if (quality == QualityCategory.Legendary)
+                        {
+                            recoveryBonus =
+                                trait.legendaryNeuralHeatRecoveryBonus;
+                        }
+
+                        if (recoveryBonus > 0f)
+                        {
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                ("Neural heat recovery rate: +" +
+                                (recoveryBonus * 100f).ToString("0.##") +
+                                "%")
+                                .Colorize(ColorLibrary.Green));
+                        }
+                    }
+                }
+
+                if (trait.masterworkImmunityGainBonus > 0f ||
+                    trait.legendaryImmunityGainBonus > 0f ||
+                    trait.masterworkDiseaseRiskReduction > 0f ||
+                    trait.legendaryDiseaseRiskReduction > 0f)
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        float immunityBonus = 0f;
+                        float diseaseReduction = 0f;
+
+                        if (quality == QualityCategory.Masterwork)
+                        {
+                            immunityBonus =
+                                trait.masterworkImmunityGainBonus;
+
+                            diseaseReduction =
+                                trait.masterworkDiseaseRiskReduction;
+                        }
+                        else if (quality == QualityCategory.Legendary)
+                        {
+                            immunityBonus =
+                                trait.legendaryImmunityGainBonus;
+
+                            diseaseReduction =
+                                trait.legendaryDiseaseRiskReduction;
+                        }
+
+                        if (immunityBonus > 0f ||
+                            diseaseReduction > 0f)
+                        {
+                            description.AppendLine();
+
+                            if (immunityBonus > 0f)
+                            {
+                                description.AppendLine(
+                                    ("Immunity gain speed: +" +
+                                    (immunityBonus * 100f).ToString("0.##") +
+                                    "%")
+                                    .Colorize(ColorLibrary.Green));
+                            }
+
+                            if (diseaseReduction > 0f)
+                            {
+                                description.AppendLine(
+                                    ("Disease contraction chance: -" +
+                                    (diseaseReduction * 100f).ToString("0.##") +
+                                    "% (relative)")
+                                    .Colorize(ColorLibrary.Green));
+                            }
+                        }
+                    }
+                }
+
+                // Reinforced
+                if (trait.masterworkArmorRatingBonus > 0f ||
+                    trait.legendaryArmorRatingBonus > 0f ||
+                    trait.masterworkMassIncrease > 0f ||
+                    trait.legendaryMassIncrease > 0f)
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        float armorBonus = 0f;
+                        float massIncrease = 0f;
+
+                        if (quality == QualityCategory.Masterwork)
+                        {
+                            armorBonus =
+                                trait.masterworkArmorRatingBonus;
+
+                            massIncrease =
+                                trait.masterworkMassIncrease;
+                        }
+                        else if (quality == QualityCategory.Legendary)
+                        {
+                            armorBonus =
+                                trait.legendaryArmorRatingBonus;
+
+                            massIncrease =
+                                trait.legendaryMassIncrease;
+                        }
+
+                        if (armorBonus > 0f || massIncrease > 0f)
+                        {
+                            description.AppendLine();
+
+                            if (armorBonus > 0f)
+                            {
+                                description.AppendLine(
+                                    ("Armor Rating (Sharp, Blunt, Heat): +" +
+                                    (armorBonus * 100f).ToString("0.##") +
+                                    "%")
+                                    .Colorize(ColorLibrary.Green));
+                            }
+
+                            if (massIncrease > 0f)
+                            {
+                                description.AppendLine(
+                                    ("Mass: +" +
+                                    (massIncrease * 100f).ToString("0.##") +
+                                    "%")
+                                    .Colorize(ColorLibrary.RedReadable));
+                            }
+                        }
+                    }
+                }
+
+
+                // Regeneration
+                if (trait.masterworkRegenerationInterval > 0f ||
+                    trait.legendaryRegenerationInterval > 0f)
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        float interval = 0f;
+
+                        if (quality == QualityCategory.Masterwork)
+                        {
+                            interval =
+                                trait.masterworkRegenerationInterval;
+                        }
+                        else if (quality == QualityCategory.Legendary)
+                        {
+                            interval =
+                                trait.legendaryRegenerationInterval;
+                        }
+
+                        if (interval > 0f)
+                        {
+                            float healingPerMinute = 60f / interval;
+
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                ("Regeneration: +" +
+                                healingPerMinute.ToString("0.##") +
+                                " HP/min")
+                                .Colorize(ColorLibrary.Green));
+
+                            description.AppendLine(
+                                ("Healing interval: " +
+                                interval.ToString("0.##") +
+                                " seconds")
+                                .Colorize(ColorLibrary.Green));
+                        }
+                    }
+                }
+
+
+
+                float moveSpeedBonus =
+                    ArmorTraitMoveSpeedUtility.GetItemBonus(
+                        parent as Apparel,
+                        trait);
+
+                if (moveSpeedBonus > 0f)
+                {
+                    description.AppendLine();
+
+                    description.AppendLine(
+                        ("Movement speed: +" +
+                        (moveSpeedBonus * 100f).ToString("0.##") +
+                        "%")
+                        .Colorize(ColorLibrary.Green));
+                }
+
+
                 description.AppendLine();
             }
+
 
             yield return new StatDrawEntry(
                 StatCategoryDefOf.BasicsImportant,

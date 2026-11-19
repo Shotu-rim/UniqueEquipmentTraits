@@ -51,6 +51,17 @@ namespace UniqueEquipmentTraits.Core
         private readonly Dictionary<BodyPartRecord, HediffDef> partInjuryDefs =
             new Dictionary<BodyPartRecord, HediffDef>();
 
+        private Dictionary<BodyPartRecord, float> originalPartDamage;
+
+        private Dictionary<BodyPartRecord, HediffDef> originalPartInjuryDefs;
+
+        public IReadOnlyDictionary<BodyPartRecord, float> OriginalPartDamage =>
+            originalPartDamage;
+
+        public IReadOnlyDictionary<BodyPartRecord, HediffDef> OriginalPartInjuryDefs =>
+            originalPartInjuryDefs;
+
+
         public IEnumerable<BodyPartRecord> HitParts => hitParts;
 
         public IReadOnlyDictionary<BodyPartRecord, float> PartDamage =>
@@ -91,6 +102,18 @@ namespace UniqueEquipmentTraits.Core
                 partInjuryDefs[part] = injuryDef;
         }
 
+
+        public void CaptureOriginalDamage()
+        {
+            if (originalPartDamage != null)
+                return;
+
+            originalPartDamage =
+                new Dictionary<BodyPartRecord, float>(partDamage);
+
+            originalPartInjuryDefs =
+                new Dictionary<BodyPartRecord, HediffDef>(partInjuryDefs);
+        }
 
 
         // For reports - bleeding effect

@@ -4,6 +4,7 @@ using RimWorld;
 using System;
 using System.Collections.Generic;
 using UniqueEquipmentTraits.Core;
+using UniqueEquipmentTraits.Core.Armor;
 using UniqueEquipmentTraits.Effects;
 using Verse;
 
@@ -81,6 +82,7 @@ namespace UniqueEquipmentTraits.Patches
                 // Effects should not run after a failed attack
                 if (__exception == null)
                 {
+                    __state.CaptureOriginalDamage();
                     try
                     {
                         WeaponTraitActivation.ProcessMeleeAttack(__state);
@@ -90,6 +92,17 @@ namespace UniqueEquipmentTraits.Patches
                         Log.Error(
                             "[UET] Melee trait activation failed: " + ex);
                     }
+
+                    try
+                    {
+                        ArmorTraitCriticalEffect.Apply(__state);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(
+                            "[UET Hawkeye] Critical hit processing failed: " + ex);
+                    }
+
 
                     try
                     {

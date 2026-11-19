@@ -1,4 +1,5 @@
 ﻿
+using RimWorld;
 using System.Linq;
 using Verse;
 
@@ -24,14 +25,14 @@ namespace UniqueEquipmentTraits.Core.Armor
                 return false;
             }
 
-            // No anatomical restrictions.
+            // No anatomical restrictions
             if (trait.allowedCategories == null ||
                 trait.allowedCategories.Count == 0)
             {
                 return true;
             }
 
-            // Armor must cover at least one allowed category.
+            // Armor must cover at least one allowed category
             return ArmorTraitEligibility
                 .GetCategories(apparelDef)
                 .Any(category =>
@@ -45,18 +46,28 @@ namespace UniqueEquipmentTraits.Core.Armor
             if (apparel == null || trait == null)
                 return false;
 
-            // Validate general eligibility and anatomical coverage.
+            // Validate general eligibility and anatomical coverage
             if (!CanApply(apparel.def, trait))
                 return false;
+            // Restrict selected traits to Legendary quality
+            if (trait.legendaryOnly)
+            {
+                QualityCategory quality;
 
-            // No material restrictions.
+                if (!apparel.TryGetQuality(out quality) ||
+                    quality != QualityCategory.Legendary)
+                {
+                    return false;
+                }
+            }
+            // No material restrictions
             if (trait.allowedStuffCategories == null ||
                 trait.allowedStuffCategories.Count == 0)
             {
                 return true;
             }
 
-            // A material-restricted trait requires actual stuff.
+            // A material-restricted trait requires actual stuff
             ThingDef stuff = apparel.Stuff;
 
             if (stuff == null || stuff.stuffProps == null ||

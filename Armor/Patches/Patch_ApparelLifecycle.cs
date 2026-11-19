@@ -86,13 +86,11 @@ namespace UniqueEquipmentTraits.Patches
             }
         }
 
+
         [HarmonyPatch(
             typeof(Pawn_ApparelTracker),
             nameof(Pawn_ApparelTracker.Remove),
-            new System.Type[]
-            {
-                typeof(Apparel)
-            })]
+            new System.Type[] { typeof(Apparel) })]
         public static class RemovePatch
         {
             [HarmonyPrefix]
@@ -116,17 +114,19 @@ namespace UniqueEquipmentTraits.Patches
                 if (!__state ||
                     __instance == null ||
                     __instance.pawn == null)
+                {
                     return;
+                }
 
                 if (!__instance.WornApparel.Contains(ap))
                 {
-                    UETEquipmentStateManager
-                        .NotifyApparelRemoved(
-                            __instance.pawn,
-                            ap);
+                    UETEquipmentStateManager.NotifyApparelRemoved(
+                        __instance.pawn,
+                        ap);
                 }
             }
         }
+
 
         [HarmonyPatch(
             typeof(Pawn_ApparelTracker),
