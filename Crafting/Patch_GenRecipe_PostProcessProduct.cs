@@ -30,6 +30,8 @@ namespace UniqueEquipmentTraits.Crafting
             internal bool Inspired;
             internal bool NotificationDeferred;
             internal bool CraftedArtDeferred;
+            internal bool EligibleForUnique;
+
         }
 
         [ThreadStatic]
@@ -39,7 +41,7 @@ namespace UniqueEquipmentTraits.Crafting
         {
             CraftContext context = activeContext;
 
-            if (context == null ||
+            if (context == null || !context.EligibleForUnique ||
                 !ReferenceEquals(context.Product, thing))
                 return false;
 
@@ -53,7 +55,7 @@ namespace UniqueEquipmentTraits.Crafting
         {
             CraftContext context = activeContext;
 
-            if (context == null ||
+            if (context == null || !context.EligibleForUnique ||
                 def != TaleDefOf.CraftedArt ||
                 args == null)
                 return false;
@@ -69,6 +71,7 @@ namespace UniqueEquipmentTraits.Crafting
 
             return false;
         }
+
 
         [HarmonyPrefix]
         private static void Prefix(
@@ -88,10 +91,13 @@ namespace UniqueEquipmentTraits.Crafting
 
             if (item == null ||
                 item.def == null ||
-                (!item.def.IsMeleeWeapon && item.def.apparel == null) ||
-                item.TryGetComp<CompUniqueWeapon>() != null ||
                 item.TryGetComp<CompQuality>() == null)
                 return;
+
+            bool eligibleForUnique =
+                (item.def.IsMeleeWeapon ||
+                 item.def.apparel != null) &&
+                item.TryGetComp<CompUniqueWeapon>() == null;
 
             __state = new CraftContext
             {
@@ -99,11 +105,13 @@ namespace UniqueEquipmentTraits.Crafting
                 Previous = activeContext,
                 Inspired =
                     worker.InspirationDef ==
-                    InspirationDefOf.Inspired_Creativity
+                    InspirationDefOf.Inspired_Creativity,
+                EligibleForUnique = eligibleForUnique
             };
 
             activeContext = __state;
         }
+
 
         [HarmonyPostfix]
         private static void Postfix(
@@ -114,9 +122,10 @@ namespace UniqueEquipmentTraits.Crafting
         {
             if (__state == null)
                 return;
-
+           
             try
             {
+                TryApplyCraftsmanship(__result, worker);
                 TryConvert(
                     ref __result,
                     recipeDef,
@@ -362,5 +371,94 @@ namespace UniqueEquipmentTraits.Crafting
                 }
             }
         }
+
+        private const bool CraftsmanshipDebugEnabled = true;
+
+        private static void TryApplyCraftsmanship(
+            Thing result,
+            Pawn worker)
+        {
+            if (result == null || worker == null)
+                return;
+
+            Thing product = result;
+
+            if (product is MinifiedThing minified)
+                product = minified.InnerThing;
+
+            if (product == null)
+                return;
+
+            CompQuality qualityComp =
+                product.TryGetComp<CompQuality>();
+
+            if (qualityComp == null)
+                return;
+
+
+            float chance =
+                ArmorTraitCraftsmanshipUtility
+                    .GetUpgradeChance(worker);
+
+            if (CraftsmanshipDebugEnabled)
+            {
+                Log.Message(
+                    "[UET Craftsmanship DEBUG] " +
+                    "Pawn: " + worker.LabelShort +
+                    " | Product: " + product.Label +
+                    " | Detected chance: " +
+                    (chance * 100f).ToString("0.##") + "%");
+            }
+
+            if (chance <= 0f)
+                return;
+
+
+            QualityCategory originalQuality =
+                qualityComp.Quality;
+
+            if (originalQuality >= QualityCategory.Legendary)
+            {
+                if (CraftsmanshipDebugEnabled)
+                {
+                    Log.Message(
+                        "[UET Craftsmanship]\n" +
+                        "Pawn: " + worker.LabelShort + "\n" +
+                        "Product: " + product.Label + "\n" +
+                        "Original quality: " + originalQuality + "\n" +
+                        "Chance: " + (chance * 100f).ToString("0.##") + "%\n" +
+                        "Result: SKIPPED (maximum quality)");
+                }
+
+                return;
+            }
+
+            float roll = Rand.Value;
+            bool success = roll < chance;
+
+            if (success)
+            {
+                QualityCategory upgradedQuality =
+                    (QualityCategory)((int)originalQuality + 1);
+
+                qualityComp.SetQuality(
+                    upgradedQuality,
+                    ArtGenerationContext.Colony);
+            }
+
+            if (CraftsmanshipDebugEnabled)
+            {
+                Log.Message(
+                    "[UET Craftsmanship]\n" +
+                    "Pawn: " + worker.LabelShort + "\n" +
+                    "Product: " + product.Label + "\n" +
+                    "Original quality: " + originalQuality + "\n" +
+                    "Chance: " + (chance * 100f).ToString("0.##") + "%\n" +
+                    "Roll: " + (roll * 100f).ToString("0.00") + "%\n" +
+                    "Result: " + (success ? "SUCCESS" : "FAILED") + "\n" +
+                    "Final base quality: " + qualityComp.Quality);
+            }
+        }
+
     }
 }

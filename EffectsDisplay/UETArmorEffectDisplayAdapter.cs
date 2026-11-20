@@ -57,7 +57,7 @@ namespace UniqueEquipmentTraits.EffectsDisplay
                     trait.description ?? string.Empty,
                     state.Charges,
                     state.MaxCharges,
-                    isPassive || state.IsEffectActive,
+                    true,
                     null,
                     state.RemainingActiveTicks,
                     state.RemainingCooldownTicks,

@@ -18,12 +18,6 @@ namespace UniqueEquipmentTraits.Core.Armor
         private List<Pawn> progressPawnKeys;
         private List<float> progressValues;
 
-        private List<Pawn> tickPawnKeys;
-        private List<int> tickValues;
-
-        private List<Pawn> ratePawnKeys;
-        private List<float> rateValues;
-
         public ArmorTraitRegenerationTracker(Game game)
         {
         }
@@ -40,39 +34,21 @@ namespace UniqueEquipmentTraits.Core.Armor
                 ref progressPawnKeys,
                 ref progressValues);
 
-            Scribe_Collections.Look(
-                ref lastUpdateTicks,
-                "UET_RegenerationLastTicks",
-                LookMode.Reference,
-                LookMode.Value,
-                ref tickPawnKeys,
-                ref tickValues);
-
-            Scribe_Collections.Look(
-                ref cachedHealingRates,
-                "UET_RegenerationCachedRates",
-                LookMode.Reference,
-                LookMode.Value,
-                ref ratePawnKeys,
-                ref rateValues);
-
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
                 if (healingProgress == null)
-                    healingProgress = new Dictionary<Pawn, float>();
+                    healingProgress =
+                        new Dictionary<Pawn, float>();
 
-                if (lastUpdateTicks == null)
-                    lastUpdateTicks = new Dictionary<Pawn, int>();
+                // Timing and rate caches are session-local.
+                lastUpdateTicks =
+                    new Dictionary<Pawn, int>();
 
-                if (cachedHealingRates == null)
-                    cachedHealingRates = new Dictionary<Pawn, float>();
+                cachedHealingRates =
+                    new Dictionary<Pawn, float>();
 
                 progressPawnKeys = null;
                 progressValues = null;
-                tickPawnKeys = null;
-                tickValues = null;
-                ratePawnKeys = null;
-                rateValues = null;
             }
         }
 
@@ -91,7 +67,8 @@ namespace UniqueEquipmentTraits.Core.Armor
 
             float rate;
 
-            if (!cachedHealingRates.TryGetValue(pawn, out rate))
+            if (!cachedHealingRates.TryGetValue(
+                pawn, out rate))
             {
                 rate =
                     ArmorTraitRegenerationUtility
@@ -109,7 +86,8 @@ namespace UniqueEquipmentTraits.Core.Armor
             int lastTick;
             int elapsedTicks;
 
-            if (lastUpdateTicks.TryGetValue(pawn, out lastTick))
+            if (lastUpdateTicks.TryGetValue(
+                pawn, out lastTick))
             {
                 elapsedTicks = currentTick - lastTick;
 
@@ -123,7 +101,6 @@ namespace UniqueEquipmentTraits.Core.Armor
 
             lastUpdateTicks[pawn] = currentTick;
 
-            // Safety cap against excessive catch-up.
             if (elapsedTicks > 2500)
                 elapsedTicks = 2500;
 
@@ -135,7 +112,6 @@ namespace UniqueEquipmentTraits.Core.Armor
             if (pawn == null || pawn.Dead)
                 return;
 
-            // Settle elapsed time using the previous rate.
             float oldRate;
 
             if (cachedHealingRates.TryGetValue(

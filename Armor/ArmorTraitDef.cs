@@ -38,7 +38,8 @@ namespace UniqueEquipmentTraits.Core.Armor
         public List<StuffCategoryDef> allowedStuffCategories;
         public List<string> nameAdjectives;
         public List<string> nameConcepts;
-
+        public float masterworkMentalBreakBlockChance = 0f;
+        public float legendaryMentalBreakBlockChance = 0f;
 
         // Passive movement speed bonus configuration
         public float masterworkMoveSpeedBonus = 0f;
@@ -64,6 +65,12 @@ namespace UniqueEquipmentTraits.Core.Armor
         // Productivity
         public float masterworkWorkSpeedBonus = 0f;
         public float legendaryWorkSpeedBonus = 0f;
+        // Empowered
+        public float masterworkCapacityBonus = 0f;
+        public float legendaryCapacityBonus = 0f;
+        // Craftsmanship
+        public float masterworkCraftsmanshipChance = 0f;
+        public float legendaryCraftsmanshipChance = 0f;
 
 
         // Regeneration

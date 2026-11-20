@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Verse;
+using UnityEngine;
 
 namespace UniqueEquipmentTraits.Core.Armor
 {
@@ -284,19 +285,152 @@ namespace UniqueEquipmentTraits.Core.Armor
                         : trait.legendaryLightweightMassReduction;
                 }
 
-                // Reinforced: increases armor rating or mass.
+                // Reinforced: increases armor rating or mass
                 if (bonus > 0f)
                     factor *= 1f + bonus;
 
-                // Lightweight: decreases armor rating or mass.
+                // Lightweight: decreases armor rating or mass
                 if (reduction > 0f)
                     factor *= 1f - UnityEngine.Mathf.Clamp01(reduction);
             }
 
             return factor;
         }
+        // Armor buttons
+        public override IEnumerable<Gizmo> CompGetWornGizmosExtra()
+        {
+            foreach (Gizmo gizmo in base.CompGetWornGizmosExtra())
+            {
+                yield return gizmo;
+            }
 
+            if (traits == null || traits.Count == 0)
+                yield break;
 
+            QualityCategory quality;
+
+            if (!parent.TryGetQuality(out quality))
+                yield break;
+
+            if (quality != QualityCategory.Legendary)
+                yield break;
+
+            foreach (ArmorTraitDef trait in traits)
+            {
+                if (trait == null ||
+                    trait.defName != "UET_NeuralDeafness")
+                    continue;
+
+                if (state == null)
+                    continue;
+
+                int currentCharges = state.Charges;
+                int maximumCharges = state.MaxCharges;
+
+                Command_Action command = new Command_Action
+                {
+                    defaultLabel = "Silence",
+
+                    icon = ContentFinder<Texture2D>.Get("UI/Commands/UET_Silence"),
+
+                    defaultDesc =
+                        "Temporarily suppresses the target's psychic sensitivity.\n\n" +
+                        "Charges: " + currentCharges + "/" + maximumCharges,
+
+                    action = delegate
+                    {
+                        Pawn caster = (parent as Apparel)?.Wearer;
+
+                        if (caster == null || caster.Map == null || caster.Dead)
+                            return;
+
+                        TargetingParameters targetParams = new TargetingParameters
+                        {
+                            canTargetPawns = true,
+                            canTargetBuildings = false,
+                            canTargetItems = false,
+                            canTargetLocations = false
+                        };
+
+                        Find.Targeter.BeginTargeting(
+                            targetParams,
+                            delegate (LocalTargetInfo target)
+                            {
+                                Pawn targetPawn = target.Pawn;
+
+                                if (targetPawn == null ||
+                                    targetPawn.Dead ||
+                                    targetPawn.Map != caster.Map)
+                                    return;
+
+                                if (!caster.Position.InHorDistOf(
+                                    targetPawn.Position, 32f))
+                                    return;
+
+                                // Check if the caster still wears this apparel
+                                if ((parent as Apparel)?.Wearer != caster)
+                                    return;
+
+                                if (state.Charges <= 0 ||
+                                    !state.TryConsumeCharge())
+                                    return;
+
+                                HediffDef silenceDef =
+                                    DefDatabase<HediffDef>.GetNamed("UET_Silence");
+
+                                Hediff existingSilence =
+                                    targetPawn.health.hediffSet.GetFirstHediffOfDef(silenceDef);
+
+                                if (existingSilence != null)
+                                {
+                                    HediffComp_Disappears disappears =
+                                        existingSilence.TryGetComp<HediffComp_Disappears>();
+
+                                    if (disappears != null)
+                                        disappears.ticksToDisappear = 7200;
+                                }
+                                else
+                                {
+                                    Hediff silence =
+                                        HediffMaker.MakeHediff(silenceDef, targetPawn);
+
+                                    targetPawn.health.AddHediff(silence);
+                                }
+
+                                Messages.Message(
+                                    "UET: Silence applied to " +
+                                    targetPawn.LabelShort,
+                                    MessageTypeDefOf.NeutralEvent,
+                                    false);
+                            },
+                            null,
+                            delegate (LocalTargetInfo target)
+                            {
+                                Pawn targetPawn = target.Pawn;
+
+                                return targetPawn != null &&
+                                       !targetPawn.Dead &&
+                                       targetPawn.Map == caster.Map &&
+                                       caster.Position.InHorDistOf(
+                                           targetPawn.Position, 32f);
+                            },
+                            caster
+                        );
+                    }
+                };
+
+                if (maximumCharges <= 0)
+                {
+                    command.Disable("No charges configured.");
+                }
+                else if (currentCharges <= 0)
+                {
+                    command.Disable("No charges available.");
+                }
+
+                yield return command;
+            }
+        }
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {
             if (traits == null || traits.Count == 0)
@@ -726,6 +860,144 @@ namespace UniqueEquipmentTraits.Core.Armor
                 }
 
 
+                // Craftsmanship
+                if (trait.masterworkCraftsmanshipChance > 0f ||
+                    trait.legendaryCraftsmanshipChance > 0f)
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        float chance = 0f;
+
+                        if (quality == QualityCategory.Masterwork)
+                        {
+                            chance =
+                                trait.masterworkCraftsmanshipChance;
+                        }
+                        else if (quality == QualityCategory.Legendary)
+                        {
+                            chance =
+                                trait.legendaryCraftsmanshipChance;
+                        }
+
+                        if (chance > 0f)
+                        {
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                ("Crafted item quality: +" +
+                                "1 level (" +
+                                (chance * 100f).ToString("0.##") +
+                                "% chance)")
+                                .Colorize(ColorLibrary.Green));
+                        }
+                    }
+                }
+
+                // Empowered
+                if (trait.masterworkCapacityBonus > 0f ||
+                    trait.legendaryCapacityBonus > 0f)
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        float bonus = 0f;
+
+                        if (quality == QualityCategory.Masterwork)
+                        {
+                            bonus = trait.masterworkCapacityBonus;
+                        }
+                        else if (quality == QualityCategory.Legendary)
+                        {
+                            bonus = trait.legendaryCapacityBonus;
+                        }
+
+                        if (bonus > 0f)
+                        {
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                ("Pawn capacities: +" +
+                                (bonus * 100f).ToString("0.##") +
+                                "% (relative)")
+                                .Colorize(ColorLibrary.Green));
+                        }
+                    }
+                }
+
+                // Neutrality
+                if (trait.masterworkMentalBreakBlockChance > 0f ||
+                    trait.legendaryMentalBreakBlockChance > 0f)
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        float chance = 0f;
+
+                        if (quality == QualityCategory.Masterwork)
+                        {
+                            chance =
+                                trait.masterworkMentalBreakBlockChance;
+                        }
+                        else if (quality == QualityCategory.Legendary)
+                        {
+                            chance =
+                                trait.legendaryMentalBreakBlockChance;
+                        }
+
+                        if (chance > 0f)
+                        {
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                ("Mental break prevention: " +
+                                (chance * 100f).ToString("0.##") +
+                                "% chance")
+                                .Colorize(ColorLibrary.Green));
+                        }
+                    }
+                }
+
+                // Neural Deafness
+                if (trait.defName == "UET_NeuralDeafness")
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        if (quality == QualityCategory.Masterwork ||
+                            quality == QualityCategory.Legendary)
+                        {
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                "Psychic sensitivity: 0%"
+                                .Colorize(ColorLibrary.Green));
+                        }
+
+                        if (quality == QualityCategory.Legendary)
+                        {
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                "Ability: Silence"
+                                .Colorize(ColorLibrary.Green));
+
+                            description.AppendLine(
+                                "Target psychic sensitivity: 0%");
+
+                            description.AppendLine(
+                                "Duration: 120 seconds");
+
+                            description.AppendLine(
+                                "Maximum charges: 2");
+
+                        }
+                    }
+                }
 
                 float moveSpeedBonus =
                     ArmorTraitMoveSpeedUtility.GetItemBonus(

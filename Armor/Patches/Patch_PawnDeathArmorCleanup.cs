@@ -43,7 +43,8 @@ namespace UniqueEquipmentTraits.Patches
         public static void Prefix(Pawn __instance)
         {
             // TEMPORARY TEST:
-            // Armor Hediff cleanup disabled during Pawn.Kill.
+            // Armor Hediff cleanup disabled during Pawn.Kill. DO NOT USE IT AT THE MOMENT!!!!!
+            // It causes double death sequence resulting in game crash. It was a testing thingy.
         }
     }
 }
