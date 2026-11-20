@@ -100,7 +100,7 @@ namespace UniqueEquipmentTraits.Core.Armor
             if (bonuses.Count == 0)
                 return 0f;
 
-            // Strongest bonuses first.
+            // Strongest bonuses first
             bonuses.Sort((a, b) => b.CompareTo(a));
 
             float totalBonus = 0f;

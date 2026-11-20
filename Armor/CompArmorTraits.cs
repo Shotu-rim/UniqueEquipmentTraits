@@ -231,6 +231,7 @@ namespace UniqueEquipmentTraits.Core.Armor
                       .CapitalizeFirst();
         }
 
+
         public override float GetStatFactor(StatDef stat)
         {
             float factor = base.GetStatFactor(stat);
@@ -260,26 +261,41 @@ namespace UniqueEquipmentTraits.Core.Armor
                     continue;
 
                 float bonus = 0f;
+                float reduction = 0f;
 
                 if (quality == QualityCategory.Masterwork)
                 {
                     bonus = isArmor
                         ? trait.masterworkArmorRatingBonus
                         : trait.masterworkMassIncrease;
+
+                    reduction = isArmor
+                        ? trait.masterworkLightweightArmorPenalty
+                        : trait.masterworkLightweightMassReduction;
                 }
                 else if (quality == QualityCategory.Legendary)
                 {
                     bonus = isArmor
                         ? trait.legendaryArmorRatingBonus
                         : trait.legendaryMassIncrease;
+
+                    reduction = isArmor
+                        ? trait.legendaryLightweightArmorPenalty
+                        : trait.legendaryLightweightMassReduction;
                 }
 
+                // Reinforced: increases armor rating or mass.
                 if (bonus > 0f)
                     factor *= 1f + bonus;
+
+                // Lightweight: decreases armor rating or mass.
+                if (reduction > 0f)
+                    factor *= 1f - UnityEngine.Mathf.Clamp01(reduction);
             }
 
             return factor;
         }
+
 
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {
@@ -580,6 +596,88 @@ namespace UniqueEquipmentTraits.Core.Armor
                                     "%")
                                     .Colorize(ColorLibrary.RedReadable));
                             }
+                        }
+                    }
+                }
+
+                // Lightweight
+                if (trait.masterworkLightweightMassReduction > 0f ||
+                    trait.legendaryLightweightMassReduction > 0f ||
+                    trait.masterworkLightweightArmorPenalty > 0f ||
+                    trait.legendaryLightweightArmorPenalty > 0f)
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        float massReduction = 0f;
+                        float armorPenalty = 0f;
+
+                        if (quality == QualityCategory.Masterwork)
+                        {
+                            massReduction =
+                                trait.masterworkLightweightMassReduction;
+
+                            armorPenalty =
+                                trait.masterworkLightweightArmorPenalty;
+                        }
+                        else if (quality == QualityCategory.Legendary)
+                        {
+                            massReduction =
+                                trait.legendaryLightweightMassReduction;
+
+                            armorPenalty =
+                                trait.legendaryLightweightArmorPenalty;
+                        }
+
+                        if (massReduction > 0f || armorPenalty > 0f)
+                        {
+                            description.AppendLine();
+
+                            if (massReduction > 0f)
+                            {
+                                description.AppendLine(
+                                    ("Mass: -" +
+                                    (massReduction * 100f).ToString("0.##") +
+                                    "%")
+                                    .Colorize(ColorLibrary.Green));
+                            }
+
+                            if (armorPenalty > 0f)
+                            {
+                                description.AppendLine(
+                                    ("Armor Rating (Sharp, Blunt, Heat): -" +
+                                    (armorPenalty * 100f).ToString("0.##") +
+                                    "%")
+                                    .Colorize(ColorLibrary.RedReadable));
+                            }
+                        }
+                    }
+                }
+
+                // Acceleration
+                if (trait.meleeCooldownReduction > 0f)
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        float reduction = 0f;
+
+                        if (quality == QualityCategory.Masterwork)
+                            reduction = 0.15f;
+                        else if (quality == QualityCategory.Legendary)
+                            reduction = 0.25f;
+
+                        if (reduction > 0f)
+                        {
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                ("Melee cooldown: -" +
+                                (reduction * 100f).ToString("0.##") +
+                                "%")
+                                .Colorize(ColorLibrary.Green));
                         }
                     }
                 }

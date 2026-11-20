@@ -58,9 +58,24 @@ namespace UniqueEquipmentTraits.Core.Armor
         public float masterworkDiseaseRiskReduction = 0f;
         public float legendaryDiseaseRiskReduction = 0f;
 
+        // Acceleration
+        public float meleeCooldownReduction = 0f;
+
+        // Productivity
+        public float masterworkWorkSpeedBonus = 0f;
+        public float legendaryWorkSpeedBonus = 0f;
+
+
         // Regeneration
         public float masterworkRegenerationInterval = 0f;
         public float legendaryRegenerationInterval = 0f;
+
+        // Lightweight
+        public float masterworkLightweightMassReduction = 0f;
+        public float legendaryLightweightMassReduction = 0f;
+        public float masterworkLightweightArmorPenalty = 0f;
+        public float legendaryLightweightArmorPenalty = 0f;
+
 
         // Reinforced
         public float masterworkArmorRatingBonus = 0f;
