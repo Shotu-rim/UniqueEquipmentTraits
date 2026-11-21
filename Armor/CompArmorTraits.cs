@@ -63,49 +63,6 @@ namespace UniqueEquipmentTraits.Core.Armor
             }
         }
 
-        //public override void CompTickRare()
-        //{
-        //    base.CompTickRare();
-
-        //    if (state == null ||
-        //        traits == null ||
-        //        traits.Count == 0)
-        //    {
-        //        return;
-        //    }
-
-        //    Apparel apparel = parent as Apparel;
-
-        //    if (apparel == null)
-        //        return;
-
-        //    Pawn wearer = apparel.Wearer;
-
-        //    if (wearer == null || wearer.health == null)
-        //        return;
-
-        //    foreach (ArmorTraitDef trait in traits)
-        //    {
-        //        if (trait == null ||
-        //            trait.activationType !=
-        //                ArmorTraitActivationType.Reactive)
-        //        {
-        //            continue;
-        //        }
-
-        //        if (state.ActiveEffectEndTick < 0)
-        //            continue;
-
-        //        if (state.IsEffectActive)
-        //            continue;
-
-        //        ArmorTraitHediffUtility.Remove(
-        //            wearer,
-        //            apparel,
-        //            trait);
-        //    }
-        //}
-
         public override void CompTickRare()
         {
             base.CompTickRare();
@@ -332,14 +289,138 @@ namespace UniqueEquipmentTraits.Core.Armor
             if (!parent.TryGetQuality(out quality))
                 yield break;
 
-            if (quality != QualityCategory.Legendary)
-                yield break;
 
             foreach (ArmorTraitDef trait in traits)
             {
-                if (trait == null ||
-                    trait.defName != "UET_NeuralDeafness")
+                if (trait == null)
                     continue;
+
+                if (trait.defName == "UET_Berserk")
+                {
+                    if (quality == QualityCategory.Masterwork ||
+                        quality == QualityCategory.Legendary)
+                    {
+                        Gizmo berserkGizmo =
+                            ArmorTraitBerserkGizmo.Create(this, quality);
+
+                        if (berserkGizmo != null)
+                            yield return berserkGizmo;
+                    }
+
+                    continue;
+                }
+
+                if (trait.defName == "UET_Skybound")
+                {
+                    if (quality == QualityCategory.Masterwork ||
+                        quality == QualityCategory.Legendary)
+                    {
+                        Gizmo jumpGizmo =
+                            ArmorTraitSkyboundGizmo.Create(this, quality);
+
+                        if (jumpGizmo != null)
+                            yield return jumpGizmo;
+                    }
+
+                    continue;
+                }
+                // Mind Cleansing
+                if (trait.defName == "UET_MindCleansing")
+                {
+                    if (quality == QualityCategory.Masterwork ||
+                        quality == QualityCategory.Legendary)
+                    {
+                        Gizmo cleansingGizmo =
+                            ArmorTraitMindCleansingGizmo.Create(this, quality);
+
+                        if (cleansingGizmo != null)
+                            yield return cleansingGizmo;
+                    }
+
+                    continue;
+                }
+                // Stunning Pulse
+                if (trait.defName == "UET_StunningPulse")
+                {
+                    if (quality == QualityCategory.Masterwork ||
+                        quality == QualityCategory.Legendary)
+                    {
+                        Gizmo stunningPulseGizmo =
+                            ArmorTraitStunningPulseGizmo.Create(
+                                this,
+                                quality);
+
+                        if (stunningPulseGizmo != null)
+                            yield return stunningPulseGizmo;
+                    }
+
+                    continue;
+                }
+
+                // Medic
+                if (trait.defName == "UET_Medic")
+                {
+                    if (quality == QualityCategory.Masterwork ||
+                        quality == QualityCategory.Legendary)
+                    {
+                        Gizmo medicGizmo =
+                            ArmorTraitMedicGizmo.Create(this, quality);
+
+                        if (medicGizmo != null)
+                            yield return medicGizmo;
+                    }
+
+                    continue;
+                }
+                // Shredding
+                if (trait.defName == "UET_Shredding")
+                {
+                    Gizmo gizmo =
+                        ArmorTraitShreddingGizmo.Create(
+                            this,
+                            quality);
+
+                    if (gizmo != null)
+                        yield return gizmo;
+                }
+                // Kindle
+
+                if (trait.defName == "UET_Kindle")
+                {
+                    if (quality == QualityCategory.Masterwork ||
+                        quality == QualityCategory.Legendary)
+                    {
+                        Gizmo kindleGizmo =
+                            ArmorTraitKindleGizmo.Create(this, quality);
+
+                        if (kindleGizmo != null)
+                            yield return kindleGizmo;
+                    }
+
+                    continue;
+                }
+
+                // Toxic Cloud
+                if (trait.defName == "UET_ToxicCloud")
+                {
+                    if (quality == QualityCategory.Masterwork ||
+                        quality == QualityCategory.Legendary)
+                    {
+                        Gizmo toxicCloudGizmo =
+                            ArmorTraitToxicCloudGizmo.Create(
+                                this,
+                                quality);
+
+                        if (toxicCloudGizmo != null)
+                            yield return toxicCloudGizmo;
+                    }
+
+                    continue;
+                }
+                if (trait.defName != "UET_NeuralDeafness" ||
+                    quality != QualityCategory.Legendary)
+                    continue;
+
 
                 if (state == null)
                     continue;
@@ -699,6 +780,85 @@ namespace UniqueEquipmentTraits.Core.Armor
                     }
                 }
 
+                // Medic
+                if (trait.defName == "UET_Medic")
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality) &&
+                        (quality == QualityCategory.Masterwork ||
+                         quality == QualityCategory.Legendary))
+                    {
+                        float range =
+                            ArmorTraitMedicUtility.GetRange(quality);
+
+                        float healingPool =
+                            ArmorTraitMedicUtility.GetHealingPool(quality);
+
+                        int maxCharges =
+                            ArmorTraitChargeUtility.GetMaxCharges(
+                                trait,
+                                quality);
+
+                        int regenTicks =
+                            ArmorTraitState.GetChargeRegenTicks(
+                                quality);
+
+                        description.AppendLine();
+                        description.AppendLine(
+                            "Ability: Medic".Colorize(ColorLibrary.Green));
+
+                    }
+                }
+
+                // Berserk
+                if (trait.defName == "UET_Berserk")
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        if (quality == QualityCategory.Masterwork ||
+                            quality == QualityCategory.Legendary)
+                        {
+                            int durationTicks =
+                                ArmorTraitBerserkUtility.GetDurationTicks(
+                                    quality,
+                                    1f);
+
+                            int maxDurationTicks =
+                                ArmorTraitBerserkUtility.GetDurationTicks(
+                                    quality,
+                                    2f);
+
+                            int goodwillPenalty =
+                                ArmorTraitBerserkUtility.GetGoodwillPenalty(
+                                    quality);
+
+                            int maxCharges =
+                                ArmorTraitChargeUtility.GetMaxCharges(
+                                    trait,
+                                    quality);
+
+                            int regenerationTicks =
+                                ArmorTraitState.GetChargeRegenTicks(
+                                    quality);
+
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                "Ability: Berserk"
+                                .Colorize(ColorLibrary.Green));
+
+                            description.AppendLine(
+                                "Base duration: " +
+                                (durationTicks / 60f).ToString("0.#") +
+                                " seconds (100% psychic sensitivity)");
+                        }
+                    }
+                }
+
+
                 // Reinforced
                 if (trait.masterworkArmorRatingBonus > 0f ||
                     trait.legendaryArmorRatingBonus > 0f ||
@@ -981,6 +1141,202 @@ namespace UniqueEquipmentTraits.Core.Armor
                     }
                 }
 
+
+                // Mind Cleansing
+                if (trait.defName == "UET_MindCleansing")
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        if (quality == QualityCategory.Masterwork ||
+                            quality == QualityCategory.Legendary)
+                        {
+                            int paralysisTicks =
+                                ArmorTraitMindCleansingUtility.GetParalysisTicks(
+                                    quality);
+
+                            int cooldownTicks =
+                                ArmorTraitMindCleansingUtility.GetCooldownTicks(
+                                    quality);
+
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                "Ability: Mind Cleansing"
+                                .Colorize(ColorLibrary.Green));
+
+                        }
+                    }
+                }
+
+                // Kindle
+                if (trait.defName == "UET_Kindle")
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality) &&
+                        (quality == QualityCategory.Masterwork ||
+                         quality == QualityCategory.Legendary))
+                    {
+                        float range =
+                            ArmorTraitKindleUtility.GetRange(quality);
+
+                        int maxCharges =
+                            ArmorTraitChargeUtility.GetMaxCharges(
+                                trait,
+                                quality);
+
+                        int regenTicks =
+                            ArmorTraitState.GetChargeRegenTicks(
+                                quality);
+
+                        int cooldownTicks =
+                            ArmorTraitKindleUtility.GetCooldownTicks();
+
+                        int goodwillPenalty =
+                            ArmorTraitKindleUtility.GetGoodwillPenalty(
+                                quality);
+
+                        description.AppendLine();
+                        description.AppendLine(
+                            "Ability: Kindle".Colorize(ColorLibrary.Green));
+
+                    }
+                }
+                // Toxic Cloud
+                if (trait.defName == "UET_ToxicCloud")
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality) &&
+                        (quality == QualityCategory.Masterwork ||
+                         quality == QualityCategory.Legendary))
+                    {
+                        float range =
+                            ArmorTraitToxicCloudUtility.GetRange(quality);
+
+                        int maxCharges =
+                            ArmorTraitChargeUtility.GetMaxCharges(
+                                trait,
+                                quality);
+
+                        int regenTicks =
+                            ArmorTraitState.GetChargeRegenTicks(
+                                quality);
+
+                        int cooldownTicks =
+                            ArmorTraitToxicCloudUtility.GetCooldownTicks();
+
+                        int goodwillPenalty =
+                            ArmorTraitToxicCloudUtility.GetGoodwillPenalty(
+                                quality);
+
+                        description.AppendLine();
+                        description.AppendLine(
+                            "Ability: Toxic Cloud".Colorize(ColorLibrary.Green));
+                    }
+                }
+
+                // Stunning Pulse
+                if (trait.defName == "UET_StunningPulse")
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality) &&
+                        (quality == QualityCategory.Masterwork ||
+                         quality == QualityCategory.Legendary))
+                    {
+                        int stunTicks =
+                            ArmorTraitStunningPulseUtility.GetStunTicks(
+                                quality);
+
+                        float range =
+                            ArmorTraitStunningPulseUtility.GetRange();
+
+                        int cooldownTicks =
+                            ArmorTraitStunningPulseUtility.GetCooldownTicks();
+
+                        int maxCharges =
+                            ArmorTraitChargeUtility.GetMaxCharges(
+                                trait,
+                                quality);
+
+                        int regenTicks =
+                            ArmorTraitState.GetChargeRegenTicks(
+                                quality);
+
+                        description.AppendLine();
+
+                        description.AppendLine(
+                            "Ability: Stunning Pulse"
+                            .Colorize(ColorLibrary.Green));
+
+                    }
+                }
+
+                // Shredding
+                if (trait.defName == "UET_Shredding")
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality) &&
+                        (quality == QualityCategory.Masterwork ||
+                         quality == QualityCategory.Legendary))
+                    {
+                        float bleedingMultiplier =
+                            ArmorTraitShreddingUtility.GetBleedingMultiplier(
+                                quality);
+
+                        float range =
+                            ArmorTraitMedicUtility.GetRange(quality);
+
+                        int cooldownTicks =
+                            ArmorTraitShreddingUtility.GetCooldownTicks();
+
+                        int maxCharges =
+                            ArmorTraitChargeUtility.GetMaxCharges(
+                                trait,
+                                quality);
+
+                        int regenTicks =
+                            ArmorTraitState.GetChargeRegenTicks(
+                                quality);
+
+                        description.AppendLine();
+
+                        description.AppendLine(
+                            "Ability: Shredding"
+                            .Colorize(ColorLibrary.Green));
+
+                    }
+                }
+
+                // Skybound
+                if (trait.defName == "UET_Skybound")
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality))
+                    {
+                        float range =
+                            ArmorTraitSkyboundUtility.GetJumpRange(quality);
+
+                        int cooldown =
+                            ArmorTraitSkyboundUtility.GetCooldownTicks(quality);
+
+                        if (range > 0f)
+                        {
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                "Ability: Jump"
+                                .Colorize(ColorLibrary.Green));
+
+                        }
+                    }
+                }
+
                 // Neural Deafness
                 if (trait.defName == "UET_NeuralDeafness")
                 {
@@ -1006,14 +1362,6 @@ namespace UniqueEquipmentTraits.Core.Armor
                                 "Ability: Silence"
                                 .Colorize(ColorLibrary.Green));
 
-                            description.AppendLine(
-                                "Target psychic sensitivity: 0%");
-
-                            description.AppendLine(
-                                "Duration: 120 seconds");
-
-                            description.AppendLine(
-                                "Maximum charges: 2");
 
                         }
                     }

@@ -61,6 +61,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Armor\ActivateEffects\Berserk\ArmorTraitBerserkGizmo.cs" />
+    <Compile Include="Armor\ActivateEffects\Berserk\ArmorTraitBerserkUtility.cs" />
+    <Compile Include="Armor\ActivateEffects\Kindle\ArmorTraitKindleGizmo.cs" />
+    <Compile Include="Armor\ActivateEffects\Kindle\ArmorTraitKindleUtility.cs" />
+    <Compile Include="Armor\ActivateEffects\Medic\ArmorTraitMedicGizmo.cs" />
+    <Compile Include="Armor\ActivateEffects\Medic\ArmorTraitMedicUtility.cs" />
+    <Compile Include="Armor\ActivateEffects\MindCleansing\ArmorTraitMindCleansingGizmo.cs" />
+    <Compile Include="Armor\ActivateEffects\MindCleansing\ArmorTraitMindCleansingUtility.cs" />
+    <Compile Include="Armor\ActivateEffects\Shredding\ArmorTraitShreddingGizmo.cs" />
+    <Compile Include="Armor\ActivateEffects\Shredding\ArmorTraitShreddingUtility.cs" />
+    <Compile Include="Armor\ActivateEffects\Shredding\Hediff_ShreddingBleeding.cs" />
+    <Compile Include="Armor\ActivateEffects\Shredding\Patch_ShreddingInjuryMerge.cs" />
+    <Compile Include="Armor\ActivateEffects\Skybound\ArmorTraitSkyboundGizmo.cs" />
+    <Compile Include="Armor\ActivateEffects\Skybound\ArmorTraitSkyboundUtility.cs" />
+    <Compile Include="Armor\ActivateEffects\StunningPulse\ArmorTraitStunningPulseGizmo.cs" />
+    <Compile Include="Armor\ActivateEffects\StunningPulse\ArmorTraitStunningPulseUtility.cs" />
+    <Compile Include="Armor\ActivateEffects\StunningPulse\Patch_StunningPulseAdaptation.cs" />
+    <Compile Include="Armor\ActivateEffects\StunningPulse\Patch_StunningPulseStun.cs" />
+    <Compile Include="Armor\ActivateEffects\ToxicCloud\ArmorTraitToxicCloudGizmo.cs" />
+    <Compile Include="Armor\ActivateEffects\ToxicCloud\ArmorTraitToxicCloudUtility.cs" />
     <Compile Include="Armor\ArmorDamageInterceptionContext.cs" />
     <Compile Include="Armor\ArmorDamageInterceptionScope.cs" />
     <Compile Include="Armor\ArmorPassiveDamageUtility.cs" />

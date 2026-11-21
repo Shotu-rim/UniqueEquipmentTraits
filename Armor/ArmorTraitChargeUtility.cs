@@ -12,6 +12,10 @@ namespace UniqueEquipmentTraits.Core.Armor
         private const int LegendaryCharges = 10;
 
         private const int NeuralDeafnessLegendaryCharges = 2;
+        private const int BerserkMasterworkCharges = 2;
+        private const int BerserkLegendaryCharges = 3;
+        private const int MedicMasterworkCharges = 1;
+        private const int MedicLegendaryCharges = 2;
 
         public static int GetMaxCharges(
             ArmorTraitDef trait,
@@ -29,7 +33,68 @@ namespace UniqueEquipmentTraits.Core.Armor
                     ? NeuralDeafnessLegendaryCharges
                     : 0;
             }
+            // Berserk:
+            // Active on Masterwork and Legendary.
+            // Uses the existing armor trait charge system.
 
+            if (trait.defName == "UET_Berserk")
+            {
+                switch (quality)
+                {
+                    case QualityCategory.Masterwork:
+                        return 2;
+
+                    case QualityCategory.Legendary:
+                        return 3;
+
+                    default:
+                        return 0;
+                }
+            }
+            // Shredding
+            if (trait.defName == "UET_Shredding")
+            {
+                if (quality == QualityCategory.Masterwork)
+                    return 1;
+
+                if (quality == QualityCategory.Legendary)
+                    return 2;
+
+                return 0;
+            }
+            // Stunning Pulse
+            if (trait.defName == "UET_StunningPulse")
+            {
+                switch (quality)
+                {
+                    case QualityCategory.Masterwork:
+                        return 2;
+
+                    case QualityCategory.Legendary:
+                        return 3;
+
+                    default:
+                        return 0;
+                }
+            }
+
+            // Medic:
+            // Limited charges.
+            // Uses the existing armor trait charge regeneration system.
+            if (trait.defName == "UET_Medic")
+            {
+                switch (quality)
+                {
+                    case QualityCategory.Masterwork:
+                        return MedicMasterworkCharges;
+
+                    case QualityCategory.Legendary:
+                        return MedicLegendaryCharges;
+
+                    default:
+                        return 0;
+                }
+            }
             switch (quality)
             {
                 case QualityCategory.Masterwork:
