@@ -103,16 +103,45 @@ namespace UniqueEquipmentTraits.Effects
                 if (!CanCorrode(item))
                     continue;
 
+
                 float scaledDamage = entry.Value *
                     (float)Math.Sqrt(item.MaxHitPoints / 100f);
 
-                int wholeDamage = (int)Math.Floor(scaledDamage);
+                Apparel apparel = item as Apparel;
 
-                if (Rand.Value < scaledDamage - wholeDamage)
-                    wholeDamage++;
+                float immunity = apparel != null
+                    ? UniqueEquipmentTraits.Core.Armor
+                        .ArmorTraitImmunityUtility.GetItemImmunity(
+                            apparel,
+                            "UET_AcidImmunity")
+                    : 0f;
+
+                int wholeDamage;
+
+                if (immunity > 0f)
+                {
+                    float remainingDamage =
+                        scaledDamage * (1f - immunity);
+
+                    var comp = apparel.TryGetComp<
+                        UniqueEquipmentTraits.Core.Armor.CompArmorTraits>();
+
+                    wholeDamage = comp != null
+                        ? comp.AccumulateImmunityDamage(remainingDamage)
+                        : (int)Math.Floor(remainingDamage);
+                }
+                else
+                {
+                    // Preserve original corrosion rounding.
+                    wholeDamage = (int)Math.Floor(scaledDamage);
+
+                    if (Rand.Value < scaledDamage - wholeDamage)
+                        wholeDamage++;
+                }
 
                 if (wholeDamage <= 0)
                     continue;
+
 
                 int hpBefore = item.HitPoints;
                 int actualDamage = Math.Min(wholeDamage, hpBefore);

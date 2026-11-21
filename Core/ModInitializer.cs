@@ -20,7 +20,8 @@ namespace UniqueEquipmentTraits.Core
             Log.Warning("[UET TEST] ModInitializer constructor executed!");
             var harmony = new Harmony("shotu.uniqueequipmenttraits");
             harmony.PatchAll();
-
+            VPEVortexCompatibility.Apply(harmony);
+            VPEColdImmunityCompatibility.Apply(harmony);
             LongEventHandler.ExecuteWhenFinished(() =>
             {
                 ArmorTraitCompInjector.Inject();

@@ -82,7 +82,9 @@ namespace UniqueEquipmentTraits.Core.Armor
         public float legendaryLightweightMassReduction = 0f;
         public float masterworkLightweightArmorPenalty = 0f;
         public float legendaryLightweightArmorPenalty = 0f;
-
+        // Global resistances - Fire/Cold/Elec/Tox/Acid/Vacuum
+        public float masterworkImmunityReduction = 0.85f;
+        public float legendaryImmunityReduction = 1f;
 
         // Reinforced
         public float masterworkArmorRatingBonus = 0f;

@@ -34,7 +34,7 @@ namespace UniqueEquipmentTraits.Core.Armor
 
         private ArmorTraitState state =
             new ArmorTraitState();
-
+    
         public IReadOnlyList<ArmorTraitDef> Traits
         {
             get { return traits; }
@@ -44,7 +44,7 @@ namespace UniqueEquipmentTraits.Core.Armor
         {
             get { return state; }
         }
-
+        private float immunityDamageRemainder = 0f;
         public bool HasReactiveTrait
         {
             get
@@ -196,7 +196,23 @@ namespace UniqueEquipmentTraits.Core.Armor
 
             return true;
         }
+        public int AccumulateImmunityDamage(float damage)
+        {
+            if (damage <= 0f)
+                return 0;
 
+            immunityDamageRemainder += damage;
+
+            int wholeDamage =
+                Mathf.FloorToInt(immunityDamageRemainder + 0.000001f);
+
+            immunityDamageRemainder -= wholeDamage;
+
+            if (immunityDamageRemainder < 0f)
+                immunityDamageRemainder = 0f;
+
+            return wholeDamage;
+        }
         public override void PostExposeData()
         {
             base.PostExposeData();
@@ -209,6 +225,10 @@ namespace UniqueEquipmentTraits.Core.Armor
             Scribe_Deep.Look(
                 ref state,
                 "uetArmorTraitState");
+            Scribe_Values.Look(
+                ref immunityDamageRemainder,
+                "uetImmunityDamageRemainder",
+                0f);
 
             if (Scribe.mode == LoadSaveMode.PostLoadInit)
             {
@@ -995,6 +1015,81 @@ namespace UniqueEquipmentTraits.Core.Armor
                             description.AppendLine(
                                 "Maximum charges: 2");
 
+                        }
+                    }
+                }
+
+                // Elemental and environmental immunities
+                string immunityName = null;
+
+                switch (trait.defName)
+                {
+                    case "UET_HeatImmunity":
+                        immunityName = "Heat";
+                        break;
+
+                    case "UET_ColdImmunity":
+                        immunityName = "Cold";
+                        break;
+
+                    case "UET_AcidImmunity":
+                        immunityName = "Acid";
+                        break;
+
+                    case "UET_ElectricityImmunity":
+                        immunityName = "Electricity";
+                        break;
+
+                    case "UET_ToxicImmunity":
+                        immunityName = "Toxic";
+                        break;
+
+                    case "UET_VacuumImmunity":
+                        immunityName = "Vacuum";
+                        break;
+                }
+                // Resistances
+                if (immunityName != null)
+                {
+                    QualityCategory immunityQuality;
+
+                    if (parent != null &&
+                        parent.TryGetQuality(out immunityQuality))
+                    {
+                        float reduction = 0f;
+
+                        if (immunityQuality ==
+                            QualityCategory.Masterwork)
+                        {
+                            reduction =
+                                trait.masterworkImmunityReduction;
+                        }
+                        else if (immunityQuality ==
+                                 QualityCategory.Legendary)
+                        {
+                            reduction =
+                                trait.legendaryImmunityReduction;
+                        }
+
+                        reduction = Mathf.Clamp01(reduction);
+
+                        if (reduction > 0f)
+                        {
+                            description.AppendLine();
+
+                            description.AppendLine(
+                                (immunityName + " immunity: " +
+                                 (reduction * 100f).ToString("0.##") +
+                                 "% reduction")
+                                .Colorize(ColorLibrary.Green));
+
+                            description.AppendLine(
+                                "Protects the wearer and this apparel item " +
+                                "against applicable effects.");
+
+                            description.AppendLine(
+                                "Wearer protection uses the highest " +
+                                "matching immunity; effects do not stack.");
                         }
                     }
                 }
