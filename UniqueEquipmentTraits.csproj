@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Armor\ActivateEffects\Berserk\ArmorTraitBerserkGizmo.cs" />
     <Compile Include="Armor\ActivateEffects\Berserk\ArmorTraitBerserkUtility.cs" />
+    <Compile Include="Armor\ActivateEffects\Berserk\HediffComp_UETBerserkTracker.cs" />
     <Compile Include="Armor\ActivateEffects\Kindle\ArmorTraitKindleGizmo.cs" />
     <Compile Include="Armor\ActivateEffects\Kindle\ArmorTraitKindleUtility.cs" />
     <Compile Include="Armor\ActivateEffects\Medic\ArmorTraitMedicGizmo.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Armor\ArmorTraitActivationUtility.cs" />
     <Compile Include="Armor\ArmorTraitCastUtility.cs" />
     <Compile Include="Armor\ArmorTraitSoundUtility.cs" />
+    <Compile Include="Armor\ArmorTraitTargetingUtility.cs" />
     <Compile Include="Armor\JobDriver_UETCastArmorAbility.cs" />
     <Compile Include="Armor\PassiveEffects\Acceleration\ArmorTraitAccelerationUtility.cs" />
     <Compile Include="Armor\ArmorTraitActivationContext.cs" />

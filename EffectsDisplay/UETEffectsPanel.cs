@@ -177,7 +177,9 @@ namespace UniqueEquipmentTraits.EffectsDisplay
             else if (coolingDown)
             {
                 status = "Cooldown: " +
-                    FormatRealSeconds(effect.RemainingCooldownTicks);
+                    (effect.EffectId == "UET_MindCleansing"
+                        ? FormatGameDuration(effect.RemainingCooldownTicks)
+                        : FormatRealSeconds(effect.RemainingCooldownTicks));
             }
             else if (effect.MaxCharges > 0 &&
                      effect.Charges <= 0)

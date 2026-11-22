@@ -113,6 +113,7 @@ namespace UniqueEquipmentTraits.Core.Armor
                             GenDraw.DrawRadiusRing(
                                 pawn.Position,
                                 range);
+                            ArmorTraitTargetingUtility.DrawHoveredTarget();
                         }
                     },
 

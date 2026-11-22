@@ -87,12 +87,6 @@ namespace UniqueEquipmentTraits.Core.Armor
                 target.health.AddHediff(silence);
             }
 
-            Messages.Message(
-                "UET: Silence applied to " +
-                target.LabelShort,
-                MessageTypeDefOf.NeutralEvent,
-                false);
-
             return true;
         }
     }

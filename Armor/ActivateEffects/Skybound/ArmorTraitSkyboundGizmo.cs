@@ -111,7 +111,17 @@ namespace UniqueEquipmentTraits.Core.Armor
                                 target.Cell);
 
                         },
-                        null,
+                        delegate
+                        {
+                            if (caster.Spawned &&
+                                apparel.Wearer == caster)
+                            {
+                                GenDraw.DrawRadiusRing(
+                                    caster.Position,
+                                    range);
+                                ArmorTraitTargetingUtility.DrawHoveredTarget();
+                            }
+                        },
                         delegate (LocalTargetInfo target)
                         {
                             return caster.Spawned &&

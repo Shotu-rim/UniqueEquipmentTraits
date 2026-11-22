@@ -114,7 +114,17 @@ namespace UniqueEquipmentTraits.Core.Armor
                                 targetPawn);
 
                         },
-                        null,
+                        delegate
+                        {
+                            if (caster.Spawned &&
+                                apparel.Wearer == caster)
+                            {
+                                GenDraw.DrawRadiusRing(
+                                    caster.Position,
+                                    Range);
+                                ArmorTraitTargetingUtility.DrawHoveredTarget();
+                            }
+                        },
                         delegate (LocalTargetInfo target)
                         {
                             Pawn targetPawn = target.Pawn;

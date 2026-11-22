@@ -145,6 +145,7 @@ namespace UniqueEquipmentTraits.Core.Armor
             if (!started)
                 return false;
 
+
             MentalState mentalState = handler.CurState;
 
             if (mentalState != null)
@@ -154,6 +155,30 @@ namespace UniqueEquipmentTraits.Core.Armor
 
                 mentalState.sourceFaction = caster.Faction;
             }
+
+            HediffDef berserkHediffDef =
+                DefDatabase<HediffDef>.GetNamedSilentFail(
+                    "UET_Berserk");
+
+            if (berserkHediffDef != null)
+            {
+                Hediff berserkHediff =
+                    target.health.AddHediff(berserkHediffDef);
+
+                if (berserkHediff != null)
+                {
+                    HediffComp_Disappears disappears =
+                        berserkHediff.TryGetComp<HediffComp_Disappears>();
+
+                    if (disappears != null)
+                    {
+                        disappears.ticksToDisappear = durationTicks;
+                    }
+                }
+            }
+
+            state.TryConsumeCharge();
+
 
 
             state.TryConsumeCharge();

@@ -114,6 +114,7 @@ namespace UniqueEquipmentTraits.Core.Armor
                                 GenDraw.DrawRadiusRing(
                                     caster.Position,
                                     range);
+                                ArmorTraitTargetingUtility.DrawHoveredTarget();
                             }
                         },
 

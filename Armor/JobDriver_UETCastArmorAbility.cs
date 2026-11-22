@@ -49,6 +49,13 @@ namespace UniqueEquipmentTraits.Core.Armor
             cast.tickAction = delegate
             {
                 pawn.pather.StopDead();
+
+                LocalTargetInfo target = job.targetB;
+
+                if (target.IsValid)
+                {
+                    GenDraw.DrawTargetHighlight(target);
+                }
             };
 
             cast.defaultCompleteMode = ToilCompleteMode.Delay;
@@ -64,19 +71,45 @@ namespace UniqueEquipmentTraits.Core.Armor
                 if (!IsArmorValid())
                     return;
 
+                Apparel armor = Armor;
 
                 bool success =
                     ArmorTraitActivationUtility.TryActivate(
                         pawn,
-                        Armor,
+                        armor,
                         job.targetB);
 
+                if (!success)
+                    return;
 
-                if (success)
+                ArmorTraitSoundUtility.PlayActivationSound(
+                    pawn);
+
+                CompArmorTraits comp =
+                    armor.TryGetComp<CompArmorTraits>();
+
+                if (comp == null ||
+                    comp.Traits == null ||
+                    comp.Traits.Count == 0)
+                    return;
+
+                string abilityName =
+                    comp.Traits[0].label;
+
+                if (comp.Traits[0].defName ==
+                    "UET_NeuralDeafness")
                 {
-                    ArmorTraitSoundUtility.PlayActivationSound(
-                        pawn);
+                    abilityName = "Silence";
                 }
+
+                Messages.Message(
+                    "UET: " +
+                    pawn.LabelShort +
+                    " used " +
+                    abilityName +
+                    ".",
+                    MessageTypeDefOf.NeutralEvent,
+                    false);
             };
 
             activate.defaultCompleteMode =
