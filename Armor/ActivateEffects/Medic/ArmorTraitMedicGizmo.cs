@@ -75,11 +75,35 @@ namespace UniqueEquipmentTraits.Core.Armor
                             if (targetPawn == null)
                                 return;
 
-                            ArmorTraitMedicUtility.TryHeal(
+
+                            if (apparel == null ||
+                                apparel.Wearer != pawn ||
+                                !ArmorTraitMedicUtility.CanHeal(
+                                    pawn,
+                                    targetPawn,
+                                    quality,
+                                    state))
+                            {
+                                return;
+                            }
+
+                            ArmorTraitDef trait =
+                                DefDatabase<ArmorTraitDef>.GetNamedSilentFail(
+                                    "UET_Medic");
+
+                            if (trait == null)
+                            {
+                                Log.Error(
+                                    "[UET] Missing ArmorTraitDef: UET_Medic");
+                                return;
+                            }
+
+                            ArmorTraitCastUtility.TryStartTargetedCast(
                                 pawn,
-                                targetPawn,
-                                quality,
-                                state);
+                                apparel,
+                                trait,
+                                targetPawn);
+
                         },
 
                         // Range indicator

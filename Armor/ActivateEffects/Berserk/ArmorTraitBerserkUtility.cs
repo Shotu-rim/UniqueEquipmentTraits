@@ -63,20 +63,26 @@ namespace UniqueEquipmentTraits.Core.Armor
             Pawn target,
             ArmorTraitState state)
         {
+
             if (caster == null ||
                 target == null ||
                 state == null ||
                 caster.Dead ||
+                caster.Downed ||
+                caster.InMentalState ||
                 target.Dead ||
+                target.Downed ||
                 !caster.Spawned ||
                 !target.Spawned ||
                 caster.Map != target.Map ||
                 target.InMentalState ||
+                target.Downed ||
                 !state.UsesCharges ||
                 !state.HasAvailableCharge)
             {
                 return false;
             }
+
 
             if (target.RaceProps.IsMechanoid)
                 return false;

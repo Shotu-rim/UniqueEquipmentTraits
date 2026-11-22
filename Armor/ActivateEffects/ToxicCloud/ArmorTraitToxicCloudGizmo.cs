@@ -68,11 +68,39 @@ namespace UniqueEquipmentTraits.Core.Armor
                             if (!target.IsValid)
                                 return;
 
-                            ArmorTraitToxicCloudUtility.TryRelease(
+
+                            if (apparel == null ||
+                                apparel.Wearer != pawn)
+                            {
+                                return;
+                            }
+
+                            if (!ArmorTraitToxicCloudUtility.CanRelease(
                                 pawn,
                                 target.Cell,
                                 quality,
-                                state);
+                                state))
+                            {
+                                return;
+                            }
+
+                            ArmorTraitDef trait =
+                                DefDatabase<ArmorTraitDef>.GetNamedSilentFail(
+                                    "UET_ToxicCloud");
+
+                            if (trait == null)
+                            {
+                                Log.Error(
+                                    "[UET] Missing ArmorTraitDef: UET_ToxicCloud");
+                                return;
+                            }
+
+                            ArmorTraitCastUtility.TryStartTargetedCast(
+                                pawn,
+                                apparel,
+                                trait,
+                                target.Cell);
+
                         },
 
                         // Ring limits

@@ -193,9 +193,11 @@ namespace UniqueEquipmentTraits.Patches
         }
     }
 
+
     /// <summary>
-    /// Adjusts melee attack cooldowns for weapons with an active
-    /// Flurry effect while preserving cooldowns for other attacks.
+    /// Adjusts attack cooldowns for Flurry and Oppression.
+    /// Flurry affects melee attacks only.
+    /// Oppression affects both melee and ranged attacks.
     /// </summary>
     [HarmonyPatch(typeof(Verb), "TryCastNextBurstShot")]
     internal static class Patch_Flurry_Cooldown
@@ -216,7 +218,7 @@ namespace UniqueEquipmentTraits.Patches
             if (cooldownMethod == null || adjustMethod == null)
             {
                 Log.Error(
-                    "[UET Flurry] Cooldown patch: required method not found.");
+                    "[UET] Attack cooldown patch: required method not found.");
 
                 foreach (CodeInstruction instruction in instructions)
                     yield return instruction;
@@ -234,9 +236,9 @@ namespace UniqueEquipmentTraits.Patches
                 {
                     found = true;
 
-                    // The cooldown value is on the evaluation stack.
-                  
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new CodeInstruction(
+                        OpCodes.Ldarg_0);
+
                     yield return new CodeInstruction(
                         OpCodes.Call,
                         adjustMethod);
@@ -246,35 +248,86 @@ namespace UniqueEquipmentTraits.Patches
             if (!found)
             {
                 Log.Error(
-                    "[UET Flurry] Cooldown call not found in " +
+                    "[UET] Attack cooldown call not found in " +
                     "TryCastNextBurstShot.");
             }
         }
 
-        private static int AdjustCooldown(int cooldown, Verb verb)
+        private static int AdjustCooldown(
+            int cooldown,
+            Verb verb)
         {
-            if (!(verb is Verb_MeleeAttack))
+            if (verb == null)
                 return cooldown;
 
             Pawn pawn = verb.CasterPawn;
 
-            CompWeaponTrait comp =
-                (verb.EquipmentSource as ThingWithComps)?
-                    .TryGetComp<CompWeaponTrait>();
-
-            if (comp == null || !comp.FlurryActiveFor(pawn))
+            if (pawn == null)
                 return cooldown;
 
-            float bonus = comp.FlurrySpeedBonus();
+            float adjusted = cooldown;
 
-            if (bonus <= 0f)
-                return cooldown;
+            // Flurry: melee attacks only.
+            if (verb is Verb_MeleeAttack)
+            {
+                CompWeaponTrait comp =
+                    (verb.EquipmentSource as ThingWithComps)?
+                        .TryGetComp<CompWeaponTrait>();
 
-            int adjusted = Math.Max(
+                if (comp != null &&
+                    comp.FlurryActiveFor(pawn))
+                {
+                    float bonus =
+                        comp.FlurrySpeedBonus();
+
+                    if (bonus > 0f)
+                    {
+                        adjusted /= 1f + bonus;
+                    }
+                }
+            }
+
+            // Oppression: all pawn attacks.
+            HediffDef oppressionDef =
+                DefDatabase<HediffDef>.GetNamedSilentFail(
+                    "UET_Oppression");
+
+            if (oppressionDef != null &&
+                pawn.health != null)
+            {
+                UniqueEquipmentTraits.Effects.Hediff_Oppression
+                    oppression =
+                    pawn.health.hediffSet
+                        .GetFirstHediffOfDef(oppressionDef)
+                    as UniqueEquipmentTraits.Effects.Hediff_Oppression;
+
+                if (oppression != null &&
+                    oppression.Slowdown > 0f)
+                {
+                    float speedMultiplier =
+                        Math.Max(
+                            0.05f,
+                            1f - oppression.Slowdown);
+
+                    adjusted /= speedMultiplier;
+                }
+            }
+
+            // Overdrive: melee and ranged attacks.
+            float overdriveMultiplier =
+                UniqueEquipmentTraits.Core.Armor
+                    .ArmorTraitOverdriveSpeedUtility
+                    .GetSpeedMultiplier(pawn);
+
+            if (overdriveMultiplier > 1f)
+            {
+                adjusted /= overdriveMultiplier;
+            }
+
+            return Math.Max(
                 1,
-                (int)Math.Round(cooldown / (1f + bonus)));
-
-            return adjusted;
+                (int)Math.Round(adjusted));
         }
     }
+
 }

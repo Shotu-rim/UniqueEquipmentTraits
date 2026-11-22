@@ -51,10 +51,34 @@ namespace UniqueEquipmentTraits.Core.Armor
                     if (wearer == null)
                         return;
 
-                    ArmorTraitMindCleansingUtility.TryActivate(
+
+                    if (apparel.Wearer != wearer ||
+                        wearer.Dead ||
+                        wearer.Downed ||
+                        wearer.psychicEntropy == null ||
+                        wearer.psychicEntropy.EntropyValue <= 0f ||
+                        state.IsEffectActive ||
+                        state.IsOnCooldown)
+                    {
+                        return;
+                    }
+
+                    ArmorTraitDef trait =
+                        DefDatabase<ArmorTraitDef>.GetNamedSilentFail(
+                            "UET_MindCleansing");
+
+                    if (trait == null)
+                    {
+                        Log.Error(
+                            "[UET] Missing ArmorTraitDef: UET_MindCleansing");
+                        return;
+                    }
+
+                    ArmorTraitCastUtility.TryStartCast(
                         wearer,
-                        quality,
-                        state);
+                        apparel,
+                        trait);
+
                 }
             };
 

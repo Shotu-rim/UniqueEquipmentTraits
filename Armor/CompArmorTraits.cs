@@ -324,6 +324,25 @@ namespace UniqueEquipmentTraits.Core.Armor
 
                     continue;
                 }
+
+                // Technomancer
+                if (trait.defName == "UET_Technomancer")
+                {
+                    if (quality == QualityCategory.Masterwork ||
+                        quality == QualityCategory.Legendary)
+                    {
+                        Gizmo technomancerGizmo =
+                            ArmorTraitTechnomancerGizmo.Create(
+                                this,
+                                quality);
+
+                        if (technomancerGizmo != null)
+                            yield return technomancerGizmo;
+                    }
+
+                    continue;
+                }
+
                 // Mind Cleansing
                 if (trait.defName == "UET_MindCleansing")
                 {
@@ -352,6 +371,42 @@ namespace UniqueEquipmentTraits.Core.Armor
 
                         if (stunningPulseGizmo != null)
                             yield return stunningPulseGizmo;
+                    }
+
+                    continue;
+                }
+
+                // Systemshock
+                if (trait.defName == "UET_Systemshock")
+                {
+                    if (quality == QualityCategory.Masterwork ||
+                        quality == QualityCategory.Legendary)
+                    {
+                        Gizmo systemshockGizmo =
+                            ArmorTraitSystemshockGizmo.Create(
+                                this,
+                                quality);
+
+                        if (systemshockGizmo != null)
+                            yield return systemshockGizmo;
+                    }
+
+                    continue;
+                }
+
+                // Overdrive
+                if (trait.defName == "UET_Overdrive")
+                {
+                    if (quality == QualityCategory.Masterwork ||
+                        quality == QualityCategory.Legendary)
+                    {
+                        Gizmo overdriveGizmo =
+                            ArmorTraitOverdriveGizmo.Create(
+                                this,
+                                quality);
+
+                        if (overdriveGizmo != null)
+                            yield return overdriveGizmo;
                     }
 
                     continue;
@@ -400,6 +455,23 @@ namespace UniqueEquipmentTraits.Core.Armor
                     continue;
                 }
 
+                // Oppression
+                if (trait.defName == "UET_Oppression")
+                {
+                    if (quality == QualityCategory.Masterwork ||
+                        quality == QualityCategory.Legendary)
+                    {
+                        Gizmo oppressionGizmo =
+                            ArmorTraitOppressionGizmo.Create(
+                                this,
+                                quality);
+
+                        if (oppressionGizmo != null)
+                            yield return oppressionGizmo;
+                    }
+
+                    continue;
+                }
                 // Toxic Cloud
                 if (trait.defName == "UET_ToxicCloud")
                 {
@@ -417,119 +489,23 @@ namespace UniqueEquipmentTraits.Core.Armor
 
                     continue;
                 }
-                if (trait.defName != "UET_NeuralDeafness" ||
-                    quality != QualityCategory.Legendary)
-                    continue;
-
-
-                if (state == null)
-                    continue;
-
-                int currentCharges = state.Charges;
-                int maximumCharges = state.MaxCharges;
-
-                Command_Action command = new Command_Action
+                // Neural Deafness - Silence
+                if (trait.defName == "UET_NeuralDeafness")
                 {
-                    defaultLabel = "Silence",
-
-                    icon = ContentFinder<Texture2D>.Get("UI/Commands/UET_Silence"),
-
-                    defaultDesc =
-                        "Temporarily suppresses the target's psychic sensitivity.\n\n" +
-                        "Charges: " + currentCharges + "/" + maximumCharges,
-
-                    action = delegate
+                    if (quality == QualityCategory.Legendary)
                     {
-                        Pawn caster = (parent as Apparel)?.Wearer;
+                        Gizmo silenceGizmo =
+                            ArmorTraitSilenceGizmo.Create(
+                                this,
+                                quality);
 
-                        if (caster == null || caster.Map == null || caster.Dead)
-                            return;
-
-                        TargetingParameters targetParams = new TargetingParameters
-                        {
-                            canTargetPawns = true,
-                            canTargetBuildings = false,
-                            canTargetItems = false,
-                            canTargetLocations = false
-                        };
-
-                        Find.Targeter.BeginTargeting(
-                            targetParams,
-                            delegate (LocalTargetInfo target)
-                            {
-                                Pawn targetPawn = target.Pawn;
-
-                                if (targetPawn == null ||
-                                    targetPawn.Dead ||
-                                    targetPawn.Map != caster.Map)
-                                    return;
-
-                                if (!caster.Position.InHorDistOf(
-                                    targetPawn.Position, 32f))
-                                    return;
-
-                                // Check if the caster still wears this apparel
-                                if ((parent as Apparel)?.Wearer != caster)
-                                    return;
-
-                                if (state.Charges <= 0 ||
-                                    !state.TryConsumeCharge())
-                                    return;
-
-                                HediffDef silenceDef =
-                                    DefDatabase<HediffDef>.GetNamed("UET_Silence");
-
-                                Hediff existingSilence =
-                                    targetPawn.health.hediffSet.GetFirstHediffOfDef(silenceDef);
-
-                                if (existingSilence != null)
-                                {
-                                    HediffComp_Disappears disappears =
-                                        existingSilence.TryGetComp<HediffComp_Disappears>();
-
-                                    if (disappears != null)
-                                        disappears.ticksToDisappear = 7200;
-                                }
-                                else
-                                {
-                                    Hediff silence =
-                                        HediffMaker.MakeHediff(silenceDef, targetPawn);
-
-                                    targetPawn.health.AddHediff(silence);
-                                }
-
-                                Messages.Message(
-                                    "UET: Silence applied to " +
-                                    targetPawn.LabelShort,
-                                    MessageTypeDefOf.NeutralEvent,
-                                    false);
-                            },
-                            null,
-                            delegate (LocalTargetInfo target)
-                            {
-                                Pawn targetPawn = target.Pawn;
-
-                                return targetPawn != null &&
-                                       !targetPawn.Dead &&
-                                       targetPawn.Map == caster.Map &&
-                                       caster.Position.InHorDistOf(
-                                           targetPawn.Position, 32f);
-                            },
-                            caster
-                        );
+                        if (silenceGizmo != null)
+                            yield return silenceGizmo;
                     }
-                };
 
-                if (maximumCharges <= 0)
-                {
-                    command.Disable("No charges configured.");
-                }
-                else if (currentCharges <= 0)
-                {
-                    command.Disable("No charges available.");
+                    continue;
                 }
 
-                yield return command;
             }
         }
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
@@ -777,6 +753,128 @@ namespace UniqueEquipmentTraits.Core.Armor
                                     .Colorize(ColorLibrary.Green));
                             }
                         }
+                    }
+                }
+
+
+                // Overdrive
+                if (trait.defName == "UET_Overdrive")
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality) &&
+                        (quality == QualityCategory.Masterwork ||
+                         quality == QualityCategory.Legendary))
+                    {
+                        float speedBonus =
+                            ArmorTraitOverdriveUtility.GetSpeedBonus(quality);
+
+                        int durationTicks =
+                            ArmorTraitOverdriveUtility.GetDurationTicks(quality);
+
+                        int exhaustedTicks =
+                            ArmorTraitOverdriveUtility.GetExhaustedTicks(quality);
+
+                        float penalty =
+                            ArmorTraitOverdriveUtility.GetExhaustedPenalty(quality);
+
+                        int cooldownTicks =
+                            ArmorTraitOverdriveUtility.GetCooldownTicks();
+
+                        int maxCharges =
+                            ArmorTraitChargeUtility.GetMaxCharges(
+                                trait,
+                                quality);
+
+                        int regenTicks =
+                            ArmorTraitState.GetChargeRegenTicks(quality);
+
+                        description.AppendLine();
+
+                        description.AppendLine(
+                            "Ability: Overdrive"
+                            .Colorize(ColorLibrary.Green));
+
+                    }
+                }
+
+                // Technomancer
+                if (trait.defName == "UET_Technomancer")
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality) &&
+                        (quality == QualityCategory.Masterwork ||
+                         quality == QualityCategory.Legendary))
+                    {
+                        float capacityBonus =
+                            ArmorTraitTechnomancerUtility.GetCapacityBonus(
+                                quality);
+
+                        float radius =
+                            ArmorTraitTechnomancerUtility.GetRadius(
+                                quality);
+
+                        int durationTicks =
+                            ArmorTraitTechnomancerUtility.GetDurationTicks(
+                                quality);
+
+                        int cooldownTicks =
+                            ArmorTraitTechnomancerUtility.GetCooldownTicks();
+
+                        int maxCharges =
+                            ArmorTraitChargeUtility.GetMaxCharges(
+                                trait,
+                                quality);
+
+                        int regenTicks =
+                            ArmorTraitState.GetChargeRegenTicks(
+                                quality);
+
+                        description.AppendLine();
+
+                        description.AppendLine(
+                            "Ability: Technomancer"
+                            .Colorize(ColorLibrary.Green));
+
+                    }
+                }
+
+                // Systemshock
+                if (trait.defName == "UET_Systemshock")
+                {
+                    QualityCategory quality;
+
+                    if (parent.TryGetQuality(out quality) &&
+                        (quality == QualityCategory.Masterwork ||
+                         quality == QualityCategory.Legendary))
+                    {
+                        float range =
+                            ArmorTraitSystemshockUtility.GetRange(quality);
+
+                        float radius =
+                            ArmorTraitSystemshockUtility.GetRadius(quality);
+
+                        int cooldownTicks =
+                            ArmorTraitSystemshockUtility.GetCooldownTicks(quality);
+
+                        int goodwillPenalty =
+                            ArmorTraitSystemshockUtility.GetGoodwillPenalty(quality);
+
+                        int maxCharges =
+                            ArmorTraitChargeUtility.GetMaxCharges(
+                                trait,
+                                quality);
+
+                        int regenTicks =
+                            ArmorTraitState.GetChargeRegenTicks(quality);
+
+                        description.AppendLine();
+
+                        description.AppendLine(
+                            "Ability: Systemshock"
+                            .Colorize(ColorLibrary.Green));
+
                     }
                 }
 

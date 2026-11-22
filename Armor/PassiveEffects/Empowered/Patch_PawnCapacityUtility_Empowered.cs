@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using HarmonyLib;
 using RimWorld;
+using UniqueEquipmentTraits.Effects;
 using Verse;
 
 namespace UniqueEquipmentTraits.Core.Armor
@@ -31,17 +32,49 @@ namespace UniqueEquipmentTraits.Core.Armor
                 diffSet.pawn == null ||
                 capacity == null ||
                 __result <= 0f)
+            {
                 return;
+            }
 
-            float bonus =
+            Pawn pawn = diffSet.pawn;
+
+            // Existing Empowered bonus
+            float empoweredBonus =
                 ArmorTraitCapacityUtility.GetBestCapacityBonus(
-                    diffSet.pawn);
+                    pawn);
 
-            if (bonus <= 0f)
-                return;
+            if (empoweredBonus > 0f)
+            {
+                __result *= 1f + empoweredBonus;
+            }
 
-            __result = GenMath.RoundedHundredth(
-                __result * (1f + bonus));
+            // Technomancer affects only Moving and Manipulation
+            if (capacity == PawnCapacityDefOf.Moving ||
+                capacity == PawnCapacityDefOf.Manipulation)
+            {
+                HediffDef technomancerDef =
+                    DefDatabase<HediffDef>.GetNamedSilentFail(
+                        "UET_Technomancer");
+
+                if (technomancerDef != null)
+                {
+                    Hediff_Technomancer technomancer =
+                        diffSet.GetFirstHediffOfDef(
+                            technomancerDef)
+                        as Hediff_Technomancer;
+
+                    if (technomancer != null &&
+                        technomancer.TicksRemaining > 0 &&
+                        technomancer.CapacityBonus > 0f)
+                    {
+                        __result *=
+                            1f + technomancer.CapacityBonus;
+                    }
+                }
+            }
+
+            __result =
+                GenMath.RoundedHundredth(__result);
         }
     }
 }

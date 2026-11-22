@@ -69,11 +69,35 @@ namespace UniqueEquipmentTraits.Core.Armor
                             if (!target.IsValid)
                                 return;
 
-                            ArmorTraitKindleUtility.TryIgnite(
+
+                            if (apparel == null ||
+                                apparel.Wearer != pawn ||
+                                !ArmorTraitKindleUtility.CanIgnite(
+                                    pawn,
+                                    target.Cell,
+                                    quality,
+                                    state))
+                            {
+                                return;
+                            }
+
+                            ArmorTraitDef trait =
+                                DefDatabase<ArmorTraitDef>.GetNamedSilentFail(
+                                    "UET_Kindle");
+
+                            if (trait == null)
+                            {
+                                Log.Error(
+                                    "[UET] Missing ArmorTraitDef: UET_Kindle");
+                                return;
+                            }
+
+                            ArmorTraitCastUtility.TryStartTargetedCast(
                                 pawn,
-                                target.Cell,
-                                quality,
-                                state);
+                                apparel,
+                                trait,
+                                target.Cell);
+
                         },
 
                         // Ring limits

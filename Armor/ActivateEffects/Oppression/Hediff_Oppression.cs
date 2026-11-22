@@ -1,0 +1,63 @@
+﻿
+using Verse;
+
+namespace UniqueEquipmentTraits.Effects
+{
+    public class Hediff_Oppression : Hediff
+    {
+        public float Slowdown;
+        public int TicksRemaining;
+
+        public override string LabelInBrackets
+        {
+            get
+            {
+                float seconds = TicksRemaining / 60f;
+
+                return $"{Slowdown:P0}, {seconds:0.0} s";
+            }
+        }
+
+        public override void Tick()
+        {
+            base.Tick();
+
+            TicksRemaining--;
+
+            if (TicksRemaining <= 0 &&
+                pawn != null &&
+                pawn.health != null)
+            {
+                pawn.health.RemoveHediff(this);
+            }
+        }
+
+        public void ApplyOppression(
+            float slowdown,
+            int durationTicks)
+        {
+            Slowdown = slowdown;
+            TicksRemaining = durationTicks;
+
+            if (pawn != null && pawn.health != null)
+            {
+                pawn.health.Notify_HediffChanged(this);
+            }
+        }
+
+        public override void ExposeData()
+        {
+            base.ExposeData();
+
+            Scribe_Values.Look(
+                ref Slowdown,
+                "slowdown",
+                0f);
+
+            Scribe_Values.Look(
+                ref TicksRemaining,
+                "ticksRemaining",
+                0);
+        }
+    }
+}

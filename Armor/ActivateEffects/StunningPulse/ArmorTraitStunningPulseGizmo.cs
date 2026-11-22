@@ -81,11 +81,33 @@ namespace UniqueEquipmentTraits.Core.Armor
                                 apparel.Wearer != pawn)
                                 return;
 
-                            ArmorTraitStunningPulseUtility.TryActivate(
+
+                            if (!ArmorTraitStunningPulseUtility.CanActivate(
                                 pawn,
                                 targetPawn,
                                 quality,
-                                state);
+                                state))
+                            {
+                                return;
+                            }
+
+                            ArmorTraitDef trait =
+                                DefDatabase<ArmorTraitDef>.GetNamedSilentFail(
+                                    "UET_StunningPulse");
+
+                            if (trait == null)
+                            {
+                                Log.Error(
+                                    "[UET] Missing ArmorTraitDef: UET_StunningPulse");
+                                return;
+                            }
+
+                            ArmorTraitCastUtility.TryStartTargetedCast(
+                                pawn,
+                                apparel,
+                                trait,
+                                targetPawn);
+
                         },
 
                         // Range indicator

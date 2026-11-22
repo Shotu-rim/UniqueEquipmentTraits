@@ -87,11 +87,32 @@ namespace UniqueEquipmentTraits.Core.Armor
                                 return;
                             }
 
-                            ArmorTraitBerserkUtility.TryApply(
+
+                            if (!ArmorTraitBerserkUtility.CanTarget(
+                                    caster,
+                                    targetPawn,
+                                    state))
+                            {
+                                return;
+                            }
+
+                            ArmorTraitDef trait =
+                                DefDatabase<ArmorTraitDef>.GetNamedSilentFail(
+                                    "UET_Berserk");
+
+                            if (trait == null)
+                            {
+                                Log.Error(
+                                    "[UET] Missing ArmorTraitDef: UET_Berserk");
+                                return;
+                            }
+
+                            ArmorTraitCastUtility.TryStartTargetedCast(
                                 caster,
-                                targetPawn,
-                                quality,
-                                state);
+                                apparel,
+                                trait,
+                                targetPawn);
+
                         },
                         null,
                         delegate (LocalTargetInfo target)

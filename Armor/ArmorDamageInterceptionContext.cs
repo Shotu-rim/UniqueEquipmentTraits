@@ -43,7 +43,7 @@ namespace UniqueEquipmentTraits.Core.Armor
             return damage;
         }
         private float previousTotalDamageDealt;
-        private float absorbedDamageAtIterationStart;
+    //    private float absorbedDamageAtIterationStart;
         public void BeginDamageIteration(float totalDamageDealt)
         {
             previousTotalDamageDealt = totalDamageDealt;

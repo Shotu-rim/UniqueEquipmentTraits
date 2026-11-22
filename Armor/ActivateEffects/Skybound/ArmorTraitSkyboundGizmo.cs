@@ -79,11 +79,37 @@ namespace UniqueEquipmentTraits.Core.Armor
                                 return;
                             }
 
-                            ArmorTraitSkyboundUtility.TryJump(
+
+                            if (!target.IsValid ||
+                                !JumpUtility.ValidJumpTarget(
+                                    caster,
+                                    caster.Map,
+                                    target.Cell) ||
+                                !JumpUtility.CanHitTargetFrom(
+                                    caster,
+                                    caster.Position,
+                                    target,
+                                    range))
+                            {
+                                return;
+                            }
+
+                            ArmorTraitDef trait =
+                                DefDatabase<ArmorTraitDef>.GetNamedSilentFail(
+                                    "UET_Skybound");
+
+                            if (trait == null)
+                            {
+                                Log.Error("[UET] Missing ArmorTraitDef: UET_Skybound");
+                                return;
+                            }
+
+                            ArmorTraitCastUtility.TryStartTargetedCast(
                                 caster,
-                                target.Cell,
-                                quality,
-                                state);
+                                apparel,
+                                trait,
+                                target.Cell);
+
                         },
                         null,
                         delegate (LocalTargetInfo target)

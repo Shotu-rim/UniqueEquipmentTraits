@@ -74,11 +74,35 @@ namespace UniqueEquipmentTraits.Core.Armor
                         if (targetPawn == null)
                             return;
 
-                        ArmorTraitShreddingUtility.TryApply(
+
+                        if (apparel == null ||
+                            apparel.Wearer != pawn ||
+                            !ArmorTraitShreddingUtility.CanApply(
+                                pawn,
+                                targetPawn,
+                                quality,
+                                state))
+                        {
+                            return;
+                        }
+
+                        ArmorTraitDef trait =
+                            DefDatabase<ArmorTraitDef>.GetNamedSilentFail(
+                                "UET_Shredding");
+
+                        if (trait == null)
+                        {
+                            Log.Error(
+                                "[UET] Missing ArmorTraitDef: UET_Shredding");
+                            return;
+                        }
+
+                        ArmorTraitCastUtility.TryStartTargetedCast(
                             pawn,
-                            targetPawn,
-                            quality,
-                            state);
+                            apparel,
+                            trait,
+                            targetPawn);
+
                     },
 
                     // Range indicator

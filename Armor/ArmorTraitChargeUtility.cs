@@ -16,6 +16,8 @@ namespace UniqueEquipmentTraits.Core.Armor
         private const int BerserkLegendaryCharges = 3;
         private const int MedicMasterworkCharges = 1;
         private const int MedicLegendaryCharges = 2;
+        private const int TechnomancerMasterworkCharges = 1;
+        private const int TechnomancerLegendaryCharges = 2;
 
         public static int GetMaxCharges(
             ArmorTraitDef trait,
@@ -25,17 +27,32 @@ namespace UniqueEquipmentTraits.Core.Armor
                 return 0;
 
             // Neural Deafness:
-            // Passive on Masterwork.
-            // Passive + Silence on Legendary.
+            // Passive on Masterwork. Passive + Silence on Legendary.
             if (trait.defName == "UET_NeuralDeafness")
             {
                 return quality == QualityCategory.Legendary
                     ? NeuralDeafnessLegendaryCharges
                     : 0;
             }
-            // Berserk:
-            // Active on Masterwork and Legendary.
-            // Uses the existing armor trait charge system.
+
+            // Technomancer: 
+
+            if (trait.defName == "UET_Technomancer")
+            {
+                switch (quality)
+                {
+                    case QualityCategory.Masterwork:
+                        return TechnomancerMasterworkCharges;
+
+                    case QualityCategory.Legendary:
+                        return TechnomancerLegendaryCharges;
+
+                    default:
+                        return 0;
+                }
+            }
+
+            // Berserk
 
             if (trait.defName == "UET_Berserk")
             {
@@ -78,9 +95,55 @@ namespace UniqueEquipmentTraits.Core.Armor
                 }
             }
 
-            // Medic:
-            // Limited charges.
-            // Uses the existing armor trait charge regeneration system.
+            // Overdrive
+            if (trait.defName == "UET_Overdrive")
+            {
+                switch (quality)
+                {
+                    case QualityCategory.Masterwork:
+                        return 1;
+
+                    case QualityCategory.Legendary:
+                        return 2;
+
+                    default:
+                        return 0;
+                }
+            }
+
+            // Systemshock
+            if (trait.defName == "UET_Systemshock")
+            {
+                switch (quality)
+                {
+                    case QualityCategory.Masterwork:
+                        return 2;
+
+                    case QualityCategory.Legendary:
+                        return 3;
+
+                    default:
+                        return 0;
+                }
+            }
+
+            // Oppression
+            if (trait.defName == "UET_Oppression")
+            {
+                switch (quality)
+                {
+                    case QualityCategory.Masterwork:
+                        return 2;
+
+                    case QualityCategory.Legendary:
+                        return 3;
+
+                    default:
+                        return 0;
+                }
+            }
+
+            // Medic
             if (trait.defName == "UET_Medic")
             {
                 switch (quality)
