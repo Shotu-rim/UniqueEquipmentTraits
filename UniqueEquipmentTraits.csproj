@@ -121,6 +121,9 @@
     <Compile Include="Armor\ArmorTraitCastUtility.cs" />
     <Compile Include="Armor\ArmorTraitSoundUtility.cs" />
     <Compile Include="Armor\ArmorTraitTargetingUtility.cs" />
+    <Compile Include="Armor\CompArmorTraits.Display.cs" />
+    <Compile Include="Armor\CompArmorTraits.Gizmos.cs" />
+    <Compile Include="Armor\CompArmorTraits.Stats.cs" />
     <Compile Include="Armor\JobDriver_UETCastArmorAbility.cs" />
     <Compile Include="Armor\PassiveEffects\Acceleration\ArmorTraitAccelerationUtility.cs" />
     <Compile Include="Armor\ArmorTraitActivationContext.cs" />
