@@ -64,12 +64,6 @@ namespace UniqueEquipmentTraits.Core
 
             if (replacements > 0)
             {
-                Log.Message(
-                    "[UET Heat Immunity] Heatstroke IL patch installed. " +
-                    "Replaced calls: " + replacements);
-            }
-            else
-            {
                 Log.Warning(
                     "[UET Heat Immunity] No AdjustSeverity call found. " +
                     "Heatstroke protection was NOT installed.");

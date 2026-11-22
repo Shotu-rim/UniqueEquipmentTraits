@@ -13,13 +13,6 @@ namespace UniqueEquipmentTraits.Effects
         private const string PrismaticDefName = "UET_Prismatic";
         private const string MeleeCategory = "UET_Melee";
         private static List<WeaponTraitDef> cachedCandidates;
-        private const bool DebugPrismatic = true;
-
-        private static void DebugLog(string message)
-        {
-            if (DebugPrismatic && Prefs.DevMode)
-                Log.Message("[UET Prismatic] " + message);
-        }
 
         internal static WeaponTraitDef RollEffect()
         {

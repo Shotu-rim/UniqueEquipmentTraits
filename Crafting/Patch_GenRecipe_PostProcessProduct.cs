@@ -372,7 +372,7 @@ namespace UniqueEquipmentTraits.Crafting
             }
         }
 
-        private const bool CraftsmanshipDebugEnabled = true;
+        private const bool CraftsmanshipDebugEnabled = false;
 
         private static void TryApplyCraftsmanship(
             Thing result,

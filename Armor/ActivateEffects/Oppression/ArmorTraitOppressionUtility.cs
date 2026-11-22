@@ -270,16 +270,6 @@ namespace UniqueEquipmentTraits.Core.Armor
                 slowdown,
                 durationTicks);
 
-
-            Log.Message(
-                "[UET Oppression] Applied to " +
-                target.LabelShort +
-                ", slowdown: " +
-                (slowdown * 100f).ToString("0.#") +
-                "%, duration: " +
-                durationTicks + " ticks.");
-
-
             return true;
         }
     }

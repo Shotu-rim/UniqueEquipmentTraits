@@ -64,9 +64,6 @@ namespace UniqueEquipmentTraits.Core
                 original,
                 transpiler: new HarmonyMethod(transpiler));
 
-            Log.Message(
-                "[UET] VPE Cold Immunity patch installed: " +
-                typeName + "." + methodName);
         }
 
         public static IEnumerable<CodeInstruction> Transpiler(

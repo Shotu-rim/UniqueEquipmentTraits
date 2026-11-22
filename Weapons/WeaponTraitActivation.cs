@@ -44,9 +44,10 @@ namespace UniqueEquipmentTraits.Core
 
                     if (comp == null)
                     {
-                        Log.Warning(
+                        Log.WarningOnce(
                             "[UET Flurry] Missing CompWeaponTrait on weapon: " +
-                            context.Weapon.LabelCap);
+                            context.Weapon.LabelCap,
+                            context.Weapon.thingIDNumber * 397 ^ 0x46A1);
                     }
                     else
                     {
@@ -66,9 +67,10 @@ namespace UniqueEquipmentTraits.Core
 
                     if (comp == null)
                     {
-                        Log.Warning(
+                        Log.WarningOnce(
                             "[UET Tailwind] Missing CompWeaponTrait on weapon: " +
-                            context.Weapon.LabelCap);
+                            context.Weapon.LabelCap,
+                            context.Weapon.thingIDNumber * 397 ^ 0x7A11);
                     }
                     else
                     {

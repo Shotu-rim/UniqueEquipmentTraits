@@ -121,9 +121,6 @@ namespace UniqueEquipmentTraits.Core.Armor
                     postArmorDamage == null ||
                     intercept == null)
                 {
-                    Log.Error(
-                        "[UET Aegis] ApplyDamageToPart: " +
-                        "required method not found.");
 
                     return codes;
                 }
@@ -427,10 +424,6 @@ namespace UniqueEquipmentTraits.Core.Armor
                     new CodeInstruction(
                         OpCodes.Call,
                         beginIteration));
-
-                Log.Message(
-                    "[UET Aegis] ApplyAllDamage: " +
-                    "iteration accounting IL installed.");
 
                 return codes;
             }

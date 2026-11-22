@@ -38,8 +38,6 @@ namespace UniqueEquipmentTraits.Core
                 getter,
                 postfix: new HarmonyMethod(postfix));
 
-            Log.Message(
-                "[UET] VPE Vortex Electricity Immunity patch installed.");
         }
 
         public static void CurStagePostfix(
