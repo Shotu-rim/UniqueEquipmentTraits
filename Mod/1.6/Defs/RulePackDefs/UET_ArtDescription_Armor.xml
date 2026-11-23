@@ -1,10 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Defs>
-    <JobDef>
-        <defName>UET_CastArmorAbility</defName>
-        <driverClass>UniqueEquipmentTraits.Core.Armor.JobDriver_UETCastArmorAbility</driverClass>
-        <reportString>preparing an armor ability.</reportString>
-        <playerInterruptible>true</playerInterruptible>
-        <casualInterruptible>false</casualInterruptible>
-    </JobDef>
+  <RulePackDef>
+    <defName>UET_ArtDescription_Armor</defName>
+    <rulePack>
+      <rulesStrings>
+
+        <!-- Engravings and etchings -->
+        <li>physical_description_root->This armor bears an intricate engraving of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->An elaborate engraving on this armor [depicts] [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->Fine lines etched into the armor form a [depiction] of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->A detailed engraving across the armor's surface portrays [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->The armor is covered in delicate etchings surrounding a [depiction] of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->An intricate pattern of engraved lines [depicts] [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->The armor's polished surface reveals an engraving of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->A carefully etched illustration on this armor portrays [image]. [desc_sentence_group]</li>
+
+        <!-- Reliefs and embossed artwork -->
+        <li>physical_description_root->A raised relief on this armor [depicts] [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->The armor is decorated with an embossed [depiction] of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->An elaborate relief worked into the armor portrays [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->The surface of this armor features a sculpted representation of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->A finely embossed illustration across the armor [depicts] [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->An ornate raised pattern frames a [depiction] of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->The armor bears a carefully hammered relief portraying [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->A detailed embossed scene on this armor [depicts] [image]. [desc_sentence_group]</li>
+
+        <!-- Painted and colored decoration -->
+        <li>physical_description_root->A vivid painted illustration on this armor [depicts] [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->The armor is adorned with a colorful [depiction] of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->A carefully painted scene across the armor portrays [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->Layers of pigment form a striking illustration of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->The armor's surface is decorated with a vibrant painting of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->A weathered but intricate painted scene [depicts] [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->A masterfully painted illustration on this armor portrays [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->The armor features a richly colored [depiction] of [image]. [desc_sentence_group]</li>
+
+        <!-- Embroidery and textile craftsmanship -->
+        <li>physical_description_root->Fine embroidery on this armor [depicts] [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->Intricate stitching forms a [depiction] of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->The armor's fabric sections are embroidered with a scene portraying [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->A delicate tapestry-like pattern woven into the armor [depicts] [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->Golden threads embroidered into the armor form a [depiction] of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->The armor is decorated with elaborate needlework portraying [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->An intricate embroidered illustration across the armor [depicts] [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->A richly stitched design on the armor presents a [depiction] of [image]. [desc_sentence_group]</li>
+
+        <!-- Inlays and ornamental craftsmanship -->
+        <li>physical_description_root->Fine metallic inlays across this armor form a [depiction] of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->An elaborate arrangement of decorative inlays [depicts] [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->The armor is adorned with intricate silverwork portraying [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->A series of carefully arranged ornamental plates forms an image of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->Delicate gold inlays on the armor [depicts] [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->The armor bears an elaborate decorative mosaic portraying [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->An intricate arrangement of polished metal fragments forms a [depiction] of [image]. [desc_sentence_group]</li>
+        <li>physical_description_root->The armor's decorative trim frames a detailed illustration of [image]. [desc_sentence_group]</li>
+
+      </rulesStrings>
+    </rulePack>
+  </RulePackDef>
 </Defs>

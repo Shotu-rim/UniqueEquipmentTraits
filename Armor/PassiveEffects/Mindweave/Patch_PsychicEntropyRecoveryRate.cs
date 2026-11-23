@@ -2,6 +2,7 @@
 using HarmonyLib;
 using RimWorld;
 using UniqueEquipmentTraits.Core.Armor;
+using Verse;
 
 namespace UniqueEquipmentTraits.Patches
 {
@@ -19,6 +20,9 @@ namespace UniqueEquipmentTraits.Patches
             Pawn_PsychicEntropyTracker __instance,
             ref float __result)
         {
+            // Mindweave requires Royalty
+            if (!ModsConfig.RoyaltyActive)
+                return;
             if (__instance == null ||
                 __instance.Pawn == null)
             {

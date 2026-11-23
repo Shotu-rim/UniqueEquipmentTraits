@@ -66,6 +66,11 @@ namespace UniqueEquipmentTraits.Core.Armor
 
         private static bool IsEligibleMech(Pawn pawn)
         {
+
+            // Mechanitor-controlled mechs require Biotech
+            if (!ModsConfig.BiotechActive)
+                return false;
+
             if (pawn == null ||
                 pawn.Dead ||
                 !pawn.Spawned ||
@@ -95,6 +100,11 @@ namespace UniqueEquipmentTraits.Core.Armor
             QualityCategory quality,
             ArmorTraitState state)
         {
+
+            // Technomancer requires Biotech
+            if (!ModsConfig.BiotechActive)
+                return false;
+
             if (caster == null ||
                 caster.Dead ||
                 caster.Downed ||

@@ -116,6 +116,11 @@ namespace UniqueEquipmentTraits.Core
             Pawn victim,
             int stunTicks)
         {
+
+            // Nerve Stun requires Anomaly
+            if (!ModsConfig.AnomalyActive)
+                return;
+
             if (attacker == null || victim == null)
                 return;
 

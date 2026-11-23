@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Tailwind</defName>
+		<label>Tailwind</label>
+		<description>The weapon enhances the wielder's reflexes and spatial awareness, allowing them to evade incoming strikes with extraordinary agility.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>windborne</li>
+			<li>evasive</li>
+			<li>wind-dancing</li>
+			<li>elusive</li>
+			<li>untouchable</li>
+			<li>nimble</li>
+			<li>agile</li>
+			<li>fleet-footed</li>
+			<li>graceful</li>
+			<li>swift</li>
+			<li>reflex-enhanced</li>
+			<li>neuroadaptive</li>
+			<li>responsive</li>
+			<li>slipstream</li>
+			<li>wind-guided</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension"/>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

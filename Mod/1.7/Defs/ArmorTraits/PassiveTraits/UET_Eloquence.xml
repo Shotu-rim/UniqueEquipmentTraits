@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Eloquence</defName>
+        <label>eloquence</label>
+        <description>Originally developed for diplomats and negotiators navigating the intricate politics of glitterworld societies, this armor heightens the wearer's social intuition and command of language. Subtle gestures, unspoken intentions, and the delicate nuances of conversation become remarkably clear, allowing even the most difficult encounters to unfold with an almost effortless sense of confidence and persuasion.</description>
+        <activationType>Passive</activationType>
+        <boostedSkill>Social</boostedSkill>
+        <masterworkSkillBonus>1</masterworkSkillBonus>
+        <legendarySkillBonus>2</legendarySkillBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>diplomat's</li>
+            <li>orator's</li>
+            <li>silver-tongued</li>
+            <li>charismatic</li>
+            <li>persuasive</li>
+            <li>eloquent</li>
+            <li>distinguished</li>
+            <li>commanding</li>
+            <li>graceful</li>
+            <li>influential</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Silver Tongue</li>
+            <li>Master Diplomat</li>
+            <li>Voice of Reason</li>
+            <li>Golden Words</li>
+            <li>Grand Orator</li>
+            <li>Peacemaker</li>
+            <li>Voice of Authority</li>
+            <li>Perfect Accord</li>
+            <li>Whisper of Influence</li>
+            <li>Final Argument</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

@@ -18,6 +18,9 @@ namespace UniqueEquipmentTraits.Core.Armor
         {
             if (apparelDef == null || trait == null)
                 return false;
+            // Reject traits requiring an inactive DLC
+            if (!UETDlcUtility.IsTraitAvailable(trait))
+                return false;
 
             if (!ArmorTraitEligibility.CanReceiveArmorTrait(
                     apparelDef))

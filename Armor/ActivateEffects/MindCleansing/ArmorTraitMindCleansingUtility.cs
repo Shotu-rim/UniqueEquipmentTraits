@@ -31,6 +31,10 @@ namespace UniqueEquipmentTraits.Core.Armor
             QualityCategory quality,
             ArmorTraitState state)
         {
+
+            if (!ModsConfig.RoyaltyActive)
+                return false;
+
             if (pawn == null ||
                 pawn.Dead ||
                 pawn.Downed ||

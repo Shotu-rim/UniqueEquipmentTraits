@@ -130,14 +130,14 @@ namespace UniqueEquipmentTraits.DevTools
             return DefDatabase<RimWorld.WeaponTraitDef>
                 .AllDefs
                 .Where(t =>
-                    t.GetModExtension<UETTraitExtension>()
-                        != null &&
-                    t.canGenerateAlone &&
-                    t.weaponCategory != null &&
-                    props.weaponCategories.Contains(
-                        t.weaponCategory))
-                .OrderBy(t => t.label)
-                .ToList();
+                t.GetModExtension<UETTraitExtension>() != null &&
+                UETDlcUtility.IsTraitAvailable(t) &&
+                t.canGenerateAlone &&
+                t.weaponCategory != null &&
+                props.weaponCategories.Contains(
+                t.weaponCategory))
+                    .OrderBy(t => t.label)
+                    .ToList();
         }
 
         public override void DoWindowContents(Rect inRect)

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+		<defName>UET_Aegis</defName>
+		<label>aegis</label>
+		<description>An advanced defensive system that projects a tightly controlled energy field around the wearer. Incoming impacts are intercepted and dispersed through the armor's internal emitters, shielding the wearer from harm.</description>
+		<activationType>Passive</activationType>
+		<workerClass>UniqueEquipmentTraits.Core.Armor.ArmorTraitWorker_Aegis</workerClass>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<allowedCategories>
+			<li>Torso</li>
+			<li>Legs</li>
+			<li>Helmet</li>
+		</allowedCategories>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<nameAdjectives>
+			<li>shielded</li>
+			<li>fortified</li>
+			<li>reinforced</li>
+			<li>unyielding</li>
+			<li>impenetrable</li>
+			<li>impervious</li>
+			<li>steadfast</li>
+			<li>resolute</li>
+			<li>indomitable</li>
+			<li>unshaken</li>
+			<li>unwavering</li>
+			<li>warded</li>
+			<li>energy-shielded</li>
+		</nameAdjectives>
+		<nameConcepts>
+			<li>Bulwark</li>
+			<li>Bastion</li>
+			<li>Aegis</li>
+			<li>Sanctuary</li>
+			<li>Citadel</li>
+			<li>Stronghold</li>
+			<li>Guardian</li>
+			<li>Sentinel</li>
+			<li>Protector</li>
+			<li>Ward</li>
+			<li>Rampart</li>
+			<li>Fortress</li>
+			<li>Last Stand</li>
+			<li>Iron Will</li>
+			<li>Unbroken</li>
+		</nameConcepts>
+	</UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

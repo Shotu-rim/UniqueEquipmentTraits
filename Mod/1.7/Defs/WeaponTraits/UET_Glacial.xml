@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Glacial</defName>
+		<label>Glacial</label>
+		<description>The weapon generates extreme cold on impact, causing localized tissue damage and severe frostbite.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>glacial</li>
+			<li>freezing</li>
+			<li>frostbound</li>
+			<li>frostbitten</li>
+			<li>frost-laden</li>
+			<li>icebound</li>
+			<li>icy</li>
+			<li>frigid</li>
+			<li>arctic</li>
+			<li>subzero</li>
+			<li>cryogenic</li>
+			<li>cryonic</li>
+			<li>hypothermic</li>
+			<li>chilling</li>
+			<li>rime-coated</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.GlacialEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

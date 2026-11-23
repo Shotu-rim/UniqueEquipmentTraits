@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Neurotoxic</defName>
+		<label>Neurotoxic</label>
+		<description>The weapon introduces potent neurotoxins into the bloodstream, disrupting vital bodily functions and progressively weakening its victims.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>neurotoxic</li>
+			<li>toxic</li>
+			<li>neurotoxin-infused</li>
+			<li>neuroparalytic</li>
+			<li>neurodisruptive</li>
+			<li>neurochemical</li>
+			<li>neuroinhibitory</li>
+			<li>neurodebilitating</li>
+			<li>synapse-disrupting</li>
+			<li>nerve-impairing</li>
+			<li>nerve-poisoning</li>
+			<li>paralytic</li>
+			<li>debilitating</li>
+			<li>enervating</li>
+			<li>venomous</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.NeurotoxicEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Berserk</defName>
+        <label>berserk</label>
+        <description>A sophisticated neural manipulation system allows the wearer to induce violent psychosis in a chosen target, driving them into an uncontrollable frenzy. The effect's duration depends on the target's psychic sensitivity, while superior craftsmanship enhances its potency. Using this ability against members of non-hostile factions may have severe diplomatic consequences.</description>
+        <activationType>Activated</activationType>
+        <usesCharges>true</usesCharges>
+        <cooldownTicks>600</cooldownTicks>
+        <activeEffectTicks>0</activeEffectTicks>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Helmet</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>berserk</li>
+            <li>frenzied</li>
+            <li>wrathful</li>
+            <li>raging</li>
+            <li>bloodthirsty</li>
+            <li>unhinged</li>
+            <li>ferocious</li>
+            <li>maddening</li>
+            <li>mindbreaking</li>
+            <li>furious</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Mindbreaker</li>
+            <li>Wrath Unleashed</li>
+            <li>Rage Incarnate</li>
+            <li>Psychic Rupture</li>
+            <li>Madness Engine</li>
+            <li>Fury's Embrace</li>
+            <li>Shattered Reason</li>
+            <li>Unbound Rage</li>
+            <li>Blood Frenzy</li>
+            <li>Fractured Mind</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Toxic</defName>
+		<label>Toxic</label>
+		<description>The weapon introduces potent toxins into the bloodstream, gradually poisoning the victim's body.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>toxic</li>
+			<li>venomous</li>
+			<li>poisonous</li>
+			<li>noxious</li>
+			<li>virulent</li>
+			<li>toxin-laden</li>
+			<li>toxin-infused</li>
+			<li>venom-laced</li>
+			<li>poison-laced</li>
+			<li>contaminating</li>
+			<li>toxicant-infused</li>
+			<li>biohazardous</li>
+			<li>chemically-laced</li>
+			<li>intoxicating</li>
+			<li>envenoming</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.ToxicEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

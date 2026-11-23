@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <HediffDef>
+    <defName>UET_ShreddingBleeding</defName>
+    <label>shredding</label>
+    <description>Existing bleeding injuries have been aggravated, increasing their blood loss.</description>
+    <hediffClass>UniqueEquipmentTraits.Effects.Hediff_ShreddingBleeding</hediffClass>
+    <isBad>true</isBad>
+    <defaultLabelColor>(0.8, 0.2, 0.2)</defaultLabelColor>
+    <scenarioCanAdd>false</scenarioCanAdd>
+  </HediffDef>
+</Defs>

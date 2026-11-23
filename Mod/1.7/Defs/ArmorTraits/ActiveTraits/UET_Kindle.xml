@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+    <defName>UET_Kindle</defName>
+    <label>kindle</label>
+    <description>An integrated ignition system capable of starting fires at a distance. The system generates ordinary flames on flammable surfaces, allowing the wearer to ignite terrain, objects, and occupied locations without directly setting targets ablaze. Superior craftsmanship increases its effective range and charge capacity.</description>
+    <activationType>Activated</activationType>
+    <usesCharges>true</usesCharges>
+    <cooldownTicks>600</cooldownTicks>
+    <activeEffectTicks>0</activeEffectTicks>
+    <commonality>0.10</commonality>
+    <canGenerateAlone>true</canGenerateAlone>
+    <allowedCategories>
+      <li>Helmet</li>
+      <li>Neck</li>
+      <li>Arms</li>
+	  <li>Hands</li>
+    </allowedCategories>
+    <exclusionTags>
+      <li>UET_Exclusive</li>
+    </exclusionTags>
+    <nameAdjectives>
+      <li>kindling</li>
+      <li>igniting</li>
+      <li>flamebound</li>
+      <li>emberborn</li>
+      <li>incendiary</li>
+      <li>scorching</li>
+      <li>blazing</li>
+      <li>smoldering</li>
+      <li>firecalling</li>
+      <li>flameweaving</li>
+    </nameAdjectives>
+    <nameConcepts>
+      <li>First Spark</li>
+      <li>Ember's Touch</li>
+      <li>Burning Will</li>
+      <li>Flame's Embrace</li>
+      <li>Heart of Cinders</li>
+      <li>Pyre's Whisper</li>
+      <li>Scorched Earth</li>
+      <li>Infernal Spark</li>
+      <li>Firestarter</li>
+      <li>Ashes to Ashes</li>
+    </nameConcepts>
+  </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

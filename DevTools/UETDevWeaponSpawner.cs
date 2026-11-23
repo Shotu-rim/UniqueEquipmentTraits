@@ -43,6 +43,15 @@ namespace UniqueEquipmentTraits.Utilities
             // Only UET traits can be selected
             if (trait.GetModExtension<UETTraitExtension>() == null)
                 return null;
+            // Reject traits requiring an inactive DLC before weapon creation
+            if (!UETDlcUtility.IsTraitAvailable(trait))
+            {
+                Log.Warning(
+                    "[UET] Cannot spawn weapon with unavailable DLC trait: " +
+                    trait.defName);
+
+                return null;
+            }
 
             ThingDef spawnDef = originalDef;
 

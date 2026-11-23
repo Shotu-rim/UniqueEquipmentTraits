@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Marksmanship</defName>
+        <label>marksmanship</label>
+        <description>Originally developed for elite military units, this armor incorporates advanced targeting assistance and combat coordination systems. Its sophisticated technology sharpens the wearer's shooting instincts, allowing them to handle ranged weapons with exceptional precision and confidence.</description>
+        <activationType>Passive</activationType>
+        <boostedSkill>Shooting</boostedSkill>
+        <masterworkSkillBonus>1</masterworkSkillBonus>
+        <legendarySkillBonus>2</legendarySkillBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>marksman's</li>
+            <li>sharpshooter's</li>
+            <li>deadeye</li>
+            <li>accurate</li>
+            <li>calibrated</li>
+            <li>precision-tuned</li>
+            <li>targeting</li>
+            <li>steady</li>
+            <li>vigilant</li>
+            <li>unerring</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Marksman</li>
+            <li>Sharpshooter</li>
+            <li>Deadeye</li>
+            <li>Eagle Eye</li>
+            <li>Hawkeye</li>
+            <li>True Aim</li>
+            <li>Perfect Shot</li>
+            <li>Surefire</li>
+            <li>Last Sight</li>
+            <li>Unerring Gaze</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

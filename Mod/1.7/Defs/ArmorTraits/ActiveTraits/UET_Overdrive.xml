@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+    <defName>UET_Overdrive</defName>
+    <label>overdrive</label>
+    <description>An experimental combat augmentation system that pushes the wearer's physical capabilities beyond their natural limits. A network of neural accelerators and synthetic muscle stimulators synchronizes with the nervous system, allowing the body to respond with extraordinary speed and precision. However, the immense physiological strain places a heavy burden on the wearer, leaving their body severely exhausted once the system disengages.</description>
+    <activationType>Activated</activationType>
+    <usesCharges>true</usesCharges>
+    <cooldownTicks>600</cooldownTicks>
+    <activeEffectTicks>0</activeEffectTicks>
+    <commonality>0.05</commonality>
+    <canGenerateAlone>true</canGenerateAlone>
+    <allowedCategories>
+      <li>Helmet</li>
+      <li>Arms</li>
+      <li>Hands</li>
+    </allowedCategories>
+    <exclusionTags>
+      <li>UET_Exclusive</li>
+    </exclusionTags>
+    <nameAdjectives>
+      <li>overdriven</li>
+      <li>accelerated</li>
+      <li>hypercharged</li>
+      <li>overclocked</li>
+      <li>neurocharged</li>
+      <li>surge-powered</li>
+      <li>quickened</li>
+      <li>adrenalized</li>
+      <li>kinetic</li>
+      <li>limit-breaking</li>
+    </nameAdjectives>
+    <nameConcepts>
+      <li>Overdrive</li>
+      <li>Neural Surge</li>
+      <li>Limit Breaker</li>
+      <li>Redline Protocol</li>
+      <li>Hyperdrive</li>
+      <li>Adrenaline Engine</li>
+      <li>Synaptic Accelerator</li>
+      <li>Beyond the Limit</li>
+      <li>Combat Overclock</li>
+      <li>Final Burst</li>
+    </nameConcepts>
+  </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

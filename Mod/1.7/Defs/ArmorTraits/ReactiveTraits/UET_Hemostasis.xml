@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Hemostasis</defName>
+        <label>hemostasis</label>
+        <description>Embedded medical nanobots monitor the wearer's blood loss. When bleeding reaches dangerous levels, they may activate to permanently seal a bleeding wound or severed limb stump, stopping its bleeding without healing the underlying injury.</description>
+        <activationType>Passive</activationType>
+        <usesCharges>true</usesCharges>
+        <cooldownTicks>0</cooldownTicks>
+        <activeEffectTicks>0</activeEffectTicks>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>hemostatic</li>
+            <li>clotting</li>
+            <li>sealing</li>
+            <li>lifesaving</li>
+            <li>stabilizing</li>
+            <li>nanomedical</li>
+            <li>bloodguard</li>
+            <li>vascular</li>
+            <li>preserving</li>
+            <li>self-sealing</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Last Lifeline</li>
+            <li>Crimson Seal</li>
+            <li>Blood Guardian</li>
+            <li>Final Clot</li>
+            <li>Nanite Sutures</li>
+            <li>Lifeweaver</li>
+            <li>Scarlet Barrier</li>
+            <li>Vital Seal</li>
+            <li>Second Pulse</li>
+            <li>Last Defense</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

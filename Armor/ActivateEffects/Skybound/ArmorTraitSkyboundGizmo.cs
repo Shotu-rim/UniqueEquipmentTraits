@@ -22,15 +22,10 @@ namespace UniqueEquipmentTraits.Core.Armor
             int cooldownTicks =
                 ArmorTraitSkyboundUtility.GetCooldownTicks(quality);
 
-            // Original RimWorld Jump Pack icon
-            ThingDef jumpPackDef =
-                DefDatabase<ThingDef>.GetNamedSilentFail(
-                    "Apparel_PackJump");
-
             Texture2D jumpIcon =
-                jumpPackDef != null
-                    ? jumpPackDef.uiIcon
-                    : BaseContent.BadTex;
+                ContentFinder<Texture2D>.Get(
+                    "UI/Commands/UET_Skybound",
+                    true);
 
             Command_Action command = new Command_Action
             {

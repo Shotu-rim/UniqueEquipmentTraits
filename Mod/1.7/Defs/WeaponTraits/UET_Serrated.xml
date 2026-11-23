@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Serrated</defName>
+		<label>Serrated</label>
+		<description>The weapon inflicts grievous wounds that resist clotting, causing persistent and excessive bleeding.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>serrated</li>
+			<li>jagged</li>
+			<li>razor-edged</li>
+			<li>lacerating</li>
+			<li>rending</li>
+			<li>mangling</li>
+			<li>bloodletting</li>
+			<li>hemorrhagic</li>
+			<li>exsanguinating</li>
+			<li>flesh-rending</li>
+			<li>tissue-tearing</li>
+			<li>wound-inflicting</li>
+			<li>visceral</li>
+			<li>traumatic</li>
+			<li>blood-drawing</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.SerratedEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

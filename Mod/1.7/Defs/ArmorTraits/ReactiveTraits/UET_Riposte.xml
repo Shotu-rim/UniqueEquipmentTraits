@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Riposte</defName>
+        <label>riposte</label>
+        <description>An advanced reactive combat system enables the wearer to exploit an opponent's momentum, potentially disarming melee attackers upon being struck.</description>
+        <activationType>Reactive</activationType>
+        <usesCharges>true</usesCharges>
+        <cooldownTicks>0</cooldownTicks>
+        <activeEffectTicks>0</activeEffectTicks>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <workerClass>UniqueEquipmentTraits.Core.Armor.ArmorTraitWorker_Riposte</workerClass>
+        <nameAdjectives>
+            <li>countering</li>
+            <li>disarming</li>
+            <li>deflecting</li>
+            <li>retaliatory</li>
+            <li>reversing</li>
+            <li>precise</li>
+            <li>reactive</li>
+            <li>duelist's</li>
+            <li>intercepting</li>
+            <li>unbalancing</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Perfect Counter</li>
+            <li>Disarming Touch</li>
+            <li>Bladebreaker</li>
+            <li>Counterstrike</li>
+            <li>Reversal</li>
+            <li>Broken Grip</li>
+            <li>Master's Riposte</li>
+            <li>Turnabout</li>
+            <li>Empty Hands</li>
+            <li>Final Parry</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

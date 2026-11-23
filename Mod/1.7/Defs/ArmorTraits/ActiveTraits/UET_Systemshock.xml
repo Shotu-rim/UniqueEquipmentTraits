@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+    <defName>UET_Systemshock</defName>
+    <label>systemshock</label>
+    <description>An integrated electromagnetic disruption array designed to overload electronic control systems. By releasing a concentrated pulse of electromagnetic energy, the system interferes with sensitive circuitry, neural interfaces and mechanized components. Although highly effective against advanced machinery, its indiscriminate discharge poses a significant risk to nearby allies and other electronic systems.</description>
+    <activationType>Activated</activationType>
+    <usesCharges>true</usesCharges>
+    <cooldownTicks>600</cooldownTicks>
+    <activeEffectTicks>0</activeEffectTicks>
+    <commonality>0.05</commonality>
+    <canGenerateAlone>true</canGenerateAlone>
+    <allowedCategories>
+      <li>Helmet</li>
+    </allowedCategories>
+    <exclusionTags>
+      <li>UET_Exclusive</li>
+    </exclusionTags>
+    <nameAdjectives>
+      <li>discharging</li>
+      <li>electromagnetic</li>
+      <li>overloading</li>
+      <li>pulsebound</li>
+      <li>surge-driven</li>
+      <li>circuit-breaking</li>
+      <li>static-charged</li>
+      <li>interference-forged</li>
+      <li>disruptive</li>
+      <li>shockbound</li>
+    </nameAdjectives>
+    <nameConcepts>
+      <li>Systemshock</li>
+      <li>Pulse Cascade</li>
+      <li>Circuitbreaker</li>
+      <li>Static Dominion</li>
+      <li>Overload Protocol</li>
+      <li>Neural Interference</li>
+      <li>Disruption Matrix</li>
+      <li>Blackout Sequence</li>
+      <li>Electromagnetic Surge</li>
+      <li>System Collapse</li>
+    </nameConcepts>
+  </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Beastmaster</defName>
+        <label>beastmaster</label>
+        <description>Developed for frontier colonists and specialists working with genetically diverse wildlife, this armor enhances the wearer's natural affinity for animals. Its sophisticated systems foster an instinctive understanding of even the most unpredictable creatures, turning uncertain encounters into opportunities for trust and cooperation.</description>
+        <activationType>Passive</activationType>
+        <boostedSkill>Animals</boostedSkill>
+        <masterworkSkillBonus>1</masterworkSkillBonus>
+        <legendarySkillBonus>2</legendarySkillBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>handler's</li>
+            <li>beastmaster's</li>
+            <li>tamer's</li>
+            <li>herdsman's</li>
+            <li>shepherd's</li>
+            <li>wildborn</li>
+            <li>beastwise</li>
+            <li>instinctive</li>
+            <li>feral</li>
+            <li>untamed</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Wild Dominion</li>
+            <li>Animal Whisperer</li>
+            <li>Wildkeeper</li>
+            <li>Pack Leader</li>
+            <li>Beast Tamer</li>
+            <li>Wildheart</li>
+            <li>Nature's Bond</li>
+            <li>Primal Instinct</li>
+            <li>Kindred Spirit</li>
+            <li>Voice of the Wild</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

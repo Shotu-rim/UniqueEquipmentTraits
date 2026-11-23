@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Flurry</defName>
+		<label>Flurry</label>
+		<description>The weapon enhances the wielder's reflexes and motor coordination, unleashing a relentless flurry of rapid, less forceful strikes.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>flurrying</li>
+			<li>swift</li>
+			<li>relentless</li>
+			<li>blinding</li>
+			<li>lightning-fast</li>
+			<li>rapid</li>
+			<li>frenzied</li>
+			<li>unrelenting</li>
+			<li>accelerated</li>
+			<li>quickened</li>
+			<li>nimble</li>
+			<li>agile</li>
+			<li>whirlwind</li>
+			<li>rushing</li>
+			<li>high-velocity</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension"/>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

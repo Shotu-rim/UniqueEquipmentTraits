@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_NeuralDeafness</defName>
+        <label>neural deafness</label>
+        <description>An intricate network of psychic dampeners woven into the armor isolates the wearer's mind from the unseen currents of the psychic field. Thoughts remain their own, untouched by whispers, compulsions, or the influence of distant minds. The finest examples of this technology can project their silence outward, briefly severing another mind's connection to the psychic field.</description>
+        <activationType>Activated</activationType>
+        <usesCharges>true</usesCharges>
+        <cooldownTicks>600</cooldownTicks>
+        <activeEffectTicks>7200</activeEffectTicks>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Helmet</li>
+            <li>Torso</li>
+            <li>Neck</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>silent</li>
+            <li>mindless</li>
+            <li>psychically insulated</li>
+            <li>thoughtless</li>
+            <li>veiled</li>
+            <li>null</li>
+            <li>hushed</li>
+            <li>shielded</li>
+            <li>serene</li>
+            <li>unseen</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Silence</li>
+            <li>Still Mind</li>
+            <li>Null Mind</li>
+            <li>Thought Barrier</li>
+            <li>Psychic Void</li>
+            <li>Mind Fortress</li>
+            <li>Silent Will</li>
+            <li>Neural Bastion</li>
+            <li>Thought Eclipse</li>
+            <li>Absolute Silence</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

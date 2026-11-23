@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+    <defName>UET_Medic</defName>
+    <label>medic</label>
+    <description>An integrated nanomedical repair system equipped with a reservoir of programmable therapeutic nanites. Upon activation, the system transfers a concentrated dose of nanites into a selected organism, where they identify damaged tissue and initiate localized cellular reconstruction.</description>
+    <activationType>Activated</activationType>
+    <usesCharges>true</usesCharges>
+    <cooldownTicks>600</cooldownTicks>
+    <activeEffectTicks>0</activeEffectTicks>
+    <commonality>0.05</commonality>
+    <canGenerateAlone>true</canGenerateAlone>
+    <allowedCategories>
+      <li>Helmet</li>
+      <li>Neck</li>
+      <li>Torso</li>
+      <li>Arms</li>
+      <li>Hands</li>
+    </allowedCategories>
+    <exclusionTags>
+      <li>UET_Exclusive</li>
+    </exclusionTags>
+    <nameAdjectives>
+      <li>restorative</li>
+      <li>regenerative</li>
+      <li>therapeutic</li>
+      <li>nanomedical</li>
+      <li>lifesaving</li>
+      <li>reconstructive</li>
+      <li>mending</li>
+      <li>rejuvenating</li>
+      <li>cellweaving</li>
+      <li>lifebinding</li>
+    </nameAdjectives>
+    <nameConcepts>
+      <li>Second Chance</li>
+      <li>Touch of Renewal</li>
+      <li>Life's Embrace</li>
+      <li>Fleshweaver</li>
+      <li>Last Respite</li>
+      <li>Promise of Life</li>
+      <li>Healing Touch</li>
+      <li>Restoration Protocol</li>
+      <li>Mercy's Hand</li>
+      <li>Breath of Life</li>
+    </nameConcepts>
+  </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

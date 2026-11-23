@@ -179,10 +179,6 @@ namespace UniqueEquipmentTraits.Core.Armor
 
             state.TryConsumeCharge();
 
-
-
-            state.TryConsumeCharge();
-
             if (applyGoodwillPenalty)
             {
                 int penalty = GetGoodwillPenalty(quality);

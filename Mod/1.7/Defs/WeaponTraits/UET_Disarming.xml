@@ -1,0 +1,30 @@
+<Defs>
+	<Rimworld.WeaponTraitDef>
+		<defName>UET_Disarming</defName>
+		<label>disarming</label>
+		<description>The weapon delivers precision strikes that disrupt the enemy's grip, causing them to lose hold of their weapon.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>disarming</li>
+			<li>disarming-focused</li>
+			<li>grip-breaking</li>
+			<li>grip-disrupting</li>
+			<li>weapon-stripping</li>
+			<li>weapon-snatching</li>
+			<li>weapon-displacing</li>
+			<li>precision-guided</li>
+			<li>tactical</li>
+			<li>disruptive</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.DisarmingEffect</effectClass>
+			</li>
+		</modExtensions>
+	</Rimworld.WeaponTraitDef>
+</Defs>

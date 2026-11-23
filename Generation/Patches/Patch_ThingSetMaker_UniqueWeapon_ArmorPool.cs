@@ -20,7 +20,7 @@ namespace UniqueEquipmentTraits.Patches
     /// Validates expected IL patterns before applying changes
     /// to preserve the original methods if their layout differs.
     /// </summary>
-    [HarmonyPatch]
+   [HarmonyPatch]
     internal static class Patch_ThingSetMaker_UniqueWeapon_ArmorPool
     {
         private static readonly MethodInfo WhereMethod =

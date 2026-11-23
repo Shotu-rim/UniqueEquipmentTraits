@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <HediffDef>
+    <defName>UET_Technomancer</defName>
+    <label>technomancer</label>
+    <description>Moving and Manipulation are enhanced by a Technomancer pulse. The effect expires automatically.</description>
+    <hediffClass>UniqueEquipmentTraits.Effects.Hediff_Technomancer</hediffClass>
+    <isBad>false</isBad>
+    <stages>
+      <li />
+    </stages>
+  </HediffDef>
+</Defs>

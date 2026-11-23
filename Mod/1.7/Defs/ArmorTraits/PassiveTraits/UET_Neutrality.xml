@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Neutrality</defName>
+        <label>neutrality</label>
+        <description>Neural stabilization systems suppress the onset of psychological breakdowns, allowing the wearer to remain composed even under extreme mental stress.</description>
+        <activationType>Passive</activationType>
+        <masterworkMentalBreakBlockChance>0.75</masterworkMentalBreakBlockChance>
+        <legendaryMentalBreakBlockChance>1.0</legendaryMentalBreakBlockChance>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Helmet</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>serene</li>
+            <li>tranquil</li>
+            <li>composed</li>
+            <li>calming</li>
+            <li>stabilized</li>
+            <li>unshaken</li>
+            <li>steadfast</li>
+            <li>balanced</li>
+            <li>peaceful</li>
+            <li>focused</li>
+            <li>resolute</li>
+            <li>untroubled</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Neutrality</li>
+            <li>Serenity</li>
+            <li>Composure</li>
+            <li>Tranquility</li>
+            <li>Equilibrium</li>
+            <li>Clarity</li>
+            <li>Stability</li>
+            <li>Resolve</li>
+            <li>Stillness</li>
+            <li>Harmony</li>
+            <li>Calm</li>
+            <li>Discipline</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

@@ -9,6 +9,10 @@ namespace UniqueEquipmentTraits.Effects
     {
         public override void Apply(UETEffectContext context)
         {
+
+            if (!ModsConfig.RoyaltyActive)
+                return;
+
             if (context == null ||
                 context.Attacker == null ||
                 context.Attacker.Dead ||

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_HeatImmunity</defName>
+        <label>heat immunity</label>
+        <description>An advanced thermal regulation system channels excess heat away from the wearer, while a heat-resistant coating shields the armor itself from scorching temperatures. Even prolonged exposure to extreme heat becomes little more than an inconvenience.</description>
+        <activationType>Passive</activationType>
+        <masterworkImmunityReduction>0.85</masterworkImmunityReduction>
+        <legendaryImmunityReduction>1.0</legendaryImmunityReduction>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>heatproof</li>
+            <li>fireproof</li>
+            <li>thermally shielded</li>
+            <li>heat-resistant</li>
+            <li>flameward</li>
+            <li>fireguard</li>
+            <li>scorchproof</li>
+            <li>thermally insulated</li>
+            <li>flame-resistant</li>
+            <li>heat-shielded</li>
+            <li>emberguard</li>
+            <li>sunforged</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Heat Immunity</li>
+            <li>Thermal Shielding</li>
+            <li>Fireguard</li>
+            <li>Flameward</li>
+            <li>Heat Resistance</li>
+            <li>Thermal Protection</li>
+            <li>Scorchguard</li>
+            <li>Emberguard</li>
+            <li>Fireproofing</li>
+            <li>Heat Shield</li>
+            <li>Thermal Barrier</li>
+            <li>Flame Protection</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

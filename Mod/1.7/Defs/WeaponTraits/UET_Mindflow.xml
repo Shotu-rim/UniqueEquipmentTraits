@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Mindflow</defName>
+		<label>Mindflow</label>
+		<description>An intricate neural resonance system channels the energy of combat into the wielder's psychic pathways, dissipating mental strain and restoring neural equilibrium.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>resonant</li>
+			<li>harmonic</li>
+			<li>neural</li>
+			<li>psionic</li>
+			<li>psychotropic</li>
+			<li>synaptic</li>
+			<li>cerebral</li>
+			<li>attuned</li>
+			<li>synchronized</li>
+			<li>harmonized</li>
+			<li>calibrated</li>
+			<li>equilibrated</li>
+			<li>mind-linked</li>
+			<li>neuroadaptive</li>
+			<li>psychoactive</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.MindflowEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

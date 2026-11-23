@@ -1,6 +1,7 @@
 ﻿
 using HarmonyLib;
 using RimWorld;
+using UniqueEquipmentTraits.Core;
 using UniqueEquipmentTraits.Traits;
 
 namespace UniqueEquipmentTraits.Patches
@@ -52,6 +53,11 @@ namespace UniqueEquipmentTraits.Patches
             // UET weapons can receive only UET traits
             if (trait == null ||
                 trait.GetModExtension<UETTraitExtension>() == null)
+            {
+                __result = false;
+            }
+            // Reject UET traits requiring an inactive DLC
+            if (__result && !UETDlcUtility.IsTraitAvailable(trait))
             {
                 __result = false;
             }

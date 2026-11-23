@@ -21,6 +21,9 @@ namespace UniqueEquipmentTraits.Core.Armor
             StatRequest req,
             ref float __result)
         {
+            // Neural Deafness requires Royalty
+            if (!ModsConfig.RoyaltyActive)
+                return;
             if (StatField(__instance) != StatDefOf.PsychicSensitivity)
                 return;
 
@@ -32,11 +35,17 @@ namespace UniqueEquipmentTraits.Core.Armor
             bool hasPassive =
             ArmorTraitNeuralDeafnessUtility.HasNeuralDeafness(pawn);
 
+
+            HediffDef silenceDef =
+                DefDatabase<HediffDef>.GetNamedSilentFail(
+                    "UET_Silence");
+
             bool hasSilence =
+                silenceDef != null &&
                 pawn.health != null &&
                 pawn.health.hediffSet != null &&
-                pawn.health.hediffSet.HasHediff(
-                    DefDatabase<HediffDef>.GetNamed("UET_Silence"));
+                pawn.health.hediffSet.HasHediff(silenceDef);
+
 
             if (hasPassive || hasSilence)
             {

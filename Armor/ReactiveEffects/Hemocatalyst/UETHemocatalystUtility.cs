@@ -9,6 +9,10 @@ namespace UniqueEquipmentTraits.Core.Armor
     {
         internal static bool CanRestoreFocus(Pawn pawn)
         {
+
+            if (!ModsConfig.RoyaltyActive)
+                return false;
+
             if (pawn == null || pawn.Dead ||
                 pawn.psychicEntropy == null)
                 return false;

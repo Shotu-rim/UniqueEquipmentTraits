@@ -19,6 +19,7 @@ namespace UniqueEquipmentTraits.Utilities
 
         public static void Process(List<Thing> things)
         {
+            
             if (things == null || things.Count == 0)
                 return;
 

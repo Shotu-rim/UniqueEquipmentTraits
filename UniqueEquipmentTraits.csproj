@@ -202,6 +202,7 @@
     <Compile Include="Armor\Patches\Patch_PawnDeathArmorCleanup.cs" />
     <Compile Include="Armor\PassiveEffects\Mindweave\Patch_PsychicEntropyRecoveryRate.cs" />
     <Compile Include="Armor\PassiveEffects\Hasted\StatPart_Hasted.cs" />
+    <Compile Include="Core\UETDlcUtility.cs" />
     <Compile Include="DevTools\ArmorTraitTestAction.cs" />
     <Compile Include="Armor\ArmorTraitWorker.cs" />
     <Compile Include="Armor\ArmorTraitWorker_Default.cs" />
@@ -325,8 +326,11 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
+    <PostBuildEvent>copy /Y "$(TargetPath)" "E:\SteamLibrary\steamapps\common\RimWorld\Mods\Unique Equipment Traits\1.6\Assemblies\UniqueEquipmentTraits.dll"
+
+copy /Y "$(TargetPath)" "E:\SteamLibrary\steamapps\common\RimWorld\Mods\Unique Equipment Traits\1.7\Assemblies\UniqueEquipmentTraits.dll"
 copy /Y "$(TargetPath)" "E:\SteamLibrary\steamapps\common\RimWorld\Mods\Unique Equipment Traits\1.6\Assemblies\UniqueEquipmentTraits.dll"
-</PostBuildEvent>
+
+copy /Y "$(TargetPath)" "E:\SteamLibrary\steamapps\common\RimWorld\Mods\Unique Equipment Traits\1.6\Assemblies\UniqueEquipmentTraits.dll"</PostBuildEvent>
   </PropertyGroup>
 </Project>

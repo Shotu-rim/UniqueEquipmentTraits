@@ -1,0 +1,35 @@
+<Defs>
+	<Rimworld.WeaponTraitDef>
+		<defName>UET_Fracturing</defName>
+		<label>fracturing</label>
+		<description>The weapon delivers devastating impacts that fracture weakened bones and shatter compromised artificial body parts.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>fracturing</li>
+			<li>shattering</li>
+			<li>bone-crushing</li>
+			<li>bone-breaking</li>
+			<li>splintering</li>
+			<li>crushing</li>
+			<li>fragmenting</li>
+			<li>pulverizing</li>
+			<li>rupturing</li>
+			<li>devastating</li>
+			<li>bone-splintering</li>
+			<li>structure-breaking</li>
+			<li>rending</li>
+			<li>demolishing</li>
+			<li>cataclysmic</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.FracturingEffect</effectClass>
+			</li>
+		</modExtensions>
+	</Rimworld.WeaponTraitDef>
+</Defs>

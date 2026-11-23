@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Medicae</defName>
+        <label>medicae</label>
+        <description>A rare achievement of glitterworld medical engineering, this armor was developed for physicians entrusted with lives that even the finest medicine could not always save. Its presence grants the wearer an uncanny clarity of judgment and an almost instinctive grasp of the fragile boundary between life and death. In the operating rooms of distant worlds, such precision was once considered the difference between a skilled surgeon and a miracle worker.</description>
+        <activationType>Passive</activationType>
+        <boostedSkill>Medicine</boostedSkill>
+        <legendaryOnly>true</legendaryOnly>
+        <legendarySkillBonus>1</legendarySkillBonus>
+        <commonality>0.01</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>surgeon's</li>
+            <li>physician's</li>
+            <li>medicae</li>
+            <li>clinical</li>
+            <li>sterile</li>
+            <li>precise</li>
+            <li>lifesaving</li>
+            <li>restorative</li>
+            <li>diagnostic</li>
+            <li>miraculous</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Lifeweaver</li>
+            <li>Miracle Worker</li>
+            <li>Second Chance</li>
+            <li>Healing Touch</li>
+            <li>Last Hope</li>
+            <li>Vitalis</li>
+            <li>Guardian of Life</li>
+            <li>Mercy</li>
+            <li>Restoration</li>
+            <li>Final Remedy</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

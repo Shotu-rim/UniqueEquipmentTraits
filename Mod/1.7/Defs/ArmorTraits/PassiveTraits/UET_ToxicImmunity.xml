@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	  <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_ToxicImmunity</defName>
+        <label>toxic immunity</label>
+        <description>An integrated filtration and molecular neutralization system intercepts airborne toxins, chemical contaminants, and poisonous compounds before they can harm the wearer. The armor maintains a protective barrier even in heavily polluted environments.</description>
+        <activationType>Passive</activationType>
+        <masterworkImmunityReduction>0.85</masterworkImmunityReduction>
+        <legendaryImmunityReduction>1.0</legendaryImmunityReduction>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>toxinproof</li>
+            <li>toxic-resistant</li>
+            <li>chemically filtered</li>
+            <li>poisonward</li>
+            <li>toxin-shielded</li>
+            <li>pollutionproof</li>
+            <li>venomguard</li>
+            <li>contamination-resistant</li>
+            <li>toxicguard</li>
+            <li>purifying</li>
+            <li>hazmat-shielded</li>
+            <li>biofiltered</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Toxic Immunity</li>
+            <li>Toxin Shield</li>
+            <li>Poisonward</li>
+            <li>Purification</li>
+            <li>Contamination Barrier</li>
+            <li>Toxicguard</li>
+            <li>Venomguard</li>
+            <li>Hazard Protection</li>
+            <li>Biofiltration</li>
+            <li>Pollution Shield</li>
+            <li>Toxin Resistance</li>
+            <li>Chemical Filtration</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>
+	

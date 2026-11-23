@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Infernal</defName>
+		<label>Infernal</label>
+		<description>The weapon generates intense thermal energy on impact, scorching exposed tissue and inflicting severe burns.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>infernal</li>
+			<li>scorching</li>
+			<li>searing</li>
+			<li>blazing</li>
+			<li>incandescent</li>
+			<li>superheated</li>
+			<li>white-hot</li>
+			<li>molten</li>
+			<li>smoldering</li>
+			<li>flame-wreathed</li>
+			<li>heat-infused</li>
+			<li>thermal</li>
+			<li>pyroclastic</li>
+			<li>combustive</li>
+			<li>seething</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.InfernalEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

@@ -25,6 +25,10 @@ namespace UniqueEquipmentTraits.Core.Armor
 
         public static bool CanShock(Pawn target)
         {
+
+            if (!ModsConfig.AnomalyActive)
+                return false;
+
             if (target == null ||
                 target.Destroyed ||
                 !target.Spawned ||

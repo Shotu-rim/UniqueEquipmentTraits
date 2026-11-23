@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <HediffDef>
+    <defName>UET_FlurryActive</defName>
+    <label>Flurry</label>
+    <description>A surge of relentless momentum drives the wielder into a whirlwind of strikes, sacrificing precision of force for overwhelming speed.</description>
+    <hediffClass>UniqueEquipmentTraits.Effects.Hediff_FlurryActive</hediffClass>
+    <isBad>false</isBad>
+    <scenarioCanAdd>false</scenarioCanAdd>
+  </HediffDef>
+</Defs>

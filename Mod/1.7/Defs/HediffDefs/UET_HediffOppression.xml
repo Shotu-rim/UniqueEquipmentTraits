@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <HediffDef>
+    <defName>UET_Oppression</defName>
+    <label>oppression</label>
+    <description>Movement and attack speed are reduced by an oppressive force. The effect wears off over time.</description>
+    <hediffClass>UniqueEquipmentTraits.Effects.Hediff_Oppression</hediffClass>
+    <isBad>true</isBad>
+    <scenarioCanAdd>false</scenarioCanAdd>
+    <stages>
+      <li />
+    </stages>
+  </HediffDef>
+</Defs>

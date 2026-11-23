@@ -25,7 +25,7 @@ namespace UniqueEquipmentTraits.Core
         public static void Generate(bool hotReload = false)
         {
             UniqueWeaponVariantRegistry.Clear();
-
+            
             List<ThingDef> originals =
                 DefDatabase<ThingDef>.AllDefs
                     .Where(IsEligible)
@@ -95,6 +95,9 @@ namespace UniqueEquipmentTraits.Core
                     original, null);
 
             variant.defName = GetVariantName(original);
+            // Prevent unique variants from ordinary pawn equipment generation
+            variant.generateCommonality = 0f;
+            variant.generateAllowChance = 0f;
 
             // Copy the list without modifying the original
             variant.comps = original.comps != null

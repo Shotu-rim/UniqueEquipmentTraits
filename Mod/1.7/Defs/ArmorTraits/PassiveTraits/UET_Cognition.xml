@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Cognition</defName>
+        <label>cognition</label>
+        <description>Developed in the research enclaves of advanced glitterworld societies, this armor enhances the wearer's cognitive awareness and capacity for complex reasoning. Intricate theories become easier to grasp, seemingly unrelated discoveries reveal hidden connections, and problems that once demanded years of study begin to yield to moments of extraordinary insight.</description>
+        <activationType>Passive</activationType>
+        <boostedSkill>Intellectual</boostedSkill>
+        <masterworkSkillBonus>1</masterworkSkillBonus>
+        <legendarySkillBonus>2</legendarySkillBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>scholar's</li>
+            <li>thinker's</li>
+            <li>visionary</li>
+            <li>cerebral</li>
+            <li>enlightened</li>
+            <li>analytical</li>
+            <li>insightful</li>
+            <li>brilliant</li>
+            <li>ingenious</li>
+            <li>transcendent</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Genius</li>
+            <li>Mastermind</li>
+            <li>Great Thinker</li>
+            <li>Infinite Wisdom</li>
+            <li>Enlightenment</li>
+            <li>Perfect Mind</li>
+            <li>Grand Theory</li>
+            <li>Hidden Knowledge</li>
+            <li>Mind's Eye</li>
+            <li>Final Revelation</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

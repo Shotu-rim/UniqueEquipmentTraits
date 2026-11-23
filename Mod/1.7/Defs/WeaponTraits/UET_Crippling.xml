@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Crippling</defName>
+		<label>Crippling</label>
+		<description>The weapon delivers debilitating strikes that disrupt neuromuscular coordination, impairing the victim's ability to move.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>crippling</li>
+			<li>maiming</li>
+			<li>hamstringing</li>
+			<li>debilitating</li>
+			<li>disabling</li>
+			<li>immobilizing</li>
+			<li>impairing</li>
+			<li>enfeebling</li>
+			<li>enervating</li>
+			<li>movement-disrupting</li>
+			<li>mobility-impairing</li>
+			<li>coordination-disrupting</li>
+			<li>neuromuscular</li>
+			<li>nerve-impairing</li>
+			<li>limb-weakening</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.CripplingEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>
