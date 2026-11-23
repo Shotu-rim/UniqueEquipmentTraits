@@ -42,6 +42,7 @@ namespace UniqueEquipmentTraits.Core
                 WeaponTraitDefInjector.Inject();
                 UniqueWeaponDefGenerator.Generate(hotReload);
                 UniqueArmorTestDefGenerator.Generate(hotReload);
+                HemostasisHediffCompInjector.Inject();
             }
         }
     }

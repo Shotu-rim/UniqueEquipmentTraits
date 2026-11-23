@@ -16,7 +16,28 @@ namespace UniqueEquipmentTraits.Core.Armor
         {
             return true;
         }
+        // Additional activation chance, independent of reaction stacks
+        public virtual float GetActivationChance(
+            ArmorTraitActivationContext context)
+        {
+            return 1f;
+        }
 
+        // Cooldown duration for the current equipment quality
+        public virtual int GetCooldownTicks(
+            ArmorTraitActivationContext context)
+        {
+            return context.Trait.cooldownTicks;
+        }
+        public virtual bool TryActivate(
+            ArmorTraitActivationContext context)
+        {
+            if (!CanActivate(context))
+                return false;
+
+            OnActivated(context);
+            return true;
+        }
         // Executes trait
         public virtual void OnActivated(
             ArmorTraitActivationContext context)

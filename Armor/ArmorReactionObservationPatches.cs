@@ -7,13 +7,9 @@ using Verse;
 
 namespace UniqueEquipmentTraits.Core.Armor
 {
-    /// <summary>
-    /// Tracks melee attack contexts independently of weapon traits.
-    /// Uses a thread-local stack to associate injuries with the
-    /// correct attack and safely restore nested attack contexts.
-    /// UET extensions can access Current to inspect the active attack.
-    /// </summary>
-    [HarmonyPatch(typeof(Verb_MeleeAttackDamage), "ApplyMeleeDamageToTarget")]
+    [HarmonyPatch(
+        typeof(Verb_MeleeAttackDamage),
+        "ApplyMeleeDamageToTarget")]
     internal static class ArmorReactionAttackObserver
     {
         [ThreadStatic]
@@ -60,14 +56,36 @@ namespace UniqueEquipmentTraits.Core.Armor
 
             return __exception;
         }
+
+        internal static void ObserveAbsorbedHit(
+            Pawn pawn,
+            DamageInfo dinfo)
+        {
+            if (UETThornsReflection.IsReflecting)
+                return;
+
+            ArmorReactionContext context = Current;
+
+            if (context == null ||
+                context.Defender == null ||
+                context.Attacker == null ||
+                pawn != context.Defender ||
+                dinfo.HitPart == null ||
+                dinfo.Instigator != context.Attacker)
+            {
+                return;
+            }
+
+            context.ObservePart(
+                dinfo.HitPart,
+                dinfo,
+                0f);
+        }
     }
 
-    /// <summary>
-    /// Observes injuries produced during tracked melee attacks.
-    /// Forwards matching injury events to the armor reaction system,
-    /// allowing custom reactive armor traits to respond to hits.
-    /// </summary>
-    [HarmonyPatch(typeof(DamageWorker_AddInjury), "FinalizeAndAddInjury",
+    [HarmonyPatch(
+        typeof(DamageWorker_AddInjury),
+        "FinalizeAndAddInjury",
         new Type[]
         {
             typeof(Pawn),
@@ -81,8 +99,14 @@ namespace UniqueEquipmentTraits.Core.Armor
         private static void Prefix(
             Pawn pawn,
             Hediff_Injury injury,
-            DamageInfo dinfo)
+            DamageInfo dinfo,
+            out UETThornsReflection.InjuryFrame __state)
         {
+            __state = UETThornsReflection.BeginInjury();
+
+            if (UETThornsReflection.IsReflecting)
+                return;
+
             ArmorReactionContext context =
                 ArmorReactionAttackObserver.Current;
 
@@ -101,6 +125,32 @@ namespace UniqueEquipmentTraits.Core.Armor
                 injury.Part,
                 dinfo,
                 injury.Severity);
+        }
+
+        [HarmonyPostfix]
+        private static void Postfix(
+    Pawn pawn,
+    Hediff_Injury injury,
+    float __result,
+    UETThornsReflection.InjuryFrame __state)
+        {
+            ArmorReactionDamageObserver.ObserveInjury(
+                pawn,
+                injury != null ? injury.Part : null,
+                __result);
+
+            UETThornsReflection.Resolve(
+                __state,
+                __result);
+        }
+
+        [HarmonyFinalizer]
+        private static Exception Finalizer(
+            Exception __exception,
+            UETThornsReflection.InjuryFrame __state)
+        {
+            UETThornsReflection.EndInjury(__state);
+            return __exception;
         }
     }
 }

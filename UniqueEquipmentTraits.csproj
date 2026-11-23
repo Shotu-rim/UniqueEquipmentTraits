@@ -114,6 +114,8 @@
     <Compile Include="Armor\ArmorPassiveDamageUtility.cs" />
     <Compile Include="Armor\ArmorReactionActivation.cs" />
     <Compile Include="Armor\ArmorReactionContext.cs" />
+    <Compile Include="Armor\ArmorReactionDamageObserver.cs" />
+    <Compile Include="Armor\ArmorReactionDamageProcessor.cs" />
     <Compile Include="Armor\ArmorReactionDiagnostics.cs" />
     <Compile Include="Armor\ArmorReactionObservationPatches.cs" />
     <Compile Include="Armor\ArmorReactionSelection.cs" />
@@ -159,9 +161,27 @@
     <Compile Include="Armor\PassiveEffects\Resistances\Patch_ToxicBuildupImmunity.cs" />
     <Compile Include="Armor\PassiveEffects\SkillBonuses\ArmorTraitSkillUtility.cs" />
     <Compile Include="Armor\ArmorTraitState.cs" />
+    <Compile Include="Armor\ReactiveEffects\Hemocatalyst\ArmorTraitWorker_Hemocatalyst.cs" />
+    <Compile Include="Armor\ReactiveEffects\Hemocatalyst\UETHemocatalystUtility.cs" />
+    <Compile Include="Armor\ReactiveEffects\Hemostasis\HediffComp_Hemostasis.cs" />
+    <Compile Include="Armor\ReactiveEffects\Hemostasis\HemostasisArmorUtility.cs" />
+    <Compile Include="Armor\ReactiveEffects\Hemostasis\HemostasisEffectUtility.cs" />
+    <Compile Include="Armor\ReactiveEffects\Hemostasis\HemostasisHediffCompInjector.cs" />
+    <Compile Include="Armor\ReactiveEffects\Hemostasis\HemostasisUtility.cs" />
+    <Compile Include="Armor\ReactiveEffects\Hemostasis\Patch_HemostasisBleedRate.cs" />
+    <Compile Include="Armor\ReactiveEffects\Hemostasis\Patch_HemostasisDamage.cs" />
+    <Compile Include="Armor\ReactiveEffects\Riposte\ArmorTraitWorker_Riposte.cs" />
+    <Compile Include="Armor\ReactiveEffects\Shock\ArmorTraitWorker_Shock.cs" />
+    <Compile Include="Armor\ReactiveEffects\Shock\UETShockUtility.cs" />
+    <Compile Include="Armor\ReactiveEffects\ThermalVent\ArmorTraitWorker_ThermalVent.cs" />
+    <Compile Include="Armor\ReactiveEffects\ThermalVent\UETThermalVentGuard.cs" />
+    <Compile Include="Armor\ReactiveEffects\ThermalVent\UETThermalVentUtility.cs" />
+    <Compile Include="Armor\ReactiveEffects\Thorns\ArmorTraitWorker_Thorns.cs" />
+    <Compile Include="Armor\ReactiveEffects\Thorns\UETThornsReflection.cs" />
+    <Compile Include="Armor\ReactiveEffects\Thorns\UETThornsUtility.cs" />
+    <Compile Include="Combat\UETDisarmUtility.cs" />
     <Compile Include="Core\Compatibility\VPEColdImmunityCompatibility.cs" />
     <Compile Include="Core\Compatibility\VPEVortexCompatibility.cs" />
-    <Compile Include="DevTools\ArmorTraitWorker_TestHediff.cs" />
     <Compile Include="Armor\Hediffs\ArmorTraitHediffUtility.cs" />
     <Compile Include="Armor\Hediffs\HediffComp_ArmorTraitSource.cs" />
     <Compile Include="Armor\IArmorDamageInterceptor.cs" />
@@ -302,9 +322,7 @@
     <Compile Include="Generation\WorldGeneration\UETWorldConversionProcessor.cs" />
     <Compile Include="Generation\WorldGeneration\UETWorldConversionThingFactory.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Armor\ReactiveEffects\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

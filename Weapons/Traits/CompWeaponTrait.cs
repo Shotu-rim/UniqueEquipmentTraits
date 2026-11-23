@@ -534,12 +534,11 @@ namespace UniqueEquipmentTraits.Traits
                 }
             }
 
-
             yield return new StatDrawEntry(
                 StatCategoryDefOf.BasicsImportant,
-                "UET_ActivationChance".Translate(),
+                "Activation chance",
                 activationChance.ToString("P0"),
-                "UET_ActivationChanceDesc".Translate(),
+                "Chance for this weapon trait to activate.",
                 99996
             );
 
@@ -554,9 +553,9 @@ namespace UniqueEquipmentTraits.Traits
 
                 yield return new StatDrawEntry(
                     StatCategoryDefOf.BasicsImportant,
-                    "UET_EffectStrength".Translate(),
+                    "Effect strength",
                     effectStrength.ToString("P0"),
-                    "UET_EffectStrengthDesc".Translate(),
+                    "Strength of this weapon trait's effect.",
                     99995
                 );
             }

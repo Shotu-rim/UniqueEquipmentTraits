@@ -13,6 +13,7 @@ namespace UniqueEquipmentTraits.Core.Armor
     {
         internal static bool TrySelect(
             List<Apparel> candidates,
+            Pawn attacker,
             out Apparel selectedApparel,
             out ArmorTraitDef selectedTrait)
         {
@@ -39,7 +40,34 @@ namespace UniqueEquipmentTraits.Core.Armor
                     continue;
                 }
 
-                eligible.Add(apparel);
+                bool hasEligibleReactive = false;
+
+                foreach (ArmorTraitDef trait in comp.Traits)
+                {
+                    if (trait == null ||
+                        trait.activationType !=
+                        ArmorTraitActivationType.Reactive)
+                    {
+                        continue;
+                    }
+
+                    if (trait.defName == "UET_Shock" &&
+                        !UETShockUtility.CanShock(attacker))
+                    {
+                        continue;
+                    }
+                    // Damage triggered traits are handled separately in ArmorReactionDamageProcessor
+                    if (trait.defName == "UET_Hemocatalyst" ||
+                        trait.defName == "UET_ThermalVent")
+                    {
+                        continue;
+                    }
+                    hasEligibleReactive = true;
+                    break;
+                }
+
+                if (hasEligibleReactive)
+                    eligible.Add(apparel);
             }
 
             if (eligible.Count == 0)
@@ -52,13 +80,21 @@ namespace UniqueEquipmentTraits.Core.Armor
 
             foreach (ArmorTraitDef trait in selectedComp.Traits)
             {
-                if (trait != null &&
-                    trait.activationType ==
+                if (trait == null ||
+                    trait.activationType !=
                     ArmorTraitActivationType.Reactive)
                 {
-                    selectedTrait = trait;
-                    return true;
+                    continue;
                 }
+
+                if (trait.defName == "UET_Shock" &&
+                    !UETShockUtility.CanShock(attacker))
+                {
+                    continue;
+                }
+
+                selectedTrait = trait;
+                return true;
             }
 
             selectedApparel = null;

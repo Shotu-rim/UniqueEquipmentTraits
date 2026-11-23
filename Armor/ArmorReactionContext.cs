@@ -88,6 +88,7 @@ namespace UniqueEquipmentTraits.Core.Armor
             // Select from ready candidates before consuming a stack
             if (!ArmorReactionSelection.TrySelect(
                 candidates,
+                Attacker,
                 out selectedApparel,
                 out selectedTrait))
             {

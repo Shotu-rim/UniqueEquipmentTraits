@@ -58,6 +58,7 @@ namespace UniqueEquipmentTraits.Core.Armor
 
 
 
+
         private static bool InterceptPartDamage(
             DamageInfo dinfo,
             Pawn pawn,
@@ -70,8 +71,13 @@ namespace UniqueEquipmentTraits.Core.Armor
             result.AddPart(pawn, dinfo.HitPart);
             result.deflected = true;
 
+            ArmorReactionAttackObserver.ObserveAbsorbedHit(
+                pawn,
+                dinfo);
+
             return true;
         }
+
 
         [HarmonyPatch]
         private static class ApplyDamageToPartTranspiler
@@ -217,14 +223,90 @@ namespace UniqueEquipmentTraits.Core.Armor
                 CodeInstruction ret =
                     new CodeInstruction(OpCodes.Ret);
 
+
                 ret.labels.Add(returnLabel);
                 codes.Add(ret);
 
-                Log.Message(
-                    "[UET Aegis] ApplyDamageToPart: " +
-                    "damage interception IL installed.");
+                // Observe vanilla hits fully absorbed by armor.
+                // Locate the return immediately following
+                // DamageResult.deflectedByMetalArmor assignment.
+
+                FieldInfo deflectedByMetalArmorField =
+                    AccessTools.Field(
+                        typeof(DamageWorker.DamageResult),
+                        "deflectedByMetalArmor");
+
+                MethodInfo observeAbsorbedHit =
+                    AccessTools.Method(
+                        typeof(ArmorReactionAttackObserver),
+                        "ObserveAbsorbedHit");
+
+                if (deflectedByMetalArmorField == null ||
+                    observeAbsorbedHit == null)
+                {
+                    Log.Error(
+                        "[UET Reactive Armor] Required member " +
+                        "not found. Vanilla absorption observer " +
+                        "not installed.");
+
+                    return codes;
+                }
+
+                int vanillaReturnIndex = -1;
+                int vanillaReturnMatches = 0;
+
+                for (int i = 0; i < codes.Count - 1; i++)
+                {
+                    if (codes[i].opcode != OpCodes.Stfld ||
+                        !Equals(
+                            codes[i].operand,
+                            deflectedByMetalArmorField))
+                    {
+                        continue;
+                    }
+
+                    if (codes[i + 1].opcode != OpCodes.Ret)
+                        continue;
+
+                    vanillaReturnIndex = i + 1;
+                    vanillaReturnMatches++;
+                }
+
+                if (vanillaReturnMatches != 1)
+                {
+                    Log.Error(
+                        "[UET Reactive Armor] Vanilla absorption " +
+                        "return pattern not unique. Found " +
+                        vanillaReturnMatches + ".");
+
+                    return codes;
+                }
+
+                // Do not alter an existing branch target.
+                if (codes[vanillaReturnIndex].labels.Count > 0 ||
+                    codes[vanillaReturnIndex].blocks.Count > 0)
+                {
+                    Log.Error(
+                        "[UET Reactive Armor] Vanilla absorption " +
+                        "return has labels or exception blocks. " +
+                        "Observer not installed.");
+
+                    return codes;
+                }
+
+                codes.InsertRange(
+                    vanillaReturnIndex,
+                    new List<CodeInstruction>
+                    {
+                        new CodeInstruction(OpCodes.Ldarg_2),
+                        new CodeInstruction(OpCodes.Ldarg_1),
+                        new CodeInstruction(
+                        OpCodes.Call,
+                        observeAbsorbedHit)
+                    });
 
                 return codes;
+
             }
 
             private static bool IsStoreLocal(CodeInstruction instruction)
@@ -429,8 +511,6 @@ namespace UniqueEquipmentTraits.Core.Armor
             }
 
         }
-
-
 
         [HarmonyPatch]
         private static class ApplyToPawnScope

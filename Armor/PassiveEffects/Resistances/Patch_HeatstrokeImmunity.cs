@@ -62,7 +62,7 @@ namespace UniqueEquipmentTraits.Core
                 }
             }
 
-            if (replacements > 0)
+            if (replacements == 0)
             {
                 Log.Warning(
                     "[UET Heat Immunity] No AdjustSeverity call found. " +

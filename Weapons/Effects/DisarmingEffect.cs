@@ -1,4 +1,6 @@
-﻿using Verse;
+﻿
+using UniqueEquipmentTraits.Core;
+using Verse;
 
 namespace UniqueEquipmentTraits.Effects
 {
@@ -6,38 +8,19 @@ namespace UniqueEquipmentTraits.Effects
     {
         public override void Apply(UETEffectContext context)
         {
-            Pawn victim = context.Victim;
+            ThingWithComps dropped;
 
-            if (victim == null ||
-                victim.Dead ||
-                victim.equipment == null ||
-                !victim.Spawned)
+            if (!UETDisarmUtility.TryDisarm(
+                context.Victim,
+                out dropped))
             {
                 return;
             }
 
-            ThingWithComps weapon = victim.equipment.Primary;
-
-            // No weapon to disarm
-            if (weapon == null)
-                return;
-
-            ThingWithComps dropped;
-
-            bool success = victim.equipment.TryDropEquipment(
-                weapon,
-                out dropped,
-                victim.Position,
-                forbid: false);
-
-            // Report on success only
-            if (!success || dropped == null)
-                return;
-
             context.Report(
                 context.Attacker.LabelShort +
                 " disarmed " +
-                victim.LabelShort +
+                context.Victim.LabelShort +
                 ", knocking " +
                 dropped.LabelShort +
                 " to the ground.");
