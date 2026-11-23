@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+    <defName>UET_ToxicCloud</defName>
+    <label>toxic cloud</label>
+    <description>An integrated toxic gas dispersal system capable of releasing concentrated clouds of poisonous fumes at a distance. The system generates ordinary toxic gas that spreads naturally through the environment, allowing the wearer to contaminate terrain, enclosed spaces, and occupied locations without directly applying toxins to targets. Superior craftsmanship increases its effective range and charge capacity.</description>
+    <activationType>Activated</activationType>
+    <usesCharges>true</usesCharges>
+    <cooldownTicks>600</cooldownTicks>
+    <activeEffectTicks>0</activeEffectTicks>
+    <commonality>0.10</commonality>
+    <canGenerateAlone>true</canGenerateAlone>
+    <allowedCategories>
+      <li>Helmet</li>
+      <li>Arms</li>
+      <li>Hands</li>
+    </allowedCategories>
+    <exclusionTags>
+      <li>UET_Exclusive</li>
+    </exclusionTags>
+    <nameAdjectives>
+      <li>toxic</li>
+      <li>venomous</li>
+      <li>noxious</li>
+      <li>poisonous</li>
+      <li>pestilent</li>
+      <li>blightborn</li>
+      <li>miasmatic</li>
+      <li>fumeweaving</li>
+      <li>plaguebound</li>
+      <li>deathbreathing</li>
+    </nameAdjectives>
+    <nameConcepts>
+      <li>Venom's Kiss</li>
+      <li>Breath of Decay</li>
+      <li>Silent Poison</li>
+      <li>Death's Exhale</li>
+      <li>Heart of Pestilence</li>
+      <li>Plague's Whisper</li>
+      <li>Poisoned Earth</li>
+      <li>Deadly Miasma</li>
+      <li>Last Breath</li>
+      <li>Cloud of Ruin</li>
+    </nameConcepts>
+  </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

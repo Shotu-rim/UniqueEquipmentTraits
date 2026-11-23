@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Botany</defName>
+        <label>botany</label>
+        <description>Originally developed for botanical specialists cultivating life on inhospitable frontier worlds, this armor enhances the wearer's sensitivity to the subtle rhythms of plant growth and vitality. Even unfamiliar vegetation seems strangely comprehensible, allowing its wearer to nurture fragile crops and work with exotic flora with an almost instinctive understanding of the natural world.</description>
+        <activationType>Passive</activationType>
+        <boostedSkill>Plants</boostedSkill>
+        <masterworkSkillBonus>1</masterworkSkillBonus>
+        <legendarySkillBonus>2</legendarySkillBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>botanist's</li>
+            <li>gardener's</li>
+            <li>harvester's</li>
+            <li>verdant</li>
+            <li>flourishing</li>
+            <li>fertile</li>
+            <li>evergreen</li>
+            <li>blossoming</li>
+            <li>rootbound</li>
+            <li>life-giving</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Green Thumb</li>
+            <li>Master Botanist</li>
+            <li>Lifeweaver</li>
+            <li>Evergreen</li>
+            <li>First Bloom</li>
+            <li>Nature's Gift</li>
+            <li>Garden of Eden</li>
+            <li>Worldseed</li>
+            <li>Verdant Heart</li>
+            <li>Eternal Harvest</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

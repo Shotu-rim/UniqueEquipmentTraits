@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Artistry</defName>
+        <label>artistry</label>
+        <description>Once reserved for the finest artisans of glitterworld societies, this armor heightens the wearer's creative intuition and artistic sensibilities. Shapes, colors, and patterns seem to fall effortlessly into place, allowing even the simplest materials to become expressions of remarkable beauty and imagination.</description>
+        <activationType>Passive</activationType>
+        <boostedSkill>Artistic</boostedSkill>
+        <masterworkSkillBonus>1</masterworkSkillBonus>
+        <legendarySkillBonus>2</legendarySkillBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>artisan's</li>
+            <li>sculptor's</li>
+            <li>visionary</li>
+            <li>inspired</li>
+            <li>imaginative</li>
+            <li>expressive</li>
+            <li>masterful</li>
+            <li>refined</li>
+            <li>exquisite</li>
+            <li>harmonious</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Muse</li>
+            <li>Masterpiece</li>
+            <li>Golden Touch</li>
+            <li>Creative Spark</li>
+            <li>Divine Inspiration</li>
+            <li>Living Canvas</li>
+            <li>Perfect Form</li>
+            <li>Dreamweaver</li>
+            <li>Timeless Beauty</li>
+            <li>Grand Vision</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

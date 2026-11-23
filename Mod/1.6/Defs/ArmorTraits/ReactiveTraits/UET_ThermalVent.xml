@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_ThermalVent</defName>
+        <label>thermal vent</label>
+        <description>An integrated network of thermal and pressure nanite regulators embedded within the armor's protective layers. When the wearer sustains an injury, these systems may release a violent burst of superheated air, scorching nearby creatures regardless of allegiance. The wearer remains protected from the discharge.</description>
+        <activationType>Reactive</activationType>
+        <usesCharges>false</usesCharges>
+        <cooldownTicks>900</cooldownTicks>
+        <activeEffectTicks>0</activeEffectTicks>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Helmet</li>
+            <li>Hands</li>
+			<li>Legs</li>
+			<li>Neck</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <workerClass>UniqueEquipmentTraits.Core.Armor.ArmorTraitWorker_ThermalVent</workerClass>
+        <nameAdjectives>
+            <li>thermal</li>
+            <li>thermogenic</li>
+            <li>heatbound</li>
+            <li>heatforged</li>
+            <li>heatwoven</li>
+            <li>scorching</li>
+            <li>searing</li>
+            <li>blazing</li>
+            <li>incandescent</li>
+            <li>superheated</li>
+            <li>pyroclastic</li>
+            <li>pyrothermal</li>
+            <li>emberbound</li>
+            <li>emberforged</li>
+            <li>flamebound</li>
+            <li>vented</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Thermal Vent</li>
+            <li>Heat Vent</li>
+            <li>Thermal Core</li>
+            <li>Heat Reactor</li>
+            <li>Inferno Core</li>
+            <li>Ember Reactor</li>
+            <li>Pyroclastic Vent</li>
+            <li>Thermal Discharge</li>
+            <li>Heat Emitter</li>
+            <li>Scorching Pulse</li>
+            <li>Inferno Pulse</li>
+            <li>Ember Pulse</li>
+            <li>Thermal Surge</li>
+            <li>Heatwave</li>
+            <li>Flame Conduit</li>
+            <li>Incandescent Matrix</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

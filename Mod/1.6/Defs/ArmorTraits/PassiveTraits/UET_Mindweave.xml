@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Mindweave</defName>
+        <label>mindweave</label>
+        <description>An intricate network of psionically attuned fibers helps dissipate neural heat, allowing the wearer to recover more quickly from the strain of psychic abilities.</description>
+        <activationType>Passive</activationType>
+        <masterworkNeuralHeatRecoveryBonus>0.15</masterworkNeuralHeatRecoveryBonus>
+        <legendaryNeuralHeatRecoveryBonus>0.30</legendaryNeuralHeatRecoveryBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Helmet</li>
+            <li>Neck</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>mindwoven</li>
+            <li>psionically attuned</li>
+            <li>neural</li>
+            <li>harmonized</li>
+            <li>tranquil</li>
+            <li>resonant</li>
+            <li>thoughtwoven</li>
+            <li>cerebral</li>
+            <li>psychically balanced</li>
+            <li>meditative</li>
+            <li>serene</li>
+            <li>entropy-dissipating</li>
+            <li>mind-calibrated</li>
+            <li>neuroharmonic</li>
+            <li>psionic</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Mindweave</li>
+            <li>Neural Harmony</li>
+            <li>Tranquility</li>
+            <li>Psionic Balance</li>
+            <li>Clear Mind</li>
+            <li>Inner Stillness</li>
+            <li>Thoughtflow</li>
+            <li>Neural Equilibrium</li>
+            <li>Serenity</li>
+            <li>Mindstream</li>
+            <li>Quietude</li>
+            <li>Psychic Resonance</li>
+            <li>Focused Thought</li>
+            <li>Neural Flow</li>
+            <li>Entropy Release</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

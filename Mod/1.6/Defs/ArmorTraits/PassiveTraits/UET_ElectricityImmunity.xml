@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_ElectricityImmunity</defName>
+        <label>electricity immunity</label>
+        <description>Conductive channels and insulated layers safely disperse electrical discharges across the armor's surface, protecting the wearer from devastating shocks. Even powerful arcs of electricity are diverted away from vulnerable tissue.</description>
+        <activationType>Passive</activationType>
+        <masterworkImmunityReduction>0.85</masterworkImmunityReduction>
+        <legendaryImmunityReduction>1.0</legendaryImmunityReduction>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>shockproof</li>
+            <li>electrically insulated</li>
+            <li>arc-resistant</li>
+            <li>shockguard</li>
+            <li>lightningproof</li>
+            <li>electrically shielded</li>
+            <li>arc-shielded</li>
+            <li>surgeproof</li>
+            <li>stormguard</li>
+            <li>lightningward</li>
+            <li>discharge-resistant</li>
+            <li>surge-shielded</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Electricity Immunity</li>
+            <li>Shockguard</li>
+            <li>Lightning Shield</li>
+            <li>Arc Protection</li>
+            <li>Surge Barrier</li>
+            <li>Electrical Insulation</li>
+            <li>Stormguard</li>
+            <li>Lightningward</li>
+            <li>Shock Resistance</li>
+            <li>Arc Shield</li>
+            <li>Surge Protection</li>
+            <li>Discharge Barrier</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>
+	

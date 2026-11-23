@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Hawkeye</defName>
+        <label>hawkeye</label>
+        <description>Advanced combat sensors analyze enemy movements and identify vulnerable points, allowing the wearer to deliver devastating critical strikes. Critical hit chances stack additively across equipped armor, while critical damage bonuses are combined using a weighted average.</description>
+        <activationType>Passive</activationType>
+        <masterworkCriticalChance>0.03</masterworkCriticalChance>
+        <legendaryCriticalChance>0.05</legendaryCriticalChance>
+        <masterworkCriticalDamageBonus>0.35</masterworkCriticalDamageBonus>
+        <legendaryCriticalDamageBonus>0.50</legendaryCriticalDamageBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>deadeye</li>
+            <li>lethal</li>
+            <li>calibrated</li>
+            <li>predatory</li>
+            <li>targeting-assisted</li>
+            <li>critical</li>
+            <li>unerring</li>
+            <li>pinpoint</li>
+            <li>ruthless</li>
+            <li>precision-tuned</li>
+            <li>weakpoint-seeking</li>
+            <li>combat-calibrated</li>
+            <li>laser-guided</li>
+            <li>hawk-eyed</li>
+            <li>vital-seeking</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Hawkeye</li>
+            <li>Deadeye</li>
+            <li>Critical Focus</li>
+            <li>Surestrike</li>
+            <li>Predator's Gaze</li>
+            <li>Target Lock</li>
+            <li>Fatal Precision</li>
+            <li>Hunter's Instinct</li>
+            <li>Weakpoint Analysis</li>
+            <li>True Sight</li>
+            <li>Killer Instinct</li>
+            <li>Perfect Strike</li>
+            <li>Pinpoint</li>
+            <li>Deathmark</li>
+            <li>Vital Strike</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

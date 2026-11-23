@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Resilient</defName>
+        <label>resilient</label>
+        <description>Forged to preserve life in the harshest conditions, this armor strengthens the wearer's natural defenses against disease and infection. Its protective properties accelerate the development of immunity while reducing the likelihood of contracting illnesses, allowing the wearer to endure ailments that might overwhelm others.</description>
+        <activationType>Passive</activationType>
+        <masterworkImmunityGainBonus>0.10</masterworkImmunityGainBonus>
+        <legendaryImmunityGainBonus>0.20</legendaryImmunityGainBonus>
+        <masterworkDiseaseRiskReduction>0.10</masterworkDiseaseRiskReduction>
+        <legendaryDiseaseRiskReduction>0.15</legendaryDiseaseRiskReduction>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>resilient</li>
+            <li>unyielding</li>
+            <li>hardy</li>
+            <li>enduring</li>
+            <li>steadfast</li>
+            <li>tenacious</li>
+            <li>indomitable</li>
+            <li>vigorous</li>
+            <li>unbreakable</li>
+            <li>death-defying</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Survivor</li>
+            <li>Endurance</li>
+            <li>Iron Will</li>
+            <li>Last Bastion</li>
+            <li>Second Wind</li>
+            <li>Unbroken</li>
+            <li>Life's Guardian</li>
+            <li>Defiance</li>
+            <li>Unyielding Spirit</li>
+            <li>Vitality</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Excavation</defName>
+        <label>excavation</label>
+        <description>Originally developed for deep-core mining operations on distant industrial worlds, this armor enhances the wearer's geological intuition and precision when working with even the most stubborn materials. Hidden fractures and mineral formations become almost instinctively recognizable, allowing experienced miners to uncover the riches buried beneath the surface with remarkable efficiency.</description>
+        <activationType>Passive</activationType>
+        <boostedSkill>Mining</boostedSkill>
+        <masterworkSkillBonus>1</masterworkSkillBonus>
+        <legendarySkillBonus>2</legendarySkillBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>miner's</li>
+            <li>prospector's</li>
+            <li>excavator's</li>
+            <li>deep-core</li>
+            <li>bedrock</li>
+            <li>earthshaking</li>
+            <li>unyielding</li>
+            <li>orebound</li>
+            <li>subterranean</li>
+            <li>seismic</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Deep Delver</li>
+            <li>Stonebreaker</li>
+            <li>Earthshaker</li>
+            <li>Iron Vein</li>
+            <li>Bedrock</li>
+            <li>Heart of the Mountain</li>
+            <li>Deep Strata</li>
+            <li>Prospector</li>
+            <li>Worldbreaker</li>
+            <li>Hidden Riches</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

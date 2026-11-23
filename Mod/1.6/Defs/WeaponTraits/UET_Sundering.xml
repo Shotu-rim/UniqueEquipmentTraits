@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Sundering</defName>
+		<label>Sundering</label>
+		<description>The weapon concentrates its impact energy to penetrate protective barriers and compromise even the most resilient armor.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>sundering</li>
+			<li>armor-breaking</li>
+			<li>piercing</li>
+			<li>armor-piercing</li>
+			<li>armor-breaching</li>
+			<li>barrier-breaking</li>
+			<li>shield-piercing</li>
+			<li>penetrating</li>
+			<li>breaching</li>
+			<li>rupturing</li>
+			<li>rending</li>
+			<li>overpowering</li>
+			<li>unrelenting</li>
+			<li>impact-focused</li>
+			<li>kinetic</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.SunderingEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

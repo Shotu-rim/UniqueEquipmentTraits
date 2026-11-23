@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Artificer</defName>
+        <label>artificer</label>
+        <description>A rare relic of glitterworld manufacturing, this armor embodies generations of accumulated craftsmanship and technological refinement. In the hands of a skilled artisan, even the most intricate mechanisms seem almost intuitive, blurring the line between practiced expertise and extraordinary genius.</description>
+        <activationType>Passive</activationType>
+        <boostedSkill>Crafting</boostedSkill>
+        <legendaryOnly>true</legendaryOnly>
+        <legendarySkillBonus>1</legendarySkillBonus>
+        <commonality>0.01</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>artificer's</li>
+            <li>mastercrafted</li>
+            <li>precision-forged</li>
+            <li>meticulous</li>
+            <li>ingenious</li>
+            <li>refined</li>
+            <li>calibrated</li>
+            <li>intricate</li>
+            <li>peerless</li>
+            <li>flawless</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Master Artificer</li>
+            <li>Perfect Design</li>
+            <li>Masterwork</li>
+            <li>Golden Hands</li>
+            <li>Grand Creation</li>
+            <li>Forgemaster</li>
+            <li>Maker's Touch</li>
+            <li>Final Blueprint</li>
+            <li>Timeless Craft</li>
+            <li>Magnum Opus</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

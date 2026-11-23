@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Hasted</defName>
+        <label>hasted</label>
+        <description>Equipped with sophisticated motion-assistance systems, this armor enhances the wearer's mobility through precisely coordinated mechanical impulses and adaptive kinetic regulators. Its advanced mechanisms compensate for the weight of heavier equipment, allowing the wearer to move with remarkable speed and fluidity.</description>
+        <activationType>Passive</activationType>
+        <masterworkMoveSpeedBonus>0.10</masterworkMoveSpeedBonus>
+        <legendaryMoveSpeedBonus>0.15</legendaryMoveSpeedBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Legs</li>
+            <li>Feet</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>hasted</li>
+            <li>accelerated</li>
+            <li>swift</li>
+            <li>fleet-footed</li>
+            <li>quickened</li>
+            <li>kinetic</li>
+            <li>velocity-enhanced</li>
+            <li>motion-assisted</li>
+            <li>speed-augmented</li>
+            <li>momentum-driven</li>
+            <li>rapid</li>
+            <li>nimble</li>
+            <li>agile</li>
+            <li>lightning-fast</li>
+            <li>windborne</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Velocity</li>
+            <li>Momentum</li>
+            <li>Acceleration</li>
+            <li>Fleetfoot</li>
+            <li>Swiftstride</li>
+            <li>Quickstep</li>
+            <li>Windrunner</li>
+            <li>Zephyr</li>
+            <li>Tailwind</li>
+            <li>Slipstream</li>
+            <li>Overdrive</li>
+            <li>Impulse</li>
+            <li>Rapid Transit</li>
+            <li>Second Wind</li>
+            <li>Breakneck</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

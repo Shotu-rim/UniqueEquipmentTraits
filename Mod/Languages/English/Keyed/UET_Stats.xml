@@ -1,0 +1,7 @@
+<LanguageData>
+    <UET_UniqueTrait>Unique trait</UET_UniqueTrait>
+    <UET_ActivationChance>Activation chance</UET_ActivationChance>
+    <UET_ActivationChanceDesc>Chance to activate the unique weapon trait when its activation conditions are met.</UET_ActivationChanceDesc>
+    <UET_EffectStrength>Effect strength</UET_EffectStrength>
+    <UET_EffectStrengthDesc>Base strength of the unique weapon trait's effect. Its actual impact depends on the trait's mechanics.</UET_EffectStrengthDesc>
+</LanguageData>

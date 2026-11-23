@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <HediffDef>
+    <defName>UET_Overdrive</defName>
+    <label>overdrive</label>
+    <description>Temporarily increases movement and attack speed. Causes exhaustion when the effect ends.</description>
+    <hediffClass>UniqueEquipmentTraits.Effects.Hediff_Overdrive</hediffClass>
+    <isBad>false</isBad>
+    <stages>
+      <li />
+    </stages>
+  </HediffDef>
+</Defs>

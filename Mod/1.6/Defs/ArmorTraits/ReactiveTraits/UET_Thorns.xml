@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+		<defName>UET_Thorns</defName>
+		<label>thorns</label>
+		<description>An intricate network of reactive microspines embedded within the armor's outer layers. Engineered to respond to physical impacts, these hardened structures turn an enemy's aggression against them, making even a successful strike a dangerous proposition.</description>
+		<activationType>Reactive</activationType>
+		<usesCharges>true</usesCharges>
+		<cooldownTicks>0</cooldownTicks>
+		<activeEffectTicks>0</activeEffectTicks>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<workerClass>UniqueEquipmentTraits.Core.Armor.ArmorTraitWorker_Thorns</workerClass>
+		<nameAdjectives>
+			<li>thorned</li>
+			<li>barbed</li>
+			<li>spiked</li>
+			<li>razored</li>
+			<li>serrated</li>
+			<li>bladed</li>
+			<li>quilled</li>
+			<li>bristling</li>
+			<li>splintered</li>
+			<li>lacerating</li>
+			<li>retaliatory</li>
+			<li>counterstrike</li>
+			<li>reactive</li>
+			<li>punishing</li>
+			<li>vicious</li>
+			<li>rending</li>
+		</nameAdjectives>
+		<nameConcepts>
+			<li>Thorns</li>
+			<li>Barbs</li>
+			<li>Spikes</li>
+			<li>Razors</li>
+			<li>Blades</li>
+			<li>Quills</li>
+			<li>Needles</li>
+			<li>Talons</li>
+			<li>Fangs</li>
+			<li>Splinters</li>
+			<li>Retaliation</li>
+			<li>Vengeance</li>
+			<li>Iron Thorn</li>
+			<li>Razor Lattice</li>
+			<li>Barbed Shell</li>
+		</nameConcepts>
+	</UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

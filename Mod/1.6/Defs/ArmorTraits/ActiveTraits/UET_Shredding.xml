@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+    <defName>UET_Shredding</defName>
+    <label>shredding</label>
+    <description>An integrated offensive nanomedical system containing a reservoir of programmable tissue-disrupting nanites. Upon activation, the system releases a concentrated swarm of microscopic surgical machines toward a selected organism. The nanites infiltrate existing open wounds, dismantling forming blood clots, severing newly repaired microvessels, and mechanically disrupting the tissue surrounding damaged blood vessels. This sustained interference prevents effective coagulation and dramatically accelerates blood loss from affected injuries.</description>
+    <activationType>Activated</activationType>
+    <usesCharges>true</usesCharges>
+    <cooldownTicks>600</cooldownTicks>
+    <activeEffectTicks>0</activeEffectTicks>
+    <commonality>0.05</commonality>
+    <canGenerateAlone>true</canGenerateAlone>
+    <allowedCategories>
+      <li>Helmet</li>
+      <li>Neck</li>
+      <li>Torso</li>
+      <li>Arms</li>
+      <li>Hands</li>
+    </allowedCategories>
+    <exclusionTags>
+      <li>UET_Exclusive</li>
+    </exclusionTags>
+    <nameAdjectives>
+      <li>hemorrhagic</li>
+      <li>lacerating</li>
+      <li>rupturing</li>
+      <li>bloodletting</li>
+      <li>exsanguinating</li>
+      <li>coagulation-breaking</li>
+      <li>vascular</li>
+      <li>rending</li>
+      <li>tissue-shredding</li>
+      <li>bloodthirsty</li>
+    </nameAdjectives>
+    <nameConcepts>
+      <li>Crimson Harvest</li>
+      <li>Bloodletter</li>
+      <li>Thousand Cuts</li>
+      <li>Scarlet Rupture</li>
+      <li>Hemorrhage Protocol</li>
+      <li>Open Vein</li>
+      <li>Red Cascade</li>
+      <li>Final Hemorrhage</li>
+      <li>Bloodstorm</li>
+      <li>Crimson Reaper</li>
+    </nameConcepts>
+  </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

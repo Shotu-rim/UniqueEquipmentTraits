@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Stormbound</defName>
+		<label>Stormbound</label>
+		<description>The weapon emits powerful electromagnetic pulses that disrupt electronic systems, temporarily disabling mechanoids.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>stormbound</li>
+			<li>electrified</li>
+			<li>thundering</li>
+			<li>electromagnetic</li>
+			<li>voltaic</li>
+			<li>galvanic</li>
+			<li>electrostatic</li>
+			<li>lightning-charged</li>
+			<li>storm-charged</li>
+			<li>thunderous</li>
+			<li>arcing</li>
+			<li>pulsating</li>
+			<li>surging</li>
+			<li>ionized</li>
+			<li>EMP-charged</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.StormboundEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

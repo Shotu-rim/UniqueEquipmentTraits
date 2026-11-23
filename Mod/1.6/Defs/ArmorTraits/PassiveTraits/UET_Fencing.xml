@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Fencing</defName>
+        <label>fencing</label>
+        <description>Designed for warriors who value precision over brute force, this armor subtly enhances the wearer's coordination, balance, and combat instincts. Its finely tuned systems allow even the slightest movement to become a deliberate, deadly action.</description>
+        <activationType>Passive</activationType>
+        <boostedSkill>Melee</boostedSkill>
+        <masterworkSkillBonus>1</masterworkSkillBonus>
+        <legendarySkillBonus>2</legendarySkillBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+			<li>Neck</li>
+			<li>Shoulders</li>
+			<li>Arms</li>
+			<li>Feet</li>
+			<li>Waist</li>
+			<li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>duelist's</li>
+            <li>fencer's</li>
+            <li>precise</li>
+            <li>agile</li>
+            <li>balanced</li>
+            <li>graceful</li>
+            <li>nimble</li>
+            <li>swift</li>
+            <li>masterful</li>
+            <li>disciplined</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Fencer</li>
+            <li>Duelist</li>
+            <li>Blademaster</li>
+            <li>Swordmaster</li>
+            <li>Blade Dancer</li>
+            <li>Perfect Form</li>
+            <li>Deadly Precision</li>
+            <li>Steel Grace</li>
+            <li>Final Riposte</li>
+            <li>Master's Edge</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

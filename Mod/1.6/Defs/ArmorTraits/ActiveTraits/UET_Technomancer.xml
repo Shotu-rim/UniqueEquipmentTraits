@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Technomancer</defName>
+        <label>technomancer</label>
+        <description>An advanced network of mechanoid command processors and signal amplifiers woven into the armor allows its wearer to synchronize nearby mechanitor-controlled machines. When activated, the system releases a powerful coordination pulse that temporarily enhances the mobility and precision of allied mechanoids. The finest examples of this technology can sustain stronger signals over greater distances, turning an ordinary mechanical workforce into a highly coordinated collective.</description>
+        <activationType>Activated</activationType>
+        <usesCharges>true</usesCharges>
+        <cooldownTicks>600</cooldownTicks>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Helmet</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>mechanized</li>
+            <li>synthetic</li>
+            <li>cybernetic</li>
+            <li>machine-linked</li>
+            <li>automated</li>
+            <li>networked</li>
+            <li>coordinated</li>
+            <li>mechanical</li>
+            <li>techno-arcane</li>
+            <li>mechbound</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Machine Dominion</li>
+            <li>Mech Command</li>
+            <li>Iron Collective</li>
+            <li>Machine Whisper</li>
+            <li>Steel Conductor</li>
+            <li>Mech Nexus</li>
+            <li>Mechanical Ascendancy</li>
+            <li>Synaptic Network</li>
+            <li>Iron Symphony</li>
+            <li>Technomancy</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

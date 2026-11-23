@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Corrosive</defName>
+		<label>Corrosive</label>
+		<description>The weapon releases a highly corrosive agent on impact, eating through protective equipment and degrading mechanical components.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>corrosive</li>
+			<li>caustic</li>
+			<li>acidic</li>
+			<li>acid-laced</li>
+			<li>acid-infused</li>
+			<li>acid-coated</li>
+			<li>acid-dripping</li>
+			<li>erosive</li>
+			<li>oxidizing</li>
+			<li>solvent-infused</li>
+			<li>armor-dissolving</li>
+			<li>metal-eating</li>
+			<li>material-degrading</li>
+			<li>corrosion-inducing</li>
+			<li>disintegrating</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.CorrosiveEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

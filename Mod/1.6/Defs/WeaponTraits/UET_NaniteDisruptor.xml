@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_NaniteDisruptor</defName>
+		<label>Nanite Disruptor</label>
+		<description>The weapon injects disruptive nanites into its target, progressively degrading mechanical components and compromising the functionality of technological implants.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>disruptive</li>
+			<li>nanite-infused</li>
+			<li>cybernetic</li>
+			<li>nanotechnological</li>
+			<li>nanomechanical</li>
+			<li>nanoscopic</li>
+			<li>nanite-laden</li>
+			<li>corruptive</li>
+			<li>degrading</li>
+			<li>invasive</li>
+			<li>subversive</li>
+			<li>destabilizing</li>
+			<li>system-corrupting</li>
+			<li>implant-disrupting</li>
+			<li>machine-eating</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.NaniteDisruptionEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

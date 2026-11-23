@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+		<defName>UET_Reinforced</defName>
+		<label>reinforced</label>
+		<description>Additional layers of reinforcement strengthen this armor against physical attacks and extreme heat. The extra protection comes at the cost of increased weight, although exceptional craftsmanship allows legendary equipment to achieve greater protection with less added mass.</description>
+		<activationType>Passive</activationType>
+		<masterworkArmorRatingBonus>0.15</masterworkArmorRatingBonus>
+		<legendaryArmorRatingBonus>0.25</legendaryArmorRatingBonus>
+		<masterworkMassIncrease>0.30</masterworkMassIncrease>
+		<legendaryMassIncrease>0.20</legendaryMassIncrease>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<allowedCategories>
+			<li>Torso</li>
+			<li>Legs</li>
+			<li>Helmet</li>
+			<li>Neck</li>
+			<li>Shoulders</li>
+			<li>Arms</li>
+			<li>Feet</li>
+			<li>Waist</li>
+			<li>Hands</li>
+		</allowedCategories>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<nameAdjectives>
+			<li>reinforced</li>
+			<li>fortified</li>
+			<li>hardened</li>
+			<li>armored</li>
+			<li>plated</li>
+			<li>unyielding</li>
+			<li>sturdy</li>
+			<li>rugged</li>
+			<li>impenetrable</li>
+			<li>ironclad</li>
+		</nameAdjectives>
+		<nameConcepts>
+			<li>Bulwark</li>
+			<li>Bastion</li>
+			<li>Iron Fortress</li>
+			<li>Steel Wall</li>
+			<li>Guardian</li>
+			<li>Last Defense</li>
+			<li>Ironclad</li>
+			<li>Unbroken Shield</li>
+			<li>Fortress</li>
+			<li>Adamant</li>
+		</nameConcepts>
+	</UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+		<defName>UET_Regeneration</defName>
+		<label>regeneration</label>
+		<description>Woven into the fabric of this equipment is an intricate network of microscopic repair systems, originally developed for sustaining soldiers through prolonged combat. These autonomous mechanisms continuously monitor the wearer's physical condition, deploying specialized medical nanites to damaged tissue and accelerating the body's natural healing processes. Even severe wounds can gradually mend under their tireless care, as the silent machinery works beneath the surface to keep its wearer alive and fighting.</description>
+		<activationType>Passive</activationType>
+		<masterworkRegenerationInterval>20</masterworkRegenerationInterval>
+		<legendaryRegenerationInterval>12</legendaryRegenerationInterval>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<allowedCategories>
+			<li>Torso</li>
+			<li>Legs</li>
+			<li>Helmet</li>
+			<li>Neck</li>
+			<li>Shoulders</li>
+			<li>Arms</li>
+			<li>Feet</li>
+			<li>Waist</li>
+			<li>Hands</li>
+		</allowedCategories>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<nameAdjectives>
+			<li>Regenerative</li>
+			<li>Restorative</li>
+			<li>Renewing</li>
+			<li>Rejuvenating</li>
+			<li>Vitalizing</li>
+		</nameAdjectives>
+		<nameConcepts>
+			<li>Renewal</li>
+			<li>Restoration</li>
+			<li>Vitality</li>
+			<li>Recovery</li>
+			<li>Rebirth</li>
+		</nameConcepts>
+	</UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

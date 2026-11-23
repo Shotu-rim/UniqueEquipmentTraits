@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	 <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_AcidImmunity</defName>
+        <label>acid immunity</label>
+        <description>A chemically inert protective layer neutralizes corrosive compounds before they can reach the wearer. Reactive surface treatments prevent even highly aggressive acids from eating through the armor's structure.</description>
+        <activationType>Passive</activationType>
+        <masterworkImmunityReduction>0.85</masterworkImmunityReduction>
+        <legendaryImmunityReduction>1.0</legendaryImmunityReduction>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>acidproof</li>
+            <li>corrosion-resistant</li>
+            <li>chemically shielded</li>
+            <li>corrosionproof</li>
+            <li>acidguard</li>
+            <li>caustic-resistant</li>
+            <li>chemically inert</li>
+            <li>corrosion-shielded</li>
+            <li>acidward</li>
+            <li>causticproof</li>
+            <li>chemguard</li>
+            <li>corrosionguard</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Acid Immunity</li>
+            <li>Corrosion Shield</li>
+            <li>Acidguard</li>
+            <li>Chemical Protection</li>
+            <li>Corrosion Barrier</li>
+            <li>Caustic Ward</li>
+            <li>Acid Resistance</li>
+            <li>Chemguard</li>
+            <li>Corrosionproofing</li>
+            <li>Acid Shield</li>
+            <li>Chemical Barrier</li>
+            <li>Corrosionguard</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>
+	

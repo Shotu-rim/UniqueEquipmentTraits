@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <DamageDef ParentName="StunBase">
+    <defName>UET_StunningPulse</defName>
+    <label>stunning pulse</label>
+    <workerClass>DamageWorker_Stun</workerClass>
+    <causeStun>true</causeStun>
+    <stunAdaptationTicks>1200</stunAdaptationTicks>
+    <harmsHealth>false</harmsHealth>
+  </DamageDef>
+</Defs>

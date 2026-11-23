@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <HediffDef>
+    <defName>UET_NaniteMechanicalDegradation</defName>
+    <label>nanite degradation</label>
+    <description>Permanent structural degradation caused by disruptive nanites. Reduces the efficiency of the affected mechanical body part.</description>
+    <hediffClass>UniqueEquipmentTraits.Mechanoids.Hediff_NaniteMechanicalDegradation</hediffClass>
+    <isBad>true</isBad>
+    <tendable>false</tendable>
+    <stages>
+      <li>
+        <minSeverity>0</minSeverity>
+      </li>
+    </stages>
+    <comps>
+      <li Class="HediffCompProperties">
+        <compClass>UniqueEquipmentTraits.Implants.HediffComp_NaniteDamage</compClass>
+      </li>
+    </comps>
+  </HediffDef>
+</Defs>

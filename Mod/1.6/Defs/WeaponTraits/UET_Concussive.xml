@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Concussive</defName>
+		<label>Concussive</label>
+		<description>The weapon delivers powerful concussive blows that disrupt the nervous system, temporarily incapacitating its victims.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>concussive</li>
+			<li>stunning</li>
+			<li>impacting</li>
+			<li>staggering</li>
+			<li>stunningly-forceful</li>
+			<li>shock-inducing</li>
+			<li>shockwave-generating</li>
+			<li>kinetic</li>
+			<li>pulsating</li>
+			<li>reverberating</li>
+			<li>disorienting</li>
+			<li>incapacitating</li>
+			<li>nerve-jarring</li>
+			<li>neurologically-disruptive</li>
+			<li>trauma-inducing</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.ConcussiveEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

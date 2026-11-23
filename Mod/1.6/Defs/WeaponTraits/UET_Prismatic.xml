@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Prismatic</defName>
+		<label>Prismatic</label>
+		<description>The weapon shimmers with an ever-changing spectrum of colors, unleashing unpredictable effects through its shifting energy patterns.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.001</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>prismatic</li>
+			<li>iridescent</li>
+			<li>shimmering</li>
+			<li>anomalous</li>
+			<li>chromatic</li>
+			<li>spectral</li>
+			<li>polychromatic</li>
+			<li>kaleidoscopic</li>
+			<li>opalescent</li>
+			<li>unstable</li>
+			<li>unpredictable</li>
+			<li>ever-shifting</li>
+			<li>refractive</li>
+			<li>paradoxical</li>
+			<li>impossible</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension"/>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

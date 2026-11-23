@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <HediffDef>
+    <defName>UET_SerratedBleeding</defName>
+    <label>serrated bleeding</label>
+    <description>Additional bleeding caused by a serrated weapon strike.</description>
+    <hediffClass>UniqueEquipmentTraits.Effects.Hediff_SerratedBleeding</hediffClass>
+    <isBad>true</isBad>
+    <scenarioCanAdd>false</scenarioCanAdd>
+    <stages>
+      <li />
+    </stages>
+  </HediffDef>
+</Defs>

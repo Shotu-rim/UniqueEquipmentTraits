@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+    <defName>UET_Oppression</defName>
+    <label>oppression</label>
+    <description>An integrated nanite dispersal system designed to interfere with a target's motor functions. The nanites temporarily disrupt movement and combat coordination, reducing both movement and attack speed. The effect gradually wears off as the nanites lose their effectiveness. Larger and heavier targets are more resistant to the disruption, while worn equipment provides additional protection.</description>
+    <activationType>Activated</activationType>
+    <usesCharges>true</usesCharges>
+    <cooldownTicks>600</cooldownTicks>
+    <activeEffectTicks>0</activeEffectTicks>
+    <commonality>0.05</commonality>
+    <canGenerateAlone>true</canGenerateAlone>
+    <allowedCategories>
+      <li>Helmet</li>
+      <li>Arms</li>
+      <li>Hands</li>
+      <li>Waist</li>
+      <li>Shoulders</li>
+      <li>Torso</li>
+	  <li>Legs</li>
+	  <li>Feet</li>
+    </allowedCategories>
+    <exclusionTags>
+      <li>UET_Exclusive</li>
+    </exclusionTags>
+    <nameAdjectives>
+      <li>oppressive</li>
+      <li>inhibiting</li>
+      <li>disruptive</li>
+      <li>restraining</li>
+      <li>nanitebound</li>
+      <li>suppression-forged</li>
+      <li>enfeebling</li>
+      <li>crippling</li>
+      <li>subjugating</li>
+      <li>motionless</li>
+    </nameAdjectives>
+    <nameConcepts>
+      <li>Oppressor</li>
+      <li>Iron Restraint</li>
+      <li>Burden of Silence</li>
+      <li>Nanite Dominion</li>
+      <li>Crushing Presence</li>
+      <li>Stillness Protocol</li>
+      <li>Weight of Eternity</li>
+      <li>Motionbreaker</li>
+      <li>Silent Subjugation</li>
+      <li>Final Restraint</li>
+    </nameConcepts>
+  </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

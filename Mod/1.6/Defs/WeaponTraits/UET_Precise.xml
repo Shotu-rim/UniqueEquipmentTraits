@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Precise</defName>
+		<label>Precise</label>
+		<description>The weapon delivers devastating strikes that inflict extensive internal trauma, compounding the damage sustained by its victims.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>precise</li>
+			<li>accurate</li>
+			<li>deadly</li>
+			<li>calibrated</li>
+			<li>surgical</li>
+			<li>pinpoint</li>
+			<li>lethal</li>
+			<li>unerring</li>
+			<li>methodical</li>
+			<li>calculated</li>
+			<li>targeted</li>
+			<li>anatomical</li>
+			<li>trauma-inducing</li>
+			<li>precision-engineered</li>
+			<li>devastating</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.PreciseEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

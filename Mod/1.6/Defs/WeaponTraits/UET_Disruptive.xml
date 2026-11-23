@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Disruptive</defName>
+		<label>Disruptive</label>
+		<description>The weapon emits disruptive psychic frequencies that destabilize neural activity, pushing psycasters toward mental overload.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>disruptive</li>
+			<li>disrupting</li>
+			<li>psychically disruptive</li>
+			<li>psionic</li>
+			<li>psi-disrupting</li>
+			<li>neurodisruptive</li>
+			<li>neural-jamming</li>
+			<li>mind-scrambling</li>
+			<li>mind-rending</li>
+			<li>psyche-shattering</li>
+			<li>resonance-disrupting</li>
+			<li>interference-generating</li>
+			<li>overloading</li>
+			<li>destabilizing</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.DisruptiveEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

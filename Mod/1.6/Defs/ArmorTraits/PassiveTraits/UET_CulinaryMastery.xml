@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_CulinaryMastery</defName>
+        <label>culinary mastery</label>
+        <description>Inspired by the culinary traditions of glitterworld societies, this armor heightens the wearer's sense of taste, precision, and instinctive understanding of food preparation. Even the humblest ingredients seem to reveal hidden possibilities, allowing a skilled cook to transform ordinary meals into creations worthy of the finest dining halls among the stars.</description>
+        <activationType>Passive</activationType>
+        <boostedSkill>Cooking</boostedSkill>
+        <masterworkSkillBonus>1</masterworkSkillBonus>
+        <legendarySkillBonus>2</legendarySkillBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>chef's</li>
+            <li>gourmet</li>
+            <li>culinary</li>
+            <li>seasoned</li>
+            <li>refined</li>
+            <li>savory</li>
+            <li>exquisite</li>
+            <li>flavorful</li>
+            <li>masterful</li>
+            <li>aromatic</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Master Chef</li>
+            <li>Grand Feast</li>
+            <li>Golden Palate</li>
+            <li>Perfect Recipe</li>
+            <li>Starborn Cuisine</li>
+            <li>Ambrosia</li>
+            <li>Feast of Kings</li>
+            <li>Divine Flavor</li>
+            <li>Last Supper</li>
+            <li>Celestial Banquet</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

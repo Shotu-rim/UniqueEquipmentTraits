@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+    <Operation Class="PatchOperationAdd">
+        <xpath>Defs/StatDef[defName="WorkSpeedGlobal"]</xpath>
+        <value>
+            <parts>
+                <li Class="UniqueEquipmentTraits.Core.Armor.StatPart_Productivity" />
+            </parts>
+        </value>
+    </Operation>
+</Patch>

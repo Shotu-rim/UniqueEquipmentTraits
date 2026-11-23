@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <HediffDef>
+    <defName>UET_TailwindActive</defName>
+    <label>Tailwind</label>
+    <description>An unseen current guides every movement, allowing the wielder to slip past incoming blows with unnatural grace.</description>
+    <hediffClass>UniqueEquipmentTraits.Effects.Hediff_TailwindActive</hediffClass>
+    <isBad>false</isBad>
+    <scenarioCanAdd>false</scenarioCanAdd>
+  </HediffDef>
+</Defs>

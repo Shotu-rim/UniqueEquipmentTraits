@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Evasive</defName>
+        <label>evasive</label>
+        <description>Developed for elite combatants whose survival depended on movement rather than protection alone, this armor subtly enhances the wearer's balance, reflexes, and spatial awareness. Its responsive systems seem to anticipate danger, allowing the wearer to slip away from incoming blows with an almost unnatural grace.</description>
+        <activationType>Passive</activationType>
+        <masterworkDodgeMultiplier>0.15</masterworkDodgeMultiplier>
+        <legendaryDodgeMultiplier>0.20</legendaryDodgeMultiplier>
+        <masterworkDodgeFlatBonus>0.01</masterworkDodgeFlatBonus>
+        <legendaryDodgeFlatBonus>0.02</legendaryDodgeFlatBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>evasive</li>
+            <li>elusive</li>
+            <li>nimble</li>
+            <li>agile</li>
+            <li>untouchable</li>
+            <li>fleet-footed</li>
+            <li>graceful</li>
+            <li>slippery</li>
+            <li>swift</li>
+            <li>weightless</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Phantom</li>
+            <li>Shadowstep</li>
+            <li>Wind Dancer</li>
+            <li>Ghostwalk</li>
+            <li>Untouchable</li>
+            <li>Fleeting Shadow</li>
+            <li>Mirage</li>
+            <li>Last Step</li>
+            <li>Perfect Evasion</li>
+            <li>Whispering Wind</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

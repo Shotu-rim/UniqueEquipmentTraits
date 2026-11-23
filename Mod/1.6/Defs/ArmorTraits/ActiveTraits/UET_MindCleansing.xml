@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_MindCleansing</defName>
+        <label>mind cleansing</label>
+        <description>An advanced neural purification system capable of instantly dissipating all accumulated neural heat. Activating the system temporarily shuts down the wearer's motor functions, leaving them completely helpless until neural activity stabilizes. Superior craftsmanship reduces both the paralysis duration and the system's recovery time.</description>
+        <activationType>Activated</activationType>
+        <usesCharges>false</usesCharges>
+        <cooldownTicks>600</cooldownTicks>
+        <activeEffectTicks>0</activeEffectTicks>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Helmet</li>
+            <li>Neck</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>purifying</li>
+            <li>cleansing</li>
+            <li>tranquil</li>
+            <li>serene</li>
+            <li>mind-clearing</li>
+            <li>neural</li>
+            <li>harmonizing</li>
+            <li>calming</li>
+            <li>restorative</li>
+            <li>thoughtless</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Silent Mind</li>
+            <li>Neural Rebirth</li>
+            <li>Tranquil Void</li>
+            <li>Mind's Respite</li>
+            <li>Inner Silence</li>
+            <li>Neural Purge</li>
+            <li>Thoughtless Serenity</li>
+            <li>Moment of Stillness</li>
+            <li>Purity of Thought</li>
+            <li>Mind's Renewal</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

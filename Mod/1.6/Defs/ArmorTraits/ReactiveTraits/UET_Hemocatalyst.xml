@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+		<defName>UET_Hemocatalyst</defName>
+		<label>hemocatalyst</label>
+		<description>A sophisticated network of bioresponsive conduits woven into the armor's protective layers. Designed to harness the physiological trauma of incoming injuries, these specialized systems convert the wearer's suffering into psychic energy, replenishing their mental reserves as wounds are sustained.</description>
+		<activationType>Reactive</activationType>
+		<usesCharges>true</usesCharges>
+		<cooldownTicks>0</cooldownTicks>
+		<activeEffectTicks>0</activeEffectTicks>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<allowedCategories>
+			<li>Torso</li>
+			<li>Helmet</li>
+			<li>Hands</li>
+		</allowedCategories>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<workerClass>UniqueEquipmentTraits.Core.Armor.ArmorTraitWorker_Hemocatalyst</workerClass>
+		<nameAdjectives>
+			<li>hemocatalytic</li>
+			<li>bloodbound</li>
+			<li>bloodwoven</li>
+			<li>bloodforged</li>
+			<li>sanguine</li>
+			<li>hematic</li>
+			<li>vitalized</li>
+			<li>painbound</li>
+			<li>painwoven</li>
+			<li>traumabound</li>
+			<li>psyreactive</li>
+			<li>psycharged</li>
+			<li>psywoven</li>
+			<li>mindbound</li>
+			<li>mindforged</li>
+			<li>catalytic</li>
+		</nameAdjectives>
+		<nameConcepts>
+			<li>Hemocatalyst</li>
+			<li>Blood Catalyst</li>
+			<li>Sanguine Core</li>
+			<li>Crimson Conduit</li>
+			<li>Blood Circuit</li>
+			<li>Pain Converter</li>
+			<li>Trauma Engine</li>
+			<li>Vital Conduit</li>
+			<li>Psychic Siphon</li>
+			<li>Psycore</li>
+			<li>Mind Catalyst</li>
+			<li>Blood Resonance</li>
+			<li>Crimson Resonance</li>
+			<li>Sanguine Matrix</li>
+			<li>Hemalattice</li>
+			<li>Scarlet Nexus</li>
+		</nameConcepts>
+	</UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

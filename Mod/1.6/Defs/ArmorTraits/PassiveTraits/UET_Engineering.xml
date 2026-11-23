@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Engineering</defName>
+        <label>engineering</label>
+        <description>Originally developed for engineers working in the hostile environments of distant frontier worlds, this armor enhances the wearer's spatial awareness and structural intuition. Complex assemblies become easier to comprehend, while even the most ambitious constructions seem to take shape with remarkable precision and confidence.</description>
+        <activationType>Passive</activationType>
+        <boostedSkill>Construction</boostedSkill>
+        <masterworkSkillBonus>1</masterworkSkillBonus>
+        <legendarySkillBonus>2</legendarySkillBonus>
+        <commonality>0.05</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+            <li>Helmet</li>
+            <li>Neck</li>
+            <li>Shoulders</li>
+            <li>Arms</li>
+            <li>Feet</li>
+            <li>Waist</li>
+            <li>Hands</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>engineer's</li>
+            <li>architect's</li>
+            <li>builder's</li>
+            <li>structural</li>
+            <li>reinforced</li>
+            <li>calibrated</li>
+            <li>precise</li>
+            <li>methodical</li>
+            <li>industrial</li>
+            <li>meticulous</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Architect</li>
+            <li>Master Builder</li>
+            <li>Cornerstone</li>
+            <li>Foundation</li>
+            <li>Iron Framework</li>
+            <li>Grand Design</li>
+            <li>Perfect Structure</li>
+            <li>Steel Blueprint</li>
+            <li>Monument</li>
+            <li>Last Bastion</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

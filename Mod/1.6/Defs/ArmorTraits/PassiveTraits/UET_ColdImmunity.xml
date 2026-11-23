@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+		<defName>UET_ColdImmunity</defName>
+		<label>cold immunity</label>
+		<description>A network of thermal regulators preserves warmth in even the most unforgiving climates, preventing the wearer from succumbing to freezing temperatures. Specialized insulation protects the armor from the destructive effects of extreme cold.</description>
+		<activationType>Passive</activationType>
+		<masterworkImmunityReduction>0.85</masterworkImmunityReduction>
+		<legendaryImmunityReduction>1.0</legendaryImmunityReduction>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<nameAdjectives>
+			<li>frostproof</li>
+			<li>coldproof</li>
+			<li>frostguard</li>
+			<li>winterized</li>
+			<li>cold-resistant</li>
+			<li>frost-shielded</li>
+			<li>iceward</li>
+			<li>cryoprotected</li>
+			<li>thermally insulated</li>
+			<li>glacierguard</li>
+			<li>frostbound</li>
+			<li>winterguard</li>
+		</nameAdjectives>
+		<nameConcepts>
+			<li>Cold Immunity</li>
+			<li>Frostguard</li>
+			<li>Winterward</li>
+			<li>Cryoprotection</li>
+			<li>Thermal Insulation</li>
+			<li>Frost Shield</li>
+			<li>Glacierguard</li>
+			<li>Winter's Embrace</li>
+			<li>Cold Resistance</li>
+			<li>Iceward</li>
+			<li>Frost Barrier</li>
+			<li>Winter Shield</li>
+		</nameConcepts>
+	</UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>
+	

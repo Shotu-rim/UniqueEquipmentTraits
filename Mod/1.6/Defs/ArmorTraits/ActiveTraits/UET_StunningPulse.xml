@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+    <defName>UET_StunningPulse</defName>
+    <label>stunning pulse</label>
+    <description>An integrated neural disruption system capable of delivering a focused stunning pulse to a single target at a distance. The pulse temporarily incapacitates the target without inflicting physical damage. Repeated exposure causes temporary adaptation, preventing subsequent pulses from stunning the same target until the adaptation expires.</description>
+    <activationType>Activated</activationType>
+    <usesCharges>true</usesCharges>
+    <cooldownTicks>600</cooldownTicks>
+    <activeEffectTicks>0</activeEffectTicks>
+    <commonality>0.05</commonality>
+    <canGenerateAlone>true</canGenerateAlone>
+    <allowedCategories>
+      <li>Helmet</li>
+      <li>Arms</li>
+      <li>Hands</li>
+	  <li>Waist</li>
+	  <li>Shoulders</li>
+	  <li>Torso</li>
+    </allowedCategories>
+    <exclusionTags>
+      <li>UET_Exclusive</li>
+    </exclusionTags>
+    <nameAdjectives>
+      <li>stunning</li>
+      <li>disruptive</li>
+      <li>paralyzing</li>
+      <li>neural</li>
+      <li>shocking</li>
+      <li>concussive</li>
+      <li>thunderstruck</li>
+      <li>mindbreaking</li>
+      <li>nervebound</li>
+      <li>pulseforged</li>
+    </nameAdjectives>
+    <nameConcepts>
+      <li>Neural Shock</li>
+      <li>Thunder's Grasp</li>
+      <li>Silent Thunder</li>
+      <li>Mindbreaker</li>
+      <li>Stunning Revelation</li>
+      <li>Pulse of Silence</li>
+      <li>Thunderclap</li>
+      <li>Neural Collapse</li>
+      <li>Moment of Stillness</li>
+      <li>Final Impulse</li>
+    </nameConcepts>
+  </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

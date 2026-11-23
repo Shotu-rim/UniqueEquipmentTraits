@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<RimWorld.WeaponTraitDef>
+		<defName>UET_Bloodseeker</defName>
+		<label>Bloodseeker</label>
+		<description>The weapon converts the blood of its enemies into regenerative energy for its wielder.</description>
+		<weaponCategory>UET_Melee</weaponCategory>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<traitAdjectives>
+			<li>bloodthirsty</li>
+			<li>bloodseeking</li>
+			<li>crimson</li>
+			<li>vampiric</li>
+			<li>sanguine</li>
+			<li>blooddrinking</li>
+			<li>blood-harvesting</li>
+			<li>blood-fueled</li>
+			<li>bloodbound</li>
+			<li>lifedraining</li>
+			<li>life-siphoning</li>
+			<li>hemophagic</li>
+			<li>hemotropic</li>
+			<li>regenerative</li>
+			<li>vitalizing</li>
+		</traitAdjectives>
+		<modExtensions>
+			<li Class="UniqueEquipmentTraits.Traits.UETTraitExtension">
+				<effectClass>UniqueEquipmentTraits.Effects.BloodseekerEffect</effectClass>
+			</li>
+		</modExtensions>
+	</RimWorld.WeaponTraitDef>
+</Defs>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+  <HediffDef>
+    <defName>UET_Neurotoxic</defName>
+    <label>neurotoxic</label>
+    <description>Neurotoxin disrupts bodily functions, temporarily reducing the affected capacity. The effect gradually wears off.</description>
+
+    <hediffClass>UniqueEquipmentTraits.Hediff_Neurotoxic</hediffClass>
+
+    <isBad>true</isBad>
+    <tendable>true</tendable>
+    <scenarioCanAdd>false</scenarioCanAdd>
+
+    <comps>
+      <li Class="HediffCompProperties_TendDuration">
+        <baseTendDurationHours>12</baseTendDurationHours>
+        <tendOverlapHours>3</tendOverlapHours>
+        <tendAllAtOnce>true</tendAllAtOnce>
+        <severityPerDayTended>0</severityPerDayTended>
+        <disappearsAtTotalTendQuality>-1</disappearsAtTotalTendQuality>
+      </li>
+    </comps>
+
+    <stages>
+      <li>
+        <label>neurotoxic</label>
+      </li>
+    </stages>
+  </HediffDef>
+</Defs>

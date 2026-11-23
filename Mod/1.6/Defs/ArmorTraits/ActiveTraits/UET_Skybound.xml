@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+    <UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+        <defName>UET_Skybound</defName>
+        <label>skybound</label>
+        <description>An advanced propulsion system integrated into the armor allows its wearer to launch themselves across the battlefield in a controlled leap. Sophisticated stabilization mechanisms ensure a precise landing, while exceptional craftsmanship enhances both the system's range and recovery speed.</description>
+        <activationType>Activated</activationType>
+        <usesCharges>false</usesCharges>
+        <cooldownTicks>0</cooldownTicks>
+        <activeEffectTicks>0</activeEffectTicks>
+        <commonality>0.10</commonality>
+        <canGenerateAlone>true</canGenerateAlone>
+        <allowedCategories>
+            <li>Torso</li>
+            <li>Legs</li>
+			<li>Feet</li>
+			<li>Waist</li>
+        </allowedCategories>
+        <exclusionTags>
+            <li>UET_Exclusive</li>
+        </exclusionTags>
+        <nameAdjectives>
+            <li>skybound</li>
+            <li>soaring</li>
+            <li>airborne</li>
+            <li>weightless</li>
+            <li>gravity-defying</li>
+            <li>high-flying</li>
+            <li>propelled</li>
+            <li>ascending</li>
+            <li>winged</li>
+            <li>unbound</li>
+        </nameAdjectives>
+        <nameConcepts>
+            <li>Skyward Leap</li>
+            <li>Gravity Breaker</li>
+            <li>Heaven's Reach</li>
+            <li>Soaring Spirit</li>
+            <li>Sky Piercer</li>
+            <li>Boundless Horizon</li>
+            <li>Aerial Freedom</li>
+            <li>Celestial Ascent</li>
+            <li>Wings of Freedom</li>
+            <li>Skyward Momentum</li>
+        </nameConcepts>
+    </UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>

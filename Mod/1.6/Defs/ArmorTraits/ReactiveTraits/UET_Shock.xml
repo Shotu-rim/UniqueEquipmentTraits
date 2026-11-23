@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+	<UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+		<defName>UET_Shock</defName>
+		<label>shock</label>
+		<description>A sophisticated network of conductive filaments and neural disruptors woven into the armor's structure. When disturbed by physical impact, the system unleashes a concentrated electrical surge designed to overwhelm the nervous system of anyone unfortunate enough to make contact.</description>
+		<activationType>Reactive</activationType>
+		<usesCharges>true</usesCharges>
+		<cooldownTicks>0</cooldownTicks>
+		<activeEffectTicks>0</activeEffectTicks>
+		<commonality>0.05</commonality>
+		<canGenerateAlone>true</canGenerateAlone>
+		<exclusionTags>
+			<li>UET_Exclusive</li>
+		</exclusionTags>
+		<workerClass>UniqueEquipmentTraits.Core.Armor.ArmorTraitWorker_Shock</workerClass>
+		<nameAdjectives>
+			<li>shocking</li>
+			<li>electrified</li>
+			<li>charged</li>
+			<li>voltaic</li>
+			<li>galvanic</li>
+			<li>neural</li>
+			<li>paralyzing</li>
+			<li>discharging</li>
+			<li>thundering</li>
+			<li>surging</li>
+		</nameAdjectives>
+		<nameConcepts>
+			<li>Neural Shock</li>
+			<li>Static Discharge</li>
+			<li>Thunderclap</li>
+			<li>Voltaic Touch</li>
+			<li>Paralyzing Grip</li>
+			<li>Lightning Reflex</li>
+			<li>Storm's Embrace</li>
+			<li>Final Spark</li>
+			<li>Thunderstrike</li>
+			<li>Neural Overload</li>
+		</nameConcepts>
+	</UniqueEquipmentTraits.Core.Armor.ArmorTraitDef>
+</Defs>
