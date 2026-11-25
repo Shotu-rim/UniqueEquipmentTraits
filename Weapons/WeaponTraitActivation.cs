@@ -1,4 +1,3 @@
-
 using RimWorld;
 using UniqueEquipmentTraits.Effects;
 using UniqueEquipmentTraits.Traits;
@@ -8,9 +7,6 @@ namespace UniqueEquipmentTraits.Core
 {
     /// <summary>
     /// Handles activation of UET melee weapon traits after an attack.
-    /// Processes traits with dedicated activation logic and dispatches
-    /// other eligible effects using quality-based activation chances
-    /// and effect strength.
     /// </summary>
     internal static class WeaponTraitActivation
     {
@@ -37,7 +33,8 @@ namespace UniqueEquipmentTraits.Core
 
             if (trait.defName == "UET_Flurry")
             {
-                if (context.DamageDealt && !context.Attacker.Dead)
+                if (context.DamageDealt &&
+                    !context.Attacker.Dead)
                 {
                     CompWeaponTrait comp =
                         context.Weapon.TryGetComp<CompWeaponTrait>();
@@ -60,7 +57,8 @@ namespace UniqueEquipmentTraits.Core
 
             if (trait.defName == "UET_Tailwind")
             {
-                if (context.DamageDealt && !context.Attacker.Dead)
+                if (context.DamageDealt &&
+                    !context.Attacker.Dead)
                 {
                     CompWeaponTrait comp =
                         context.Weapon.TryGetComp<CompWeaponTrait>();
@@ -90,8 +88,12 @@ namespace UniqueEquipmentTraits.Core
             if (qualityComp == null)
                 return;
 
-            if (context.Attacker.Dead ||
-                !context.DamageDealt)
+            if (context.Attacker.Dead)
+                return;
+
+            // Corrosive can activate on fully absorbed hits.
+            // Other traits still require actual damage.
+            if (!CanActivateOnHit(trait, context))
                 return;
 
             float activationChance =
@@ -136,11 +138,34 @@ namespace UniqueEquipmentTraits.Core
                     context.HitParts,
                     context.DamageAmount,
                     context.PartDamage,
-                    context.PartInjuryDefs);
+                    context.PartInjuryDefs,
+                    context.ContactDamageAmount,
+                    context.ContactParts);
 
             UETEffectDispatcher.TryApply(
                 trait,
                 effectContext);
+        }
+
+        /// <summary>
+        /// Determines whether the attack satisfies the hit
+        /// requirements of the selected weapon trait.
+        /// </summary>
+        internal static bool CanActivateOnHit(
+            RimWorld.WeaponTraitDef trait,
+            MeleeAttackContext context)
+        {
+            if (trait == null || context == null)
+                return false;
+
+            if (trait.defName == "UET_Corrosive")
+            {
+                return context.DamageDealt ||
+                       (context.ContactMade &&
+                        context.ContactDamageAmount > 0f);
+            }
+
+            return context.DamageDealt;
         }
 
         private static RimWorld.WeaponTraitDef GetUETTrait(

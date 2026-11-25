@@ -1,5 +1,4 @@
-﻿
-using RimWorld;
+﻿using RimWorld;
 using System.Collections.Generic;
 using Verse;
 
@@ -7,18 +6,15 @@ namespace UniqueEquipmentTraits.Effects
 {
     /// <summary>
     /// Defines the base contract for UET equipment effects.
-    /// Each effect implements its behavior using the supplied
-    /// effect context.
     /// </summary>
     public abstract class UETEffect
     {
         public abstract void Apply(UETEffectContext context);
     }
+
     /// <summary>
     /// Provides attack and equipment information required by UET effects.
-    /// Stores the attacker, victim, equipment quality, effect strength,
-    /// damage information, affected body parts, and injury definitions.
-    /// Collects effect reports for subsequent processing.
+    /// Stores both physical contact and actual damage information.
     /// </summary>
     public class UETEffectContext
     {
@@ -28,14 +24,14 @@ namespace UniqueEquipmentTraits.Effects
         private readonly List<BodyPartRecord> hitParts =
             new List<BodyPartRecord>();
 
+        private readonly List<BodyPartRecord> contactParts =
+            new List<BodyPartRecord>();
+
         private readonly Dictionary<BodyPartRecord, float> partDamage =
             new Dictionary<BodyPartRecord, float>();
 
         private readonly Dictionary<BodyPartRecord, HediffDef> partInjuryDefs =
-             new Dictionary<BodyPartRecord, HediffDef>();
-
-        public IReadOnlyDictionary<BodyPartRecord, HediffDef> PartInjuryDefs =>
-           partInjuryDefs;
+            new Dictionary<BodyPartRecord, HediffDef>();
 
         public Pawn Attacker { get; }
         public Pawn Victim { get; }
@@ -43,15 +39,30 @@ namespace UniqueEquipmentTraits.Effects
         public QualityCategory Quality { get; }
         public float EffectStrength { get; }
         public float BleedingBeforeAttack { get; }
+
+        // Actual damage dealt to the victim
         public float DamageAmount { get; }
 
-        public IReadOnlyList<string> Reports => reports;
+        // Physical contact before armor mitigation
+        public float ContactDamageAmount { get; }
 
-        public IReadOnlyList<BodyPartRecord> HitParts => hitParts;
+        public bool ContactMade =>
+            contactParts.Count > 0;
+
+        public IReadOnlyList<BodyPartRecord> ContactParts =>
+            contactParts;
+
+        public IReadOnlyList<string> Reports =>
+            reports;
+
+        public IReadOnlyList<BodyPartRecord> HitParts =>
+            hitParts;
 
         public IReadOnlyDictionary<BodyPartRecord, float> PartDamage =>
             partDamage;
 
+        public IReadOnlyDictionary<BodyPartRecord, HediffDef> PartInjuryDefs =>
+            partInjuryDefs;
 
         public UETEffectContext(
             Pawn attacker,
@@ -63,7 +74,9 @@ namespace UniqueEquipmentTraits.Effects
             IEnumerable<BodyPartRecord> hitParts = null,
             float damageAmount = 0f,
             IReadOnlyDictionary<BodyPartRecord, float> partDamage = null,
-            IReadOnlyDictionary<BodyPartRecord, HediffDef> partInjuryDefs = null)
+            IReadOnlyDictionary<BodyPartRecord, HediffDef> partInjuryDefs = null,
+            float contactDamageAmount = 0f,
+            IEnumerable<BodyPartRecord> contactParts = null)
         {
             Attacker = attacker;
             Victim = victim;
@@ -72,13 +85,29 @@ namespace UniqueEquipmentTraits.Effects
             EffectStrength = effectStrength;
             BleedingBeforeAttack = bleedingBeforeAttack;
             DamageAmount = damageAmount;
+            ContactDamageAmount = contactDamageAmount;
 
             if (hitParts != null)
             {
                 foreach (BodyPartRecord part in hitParts)
                 {
-                    if (part != null && !this.hitParts.Contains(part))
+                    if (part != null &&
+                        !this.hitParts.Contains(part))
+                    {
                         this.hitParts.Add(part);
+                    }
+                }
+            }
+
+            if (contactParts != null)
+            {
+                foreach (BodyPartRecord part in contactParts)
+                {
+                    if (part != null &&
+                        !this.contactParts.Contains(part))
+                    {
+                        this.contactParts.Add(part);
+                    }
                 }
             }
 
@@ -87,7 +116,8 @@ namespace UniqueEquipmentTraits.Effects
                 foreach (KeyValuePair<BodyPartRecord, float> entry
                     in partDamage)
                 {
-                    if (entry.Key == null || entry.Value <= 0f)
+                    if (entry.Key == null ||
+                        entry.Value <= 0f)
                         continue;
 
                     this.partDamage[entry.Key] = entry.Value;
@@ -99,13 +129,13 @@ namespace UniqueEquipmentTraits.Effects
                 foreach (KeyValuePair<BodyPartRecord, HediffDef> entry
                     in partInjuryDefs)
                 {
-                    if (entry.Key == null || entry.Value == null)
+                    if (entry.Key == null ||
+                        entry.Value == null)
                         continue;
 
                     this.partInjuryDefs[entry.Key] = entry.Value;
                 }
             }
-
         }
 
         public void Report(string description)

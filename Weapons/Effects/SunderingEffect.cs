@@ -1,5 +1,5 @@
-﻿
-using RimWorld;
+﻿using RimWorld;
+using UnityEngine;
 using UniqueEquipmentTraits.Core;
 using UniqueEquipmentTraits.Traits;
 using Verse;
@@ -8,6 +8,60 @@ namespace UniqueEquipmentTraits.Effects
 {
     internal class SunderingEffect : UETEffect
     {
+        private const float MaxEffectiveMass = 15f;
+        private const float MassBreakpoint = 2f;
+        private const float BreakpointStrength = 0.50f;
+
+        internal static float GetEffectStrength(
+            Thing weapon,
+            QualityCategory quality)
+        {
+            if (weapon == null)
+                return 0f;
+
+            float maxStrength;
+
+            switch (quality)
+            {
+                case QualityCategory.Masterwork:
+                    maxStrength = 0.40f;
+                    break;
+
+                case QualityCategory.Legendary:
+                    maxStrength = 0.50f;
+                    break;
+
+                default:
+                    maxStrength = WeaponTraitQuality.GetEffectStrength(quality);
+                    break;
+            }
+
+            float mass = Mathf.Clamp(
+                weapon.GetStatValue(StatDefOf.Mass),
+                0f,
+                MaxEffectiveMass);
+
+            float massFactor;
+
+            if (mass <= MassBreakpoint)
+            {
+                massFactor = Mathf.Lerp(
+                    0f,
+                    BreakpointStrength,
+                    mass / MassBreakpoint);
+            }
+            else
+            {
+                massFactor = Mathf.Lerp(
+                    BreakpointStrength,
+                    1f,
+                    (mass - MassBreakpoint) /
+                    (MaxEffectiveMass - MassBreakpoint));
+            }
+
+            return maxStrength * massFactor;
+        }
+
         internal static void Prepare(MeleeAttackContext context)
         {
             if (context == null ||
@@ -57,10 +111,15 @@ namespace UniqueEquipmentTraits.Effects
             if (chance <= 0f || !Rand.Chance(chance))
                 return;
 
+            float strength = GetEffectStrength(
+                context.Weapon,
+                qualityComp.Quality);
+
+            if (strength <= 0f)
+                return;
+
             context.ArmorPiercingActivated = true;
-            context.ArmorPiercingStrength =
-                WeaponTraitQuality.GetEffectStrength(
-                    qualityComp.Quality);
+            context.ArmorPiercingStrength = strength;
         }
 
         public override void Apply(UETEffectContext context)
@@ -74,10 +133,11 @@ namespace UniqueEquipmentTraits.Effects
         {
             if (context == null ||
                 !context.ArmorPiercingActivated ||
+                !context.ArmorPiercingApplied ||
                 context.Attacker == null ||
                 context.Victim == null ||
                 context.Weapon == null)
-                return;
+                    return;
 
             RimWorld.WeaponTraitDef sundering = null;
 
@@ -129,7 +189,7 @@ namespace UniqueEquipmentTraits.Effects
             effectContext.Report(
                 $"{context.Attacker.LabelShort}'s weapon tears through " +
                 $"{context.Victim.LabelShort}'s defenses, ignoring " +
-                $"{context.ArmorPiercingStrength:P0} of their armor.");
+                $"{context.ArmorPiercingStrength:P1} of their armor.");
 
             UETCombatLog.Record(sundering, effectContext);
         }

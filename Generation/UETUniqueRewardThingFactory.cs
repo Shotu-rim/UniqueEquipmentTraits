@@ -25,7 +25,7 @@ namespace UniqueEquipmentTraits.Utilities
 
             // Preserve the original creation behavior for vanilla items
             if (!IsUETVariant(def))
-                return ThingMaker.MakeThing(def);
+                return ThingMaker.MakeThing(def, stuff);
 
             if (def.MadeFromStuff)
             {

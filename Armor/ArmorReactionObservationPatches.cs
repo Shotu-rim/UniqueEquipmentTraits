@@ -10,7 +10,7 @@ namespace UniqueEquipmentTraits.Core.Armor
     [HarmonyPatch(
         typeof(Verb_MeleeAttackDamage),
         "ApplyMeleeDamageToTarget")]
-    internal static class ArmorReactionAttackObserver
+    public static class ArmorReactionAttackObserver
     {
         [ThreadStatic]
         private static Stack<ArmorReactionContext> active;
@@ -25,34 +25,49 @@ namespace UniqueEquipmentTraits.Core.Armor
             }
         }
 
-        [HarmonyPrefix]
-        private static void Prefix(
-            Verb_MeleeAttackDamage __instance,
-            LocalTargetInfo target,
-            out ArmorReactionContext __state)
+        public static object BeginAttack(
+    Pawn attacker,
+    Pawn defender)
         {
-            __state = new ArmorReactionContext(
-                __instance.CasterPawn,
-                target.Thing as Pawn);
+            ArmorReactionContext context =
+                new ArmorReactionContext(attacker, defender);
 
             if (active == null)
                 active = new Stack<ArmorReactionContext>();
 
-            active.Push(__state);
+            active.Push(context);
+
+            return context;
+        }
+
+        public static void EndAttack(object state)
+        {
+            if (state != null &&
+                active != null &&
+                active.Count > 0 &&
+                ReferenceEquals(active.Peek(), state))
+            {
+                active.Pop();
+            }
+        }
+
+        [HarmonyPrefix]
+        private static void Prefix(
+            Verb_MeleeAttackDamage __instance,
+            LocalTargetInfo target,
+            out object __state)
+        {
+            __state = BeginAttack(
+                __instance.CasterPawn,
+                target.Thing as Pawn);
         }
 
         [HarmonyFinalizer]
         private static Exception Finalizer(
             Exception __exception,
-            ArmorReactionContext __state)
+            object __state)
         {
-            if (__state != null &&
-                active != null &&
-                active.Count > 0 &&
-                ReferenceEquals(active.Peek(), __state))
-            {
-                active.Pop();
-            }
+            EndAttack(__state);
 
             return __exception;
         }

@@ -15,7 +15,7 @@ namespace UniqueEquipmentTraits.Patches
     /// and maintains a thread-local stack for nested attack calls.
     /// </summary>
     [HarmonyPatch(typeof(Verb_MeleeAttack), "TryCastShot")]
-    internal static class Patch_Flurry_Attempt
+    public static class Patch_Flurry_Attempt
     {
         internal sealed class Attempt
         {
@@ -40,24 +40,26 @@ namespace UniqueEquipmentTraits.Patches
                 ? attacks.Peek()
                 : null;
 
-        [HarmonyPrefix]
-        private static void Prefix(
-            Verb_MeleeAttack __instance,
-            out Attempt __state)
+        // Shared attack lifecycle
+        public static void BeginAttempt(
+            Verb_MeleeAttack attack,
+            out object state)
         {
-            Pawn attacker = __instance.CasterPawn;
+            state = null;
+
+            Pawn attacker = attack.CasterPawn;
 
             CompWeaponTrait attackerComp =
-                (__instance.EquipmentSource as ThingWithComps)?
+                (attack.EquipmentSource as ThingWithComps)?
                     .TryGetComp<CompWeaponTrait>();
 
-            Pawn defender = __instance.CurrentTarget.Pawn;
+            Pawn defender = attack.CurrentTarget.Pawn;
 
             CompWeaponTrait defenderComp =
                 (defender?.equipment?.Primary as ThingWithComps)?
                     .TryGetComp<CompWeaponTrait>();
 
-            __state = new Attempt
+            Attempt attempt = new Attempt
             {
                 Comp = attackerComp,
                 Pawn = attacker,
@@ -73,10 +75,63 @@ namespace UniqueEquipmentTraits.Patches
             if (attacks == null)
                 attacks = new Stack<Attempt>();
 
-            attacks.Push(__state);
+            attacks.Push(attempt);
+            state = attempt;
         }
 
-        // Mark attack attempts
+        public static void MarkResolved()
+        {
+            Attempt attempt = Current;
+
+            if (attempt != null)
+                attempt.ReachedResolution = true;
+        }
+
+        public static void ConsumeAttempt(object state)
+        {
+            Attempt attempt = state as Attempt;
+
+            if (attempt == null ||
+                !attempt.ReachedResolution)
+                return;
+
+            // Consume one Flurry charge
+            if (attempt.WasActive &&
+                attempt.Comp != null)
+            {
+                attempt.Comp.ConsumeFlurryAttempt(
+                    attempt.Pawn);
+            }
+
+            // Consume one Tailwind charge
+            if (attempt.TailwindWasActive &&
+                attempt.DefenderComp != null)
+            {
+                attempt.DefenderComp.ConsumeTailwindAttempt(
+                    attempt.Defender);
+            }
+        }
+
+        public static void EndAttempt(object state)
+        {
+            if (state == null ||
+                attacks == null ||
+                attacks.Count == 0)
+                return;
+
+            if (ReferenceEquals(attacks.Peek(), state))
+                attacks.Pop();
+        }
+
+        // Vanilla Harmony patches
+        [HarmonyPrefix]
+        private static void Prefix(
+            Verb_MeleeAttack __instance,
+            out object __state)
+        {
+            BeginAttempt(__instance, out __state);
+        }
+
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> Transpiler(
             IEnumerable<CodeInstruction> instructions)
@@ -112,42 +167,18 @@ namespace UniqueEquipmentTraits.Patches
             }
         }
 
-        private static void MarkResolved()
-        {
-            Attempt attempt = Current;
-
-            if (attempt != null)
-                attempt.ReachedResolution = true;
-        }
-
         [HarmonyPostfix]
-        private static void Postfix(Attempt __state)
+        private static void Postfix(object __state)
         {
-            if (__state == null || !__state.ReachedResolution)
-                return;
-
-            // Consume one Flurry charge
-            if (__state.WasActive && __state.Comp != null)
-            {
-                __state.Comp.ConsumeFlurryAttempt(
-                    __state.Pawn);
-            }
-
-            // Consume one Tailwind charge
-            if (__state.TailwindWasActive &&
-                __state.DefenderComp != null)
-            {
-                __state.DefenderComp.ConsumeTailwindAttempt(
-                    __state.Defender);
-            }
+            ConsumeAttempt(__state);
         }
 
         [HarmonyFinalizer]
         private static Exception Finalizer(
-            Exception __exception)
+            Exception __exception,
+            object __state)
         {
-            if (attacks != null && attacks.Count > 0)
-                attacks.Pop();
+            EndAttempt(__state);
 
             return __exception;
         }
@@ -160,23 +191,23 @@ namespace UniqueEquipmentTraits.Patches
     [HarmonyPatch(
         typeof(Verb_MeleeAttackDamage),
         "DamageInfosToApply")]
-    internal static class Patch_Flurry_Damage
+    public static class Patch_Flurry_Damage
     {
-        [HarmonyPostfix]
-        private static void Postfix(
-            ref IEnumerable<DamageInfo> __result)
+        public static IEnumerable<DamageInfo> ApplyDamageMultiplier(
+            IEnumerable<DamageInfo> source)
         {
             var attempt = Patch_Flurry_Attempt.Current;
 
             if (attempt == null ||
                 !attempt.WasActive ||
-                __result == null)
+                attempt.Comp == null ||
+                source == null)
             {
-                return;
+                return source;
             }
 
-            __result = Scale(
-                __result,
+            return Scale(
+                source,
                 attempt.Comp.FlurryDamageMultiplier());
         }
 
@@ -188,8 +219,16 @@ namespace UniqueEquipmentTraits.Patches
             {
                 DamageInfo scaled = info;
                 scaled.SetAmount(info.Amount * factor);
+
                 yield return scaled;
             }
+        }
+
+        [HarmonyPostfix]
+        private static void Postfix(
+            ref IEnumerable<DamageInfo> __result)
+        {
+            __result = ApplyDamageMultiplier(__result);
         }
     }
 

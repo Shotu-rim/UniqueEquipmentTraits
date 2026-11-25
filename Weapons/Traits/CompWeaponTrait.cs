@@ -520,7 +520,8 @@ namespace UniqueEquipmentTraits.Traits
                         WeaponTraitQuality.GetEffectStrength(
                             qualityComp.Quality) * 2f);
             }
-            else if (trait.defName == "UET_NaniteDisruptor")
+            else if (trait.defName == "UET_NaniteDisruptor" ||
+                    trait.defName == "UET_Sundering")
             {
                 switch (qualityComp.Quality)
                 {
@@ -547,15 +548,26 @@ namespace UniqueEquipmentTraits.Traits
 
             if (extension != null && extension.effectClass != null)
             {
-                float effectStrength =
-                    WeaponTraitQuality.GetEffectStrength(
+                bool isSundering =
+                    trait.defName == "UET_Sundering";
+
+                float effectStrength = isSundering
+                    ? SunderingEffect.GetEffectStrength(
+                        parent,
+                        qualityComp.Quality)
+                    : WeaponTraitQuality.GetEffectStrength(
                         qualityComp.Quality);
 
                 yield return new StatDrawEntry(
                     StatCategoryDefOf.BasicsImportant,
                     "Effect strength",
-                    effectStrength.ToString("P0"),
-                    "Strength of this weapon trait's effect.",
+                    effectStrength.ToString(
+                        isSundering ? "P1" : "P0"),
+                    isSundering
+                        ? "Percentage of the target's armor ignored " +
+                          "when Sundering activates. Scales with weapon " +
+                          "mass, reaching maximum strength at 15 kg."
+                        : "Strength of this weapon trait's effect.",
                     99995
                 );
             }

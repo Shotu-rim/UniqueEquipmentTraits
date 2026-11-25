@@ -44,43 +44,8 @@ namespace UniqueEquipmentTraits.Core.Armor
             return result.totalDamageDealt +
                    context.AbsorbedDamage;
         }
-
-        private static bool TryInterceptDamage(
-            Pawn pawn,
-            float damage)
-        {
-            if (pawn == null || damage <= 0f)
-                return false;
-
-            return ArmorPassiveDamageUtility
-                .TryInterceptAndRecord(pawn, damage);
-        }
-
-
-
-
-        private static bool InterceptPartDamage(
-            DamageInfo dinfo,
-            Pawn pawn,
-            DamageWorker.DamageResult result,
-            float damage)
-        {
-            if (!TryInterceptDamage(pawn, damage))
-                return false;
-
-            result.AddPart(pawn, dinfo.HitPart);
-            result.deflected = true;
-
-            ArmorReactionAttackObserver.ObserveAbsorbedHit(
-                pawn,
-                dinfo);
-
-            return true;
-        }
-
-
         [HarmonyPatch]
-        private static class ApplyDamageToPartTranspiler
+        private static class ApplyDamageToPartPrefix
         {
             private static MethodBase TargetMethod()
             {
@@ -103,6 +68,23 @@ namespace UniqueEquipmentTraits.Core.Armor
                 if (context != null)
                     context.BeginPartDamage();
             }
+        }
+        [HarmonyPatch]
+        [HarmonyBefore("CombatExtended.HarmonyCE")]
+        private static class ApplyDamageToPartTranspiler
+        {
+            private static MethodBase TargetMethod()
+            {
+                return AccessTools.Method(
+                    typeof(DamageWorker_AddInjury),
+                    "ApplyDamageToPart",
+                    new Type[]
+                    {
+                typeof(DamageInfo),
+                typeof(Pawn),
+                typeof(DamageWorker.DamageResult)
+                    });
+            }
 
             private static IEnumerable<CodeInstruction> Transpiler(
                 IEnumerable<CodeInstruction> instructions,
@@ -120,8 +102,8 @@ namespace UniqueEquipmentTraits.Core.Armor
                     "GetPostArmorDamage");
 
                 MethodInfo intercept = AccessTools.Method(
-                    typeof(Patch_ArmorDamageInterception),
-                    "InterceptPartDamage");
+                    typeof(ArmorDamageInterceptionUtility),
+                    nameof(ArmorDamageInterceptionUtility.InterceptPartDamage));
 
                 if (isHeadshot == null ||
                     postArmorDamage == null ||
@@ -236,10 +218,9 @@ namespace UniqueEquipmentTraits.Core.Armor
                         typeof(DamageWorker.DamageResult),
                         "deflectedByMetalArmor");
 
-                MethodInfo observeAbsorbedHit =
-                    AccessTools.Method(
-                        typeof(ArmorReactionAttackObserver),
-                        "ObserveAbsorbedHit");
+                MethodInfo observeAbsorbedHit = AccessTools.Method(
+                    typeof(ArmorDamageInterceptionUtility),
+                    nameof(ArmorDamageInterceptionUtility.ObserveAbsorbedHit));
 
                 if (deflectedByMetalArmorField == null ||
                     observeAbsorbedHit == null)

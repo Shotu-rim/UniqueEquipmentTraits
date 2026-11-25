@@ -36,11 +36,11 @@ namespace UniqueEquipmentTraits.Core.Armor
             switch (quality)
             {
                 case QualityCategory.Masterwork:
-                    chance = 0.25f;
+                    chance = 0.30f;
                     break;
 
                 case QualityCategory.Legendary:
-                    chance = 0.35f;
+                    chance = 0.40f;
                     break;
 
                 default:

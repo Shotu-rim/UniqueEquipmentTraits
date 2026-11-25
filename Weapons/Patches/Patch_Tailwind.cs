@@ -1,25 +1,41 @@
-﻿
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
 using UniqueEquipmentTraits.Core.Armor;
-using UniqueEquipmentTraits.Traits;
 using Verse;
 
 namespace UniqueEquipmentTraits.Patches
 {
     /// <summary>
-    /// Applies passive armor dodge bonuses and the active
-    /// Tailwind weapon trait bonus to melee dodge chance.
-    /// Preserves vanilla restrictions on dodging.
+    /// Applies UET dodge bonuses while preserving
+    /// vanilla restrictions on dodging.
     /// </summary>
     [HarmonyPatch(typeof(Verb_MeleeAttack), "GetDodgeChance")]
     internal static class Patch_Tailwind_Dodge
     {
+        //[HarmonyPostfix]
+        //private static void Postfix(
+        //    Verb_MeleeAttack __instance,
+        //    LocalTargetInfo target,
+        //    ref float __result)
+        //{
+        //    Pawn defender = target.Pawn;
+
+        //    if (defender == null || defender.Dead)
+        //        return;
+
+        //    if (!CanDodge(__instance, defender))
+        //        return;
+
+        //    __result =
+        //        UETDodgeUtility.ApplyDodgeBonuses(
+        //            defender,
+        //            __result);
+        //}
         [HarmonyPostfix]
         private static void Postfix(
-            Verb_MeleeAttack __instance,
-            LocalTargetInfo target,
-            ref float __result)
+    Verb_MeleeAttack __instance,
+    LocalTargetInfo target,
+    ref float __result)
         {
             Pawn defender = target.Pawn;
 
@@ -27,31 +43,33 @@ namespace UniqueEquipmentTraits.Patches
                 return;
 
             if (!CanDodge(__instance, defender))
-                return;
-
-            // Apply passive armor bonuses first
-            __result =
-                ArmorTraitDodgeUtility.ApplyDodgeBonus(
-                    defender,
-                    __result);
-
-            // Apply active Tailwind bonus afterward
-            ThingWithComps weapon =
-                defender.equipment?.Primary;
-
-            CompWeaponTrait comp =
-                weapon?.TryGetComp<CompWeaponTrait>();
-
-            if (comp != null &&
-                comp.TailwindActiveFor(defender))
             {
-                float bonus = comp.TailwindDodgeBonus();
+                Log.Message(
+                    "[UET DODGE] " + defender.LabelShort +
+                    " | CanDodge: FALSE" +
+                    " | Vanilla: " + __result.ToString("P2"));
 
-                if (bonus > 0f)
-                    __result += bonus;
+                return;
             }
 
-            __result = UnityEngine.Mathf.Clamp01(__result);
+            float baseDodge = __result;
+
+            float armorDodge =
+                ArmorTraitDodgeUtility.ApplyDodgeBonus(
+                    defender,
+                    baseDodge);
+
+            __result =
+                UETDodgeUtility.ApplyDodgeBonuses(
+                    defender,
+                    baseDodge);
+
+            Log.Message(
+                "[UET DODGE] " + defender.LabelShort +
+                " | CanDodge: TRUE" +
+                " | Vanilla: " + baseDodge.ToString("P2") +
+                " | After armor: " + armorDodge.ToString("P2") +
+                " | Final: " + __result.ToString("P2"));
         }
 
         private static bool CanDodge(

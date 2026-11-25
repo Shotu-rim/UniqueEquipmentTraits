@@ -1,5 +1,4 @@
-﻿
-using HarmonyLib;
+﻿using HarmonyLib;
 using RimWorld;
 using System;
 using System.Collections.Generic;
@@ -12,15 +11,13 @@ namespace UniqueEquipmentTraits.Patches
 {
     /// <summary>
     /// Manages the lifecycle of UET melee attack contexts.
-    /// Creates and tracks an attack context, prepares pre-damage trait
-    /// effects, and processes trait activations and combat log entries
-    /// after successful execution of the melee damage routine.
-    /// Supports nested attack contexts using a thread-local stack.
+    /// Supports vanilla and external combat systems through
+    /// a shared attack lifecycle API.
     /// </summary>
     [HarmonyPatch(
         typeof(Verb_MeleeAttackDamage),
         "ApplyMeleeDamageToTarget")]
-    internal static class Patch_Verb_MeleeAttackDamage
+    public static class Patch_Verb_MeleeAttackDamage
     {
         [ThreadStatic]
         private static Stack<MeleeAttackContext> activeAttacks;
@@ -37,98 +34,156 @@ namespace UniqueEquipmentTraits.Patches
             }
         }
 
-        [HarmonyPrefix]
-        private static void Prefix(
-            Verb_MeleeAttackDamage __instance,
-            LocalTargetInfo target,
-            out MeleeAttackContext __state)
+        public static float GetArmorPiercingStrength(
+            Pawn victim,
+            Thing instigator)
         {
-            // State belongs to this specific Harmony
-            __state = null;
+            MeleeAttackContext context = CurrentContext;
+
+            if (context == null ||
+                !context.ArmorPiercingActivated ||
+                victim == null ||
+                instigator == null ||
+                context.Victim != victim ||
+                context.Attacker != instigator)
+                return 0f;
+
+            return UnityEngine.Mathf.Clamp01(
+                context.ArmorPiercingStrength);
+        }
+
+        public static void MarkArmorPiercingApplied()
+        {
+            MeleeAttackContext context = CurrentContext;
+
+            if (context == null ||
+                !context.ArmorPiercingActivated)
+                return;
+
+            context.ArmorPiercingApplied = true;
+        }
+
+        // Shared attack lifecycle API
+        public static void BeginAttack(
+            Pawn attacker,
+            Pawn victim,
+            ThingWithComps weapon,
+            out object state)
+        {
+            state = null;
 
             if (activeAttacks == null)
-                activeAttacks = new Stack<MeleeAttackContext>();
-
-            Pawn attacker = __instance.CasterPawn;
-            Pawn victim = target.Thing as Pawn;
-
-            ThingWithComps weapon =
-                __instance.EquipmentSource as ThingWithComps;
+                activeAttacks =
+                    new Stack<MeleeAttackContext>();
 
             MeleeAttackContext context =
-                new MeleeAttackContext(attacker, victim, weapon);
+                new MeleeAttackContext(
+                    attacker,
+                    victim,
+                    weapon);
 
-            // Register context before effects
             activeAttacks.Push(context);
-            __state = context;
+            state = context;
 
-            // Select Prismatic's trait for attack
+            // Select Prismatic's trait for the attack.
             PrismaticEffect.Prepare(context);
 
-            // Prepare Sundering
+            // Prepare armor penetration modifiers.
             SunderingEffect.Prepare(context);
         }
 
-        [HarmonyFinalizer]
-        private static Exception Finalizer(
-            Exception __exception,
-            MeleeAttackContext __state)
+        public static Exception EndAttack(
+            Exception exception,
+            object state)
         {
-            if (__state == null)
-                return __exception;
+            MeleeAttackContext context =
+                state as MeleeAttackContext;
+
+            if (context == null)
+                return exception;
 
             try
             {
-                // Effects should not run after a failed attack
-                if (__exception == null)
+                if (exception == null)
                 {
-                    __state.CaptureOriginalDamage();
+                    // Preserve original attack damage for Hawkeye.
+                    context.CaptureOriginalDamage();
+
+                    // Trait-generated damage must not modify
+                    // the original melee contact information.
+                    context.CloseContactObservation();
+
                     try
                     {
-                        WeaponTraitActivation.ProcessMeleeAttack(__state);
+                        WeaponTraitActivation
+                            .ProcessMeleeAttack(context);
                     }
                     catch (Exception ex)
                     {
                         Log.Error(
-                            "[UET] Melee trait activation failed: " + ex);
+                            "[UET] Melee trait activation failed: "
+                            + ex);
                     }
 
                     try
                     {
-                        ArmorTraitCriticalEffect.Apply(__state);
+                        ArmorTraitCriticalEffect.Apply(context);
                     }
                     catch (Exception ex)
                     {
                         Log.Error(
-                            "[UET Hawkeye] Critical hit processing failed: " + ex);
+                            "[UET Hawkeye] Critical hit processing failed: "
+                            + ex);
                     }
-
 
                     try
                     {
-                        SunderingEffect.RecordCombatLog(__state);
+                        SunderingEffect.RecordCombatLog(context);
                     }
                     catch (Exception ex)
                     {
                         Log.Error(
-                            "[UET] Sundering combat log failed: " + ex);
+                            "[UET] Sundering combat log failed: "
+                            + ex);
                     }
                 }
             }
             finally
             {
-                // Remove context belonging to this call
                 if (activeAttacks != null &&
                     activeAttacks.Count > 0 &&
                     ReferenceEquals(
-                        activeAttacks.Peek(), __state))
+                        activeAttacks.Peek(), context))
                 {
                     activeAttacks.Pop();
                 }
             }
 
-            return __exception;
+            return exception;
         }
 
+        // Vanilla adapter
+        [HarmonyPrefix]
+        private static void Prefix(
+            Verb_MeleeAttackDamage __instance,
+            LocalTargetInfo target,
+            out object __state)
+        {
+            BeginAttack(
+                __instance.CasterPawn,
+                target.Thing as Pawn,
+                __instance.EquipmentSource as ThingWithComps,
+                out __state);
+        }
+
+        [HarmonyFinalizer]
+        private static Exception Finalizer(
+            Exception __exception,
+            object __state)
+        {
+            return EndAttack(
+                __exception,
+                __state);
+        }
     }
 }

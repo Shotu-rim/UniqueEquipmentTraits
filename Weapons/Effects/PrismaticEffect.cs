@@ -1,5 +1,4 @@
-﻿
-using RimWorld;
+﻿using RimWorld;
 using System.Collections.Generic;
 using UniqueEquipmentTraits.Core;
 using UniqueEquipmentTraits.Traits;
@@ -12,18 +11,17 @@ namespace UniqueEquipmentTraits.Effects
     {
         private const string PrismaticDefName = "UET_Prismatic";
         private const string MeleeCategory = "UET_Melee";
+
         private static List<WeaponTraitDef> cachedCandidates;
 
         internal static WeaponTraitDef RollEffect()
         {
-            // Cache traits
             if (cachedCandidates == null)
                 cachedCandidates = BuildCandidates();
 
             if (cachedCandidates.Count == 0)
                 return null;
 
-            // Random traits
             return cachedCandidates.RandomElement();
         }
 
@@ -42,12 +40,11 @@ namespace UniqueEquipmentTraits.Effects
                 if (trait.defName == PrismaticDefName)
                     continue;
 
-                // Only UET traits
+                // Only UET melee traits
                 if (trait.weaponCategory == null ||
                     trait.weaponCategory.defName != MeleeCategory)
                     continue;
 
-                // Need UET
                 if (trait.GetModExtension<UETTraitExtension>() == null)
                     continue;
 
@@ -56,7 +53,6 @@ namespace UniqueEquipmentTraits.Effects
 
             return candidates;
         }
-
 
         internal static void Prepare(MeleeAttackContext context)
         {
@@ -67,14 +63,12 @@ namespace UniqueEquipmentTraits.Effects
                 context.Attacker.Dead)
                 return;
 
-            // Only Prismatic can use
             if (!HasPrismatic(context.Weapon))
                 return;
 
-            // Choose trait per attack
+            // Choose one trait per attack
             if (context.PrismaticSelectedTrait != null)
                 return;
-
 
             WeaponTraitDef selectedTrait = RollEffect();
 
@@ -83,7 +77,7 @@ namespace UniqueEquipmentTraits.Effects
 
             context.PrismaticSelectedTrait = selectedTrait;
 
-            // Sundering before resolve
+            // Sundering must be prepared before damage resolution
             if (selectedTrait.defName != "UET_Sundering")
                 return;
 
@@ -101,16 +95,24 @@ namespace UniqueEquipmentTraits.Effects
                 UnityEngine.Mathf.Clamp01(effectStrength * 2f);
 
             context.PrismaticActivationRolled = true;
+
             context.PrismaticActivated =
                 Rand.Chance(activationChance);
 
             if (!context.PrismaticActivated)
                 return;
 
-            context.ArmorPiercingActivated = true;
-            context.ArmorPiercingStrength = effectStrength;
-        }
+            float sunderingStrength =
+                SunderingEffect.GetEffectStrength(
+                    context.Weapon,
+                    qualityComp.Quality);
 
+            if (sunderingStrength <= 0f)
+                return;
+
+            context.ArmorPiercingActivated = true;
+            context.ArmorPiercingStrength = sunderingStrength;
+        }
 
         internal static void Resolve(MeleeAttackContext context)
         {
@@ -122,15 +124,20 @@ namespace UniqueEquipmentTraits.Effects
             if (context.PrismaticSelectedTrait.defName == "UET_Sundering")
                 return;
 
-            // Damage required to init
-            if (!context.DamageDealt ||
-                context.Attacker == null ||
+            if (context.Attacker == null ||
                 context.Attacker.Dead ||
                 context.Victim == null ||
                 context.Weapon == null)
                 return;
 
-            // Prevent second activation
+            // Use the same hit requirements as direct weapon traits.
+            // Corrosive can activate on fully absorbed hits.
+            if (!WeaponTraitActivation.CanActivateOnHit(
+                context.PrismaticSelectedTrait,
+                context))
+                return;
+
+            // Prevent a second activation roll
             if (context.PrismaticActivationRolled)
                 return;
 
@@ -148,6 +155,7 @@ namespace UniqueEquipmentTraits.Effects
                 UnityEngine.Mathf.Clamp01(effectStrength * 2f);
 
             context.PrismaticActivationRolled = true;
+
             context.PrismaticActivated =
                 Rand.Chance(activationChance);
 
@@ -165,18 +173,21 @@ namespace UniqueEquipmentTraits.Effects
                     context.HitParts,
                     context.DamageAmount,
                     context.PartDamage,
-                    context.PartInjuryDefs);
+                    context.PartInjuryDefs,
+                    context.ContactDamageAmount,
+                    context.ContactParts);
 
-            bool executed = TryExecuteEffect(
-    context.PrismaticSelectedTrait,
-    effectContext);
+            TryExecuteEffect(
+                context.PrismaticSelectedTrait,
+                effectContext);
         }
 
         internal static bool TryExecuteEffect(
             WeaponTraitDef selectedTrait,
             UETEffectContext context)
         {
-            if (selectedTrait == null || context == null)
+            if (selectedTrait == null ||
+                context == null)
                 return false;
 
             UETTraitExtension extension =
@@ -185,7 +196,7 @@ namespace UniqueEquipmentTraits.Effects
             if (extension == null)
                 return false;
 
-            // Use charges
+            // Charged weapon traits
             if (selectedTrait.defName == "UET_Flurry" ||
                 selectedTrait.defName == "UET_Tailwind")
             {
@@ -203,16 +214,16 @@ namespace UniqueEquipmentTraits.Effects
                     context.Attacker);
             }
 
-            // Effects executed without another roll, Prismatic already did that
+            // Prismatic already performed the activation roll
             if (extension.effectClass != null)
+            {
                 return UETEffectDispatcher.TryApply(
                     selectedTrait,
                     context);
+            }
 
             return false;
         }
-
-
 
         internal static bool HasPrismatic(ThingWithComps weapon)
         {
@@ -229,13 +240,11 @@ namespace UniqueEquipmentTraits.Effects
                 in unique.TraitsListForReading)
             {
                 if (trait != null &&
-                    trait.defName == "UET_Prismatic")
+                    trait.defName == PrismaticDefName)
                     return true;
             }
 
             return false;
         }
-
-
     }
 }

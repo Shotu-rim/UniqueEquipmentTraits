@@ -1,14 +1,12 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Verse;
 
 namespace UniqueEquipmentTraits.Core
 {
     /// <summary>
     /// Stores the state and results of a single melee attack.
-    /// Tracks participants, weapon, damage, affected body parts,
-    /// and activation state of UET weapon trait effects.
-    /// Provides shared attack data for combat patches and trait handlers.
+    /// Tracks participants, weapon, contact damage, actual damage,
+    /// affected body parts and trait activation state.
     /// </summary>
     internal sealed class MeleeAttackContext
     {
@@ -19,10 +17,26 @@ namespace UniqueEquipmentTraits.Core
         public bool DamageDealt { get; set; }
         public float DamageAmount { get; private set; }
         public float BleedingBeforeAttack { get; }
+
+        // Contact observation
+        public bool ContactObservationClosed { get; private set; }
+
+        public bool ContactMade =>
+            contactParts.Count > 0;
+
+        public float ContactDamageAmount { get; private set; }
+
+        public IEnumerable<BodyPartRecord> ContactParts =>
+            contactParts;
+
+        // Sundering
         public bool ArmorPiercingActivated { get; internal set; }
+
+        public bool ArmorPiercingApplied { get; internal set; }
 
         public float ArmorPiercingStrength { get; internal set; }
 
+        // Prismatic
         public RimWorld.WeaponTraitDef PrismaticSelectedTrait
         {
             get;
@@ -41,8 +55,10 @@ namespace UniqueEquipmentTraits.Core
             internal set;
         }
 
-
         private readonly HashSet<BodyPartRecord> hitParts =
+            new HashSet<BodyPartRecord>();
+
+        private readonly HashSet<BodyPartRecord> contactParts =
             new HashSet<BodyPartRecord>();
 
         private readonly Dictionary<BodyPartRecord, float> partDamage =
@@ -61,14 +77,39 @@ namespace UniqueEquipmentTraits.Core
         public IReadOnlyDictionary<BodyPartRecord, HediffDef> OriginalPartInjuryDefs =>
             originalPartInjuryDefs;
 
-
-        public IEnumerable<BodyPartRecord> HitParts => hitParts;
+        public IEnumerable<BodyPartRecord> HitParts =>
+            hitParts;
 
         public IReadOnlyDictionary<BodyPartRecord, float> PartDamage =>
             partDamage;
 
         public IReadOnlyDictionary<BodyPartRecord, HediffDef> PartInjuryDefs =>
             partInjuryDefs;
+
+        /// <summary>
+        /// Prevents subsequent trait-generated damage from being
+        /// registered as original melee contact.
+        /// </summary>
+        public void CloseContactObservation()
+        {
+            ContactObservationClosed = true;
+        }
+
+        public void RegisterContactDamage(float amount)
+        {
+            if (ContactObservationClosed || amount <= 0f)
+                return;
+
+            ContactDamageAmount += amount;
+        }
+
+        public void RegisterContactPart(BodyPartRecord part)
+        {
+            if (ContactObservationClosed || part == null)
+                return;
+
+            contactParts.Add(part);
+        }
 
         public void RegisterDamage(float amount)
         {
@@ -102,7 +143,6 @@ namespace UniqueEquipmentTraits.Core
                 partInjuryDefs[part] = injuryDef;
         }
 
-
         public void CaptureOriginalDamage()
         {
             if (originalPartDamage != null)
@@ -115,9 +155,6 @@ namespace UniqueEquipmentTraits.Core
                 new Dictionary<BodyPartRecord, HediffDef>(partInjuryDefs);
         }
 
-
-        // For reports - bleeding effect
-
         public MeleeAttackContext(
             Pawn attacker,
             Pawn victim,
@@ -126,9 +163,6 @@ namespace UniqueEquipmentTraits.Core
             Attacker = attacker;
             Victim = victim;
             Weapon = weapon;
-
-            DamageDealt = false;
-            DamageAmount = 0f;
 
             BleedingBeforeAttack =
                 victim != null &&
